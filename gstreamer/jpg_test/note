@@ -1,0 +1,98 @@
+這份檔案未整理
+
+
+https://devtalk.nvidia.com/default/topic/1049311/jetson-agx-xavier/nvjpegdec-slower-then-jpegdec-in-gstreamer/
+nvjpegdec
+
+http://seanhung365.pixnet.net/blog/post/212558487-gstreamer(gst-launch)-%E6%B8%AC%E8%A9%A6%E6%8C%87%E4%BB%A4
+
+
+
+/*
+https://opensource.apple.com/source/WebCore/WebCore-7537.77.4/platform/audio/gstreamer/AudioFileReaderGStreamer.cpp.auto.html
+*/
+
+
+https://stackoverflow.com/questions/20207687/muxing-jpeg-to-mkv-using-gstreamer/24620197
+
+
+可以嘗試用 giostreamsrc 讀取記憶體資料
+還沒成功
+gcc v2_jpg_to_mp4.c -o v2_jpg_to_mp4 `pkg-config --cflags --libs gstreamer-1.0 gio-2.0`
+使用到gio的話,編譯要加上gio-2.0
+
+
+
+https://gstreamer-devel.narkive.com/oLq0pHKH/gst-devel-trouble-with-giostreamsrc
+https://chromium.googlesource.com/chromium/blink/+/0f64c1cf0dd061470a7515ea5c3ff52c876f38c4/Source/WebCore/platform/audio/gstreamer/AudioFileReaderGStreamer.cpp
+http://gstreamer-devel.966125.n4.nabble.com/Need-an-example-for-quot-How-to-play-an-audio-data-which-is-in-memory-as-buffer-quot-td4672763.html
+https://github.com/spk121/burro-engine/wiki/GStreamer-Tutorial-%231:-How-I-Made-a-Beep!
+https://stackoverflow.com/questions/21170124/how-to-use-gstreamer-to-decode-jpeg-in-memory
+http://gstreamer-devel.966125.n4.nabble.com/giostreamsrc-and-udpsink-problem-td4666669.html
+
+
+
+http://blog.sina.com.cn/s/blog_d177576b0101oj10.html
+
+https://stackoverflow.com/questions/21170124/how-to-use-gstreamer-to-decode-jpeg-in-memory
+https://github.com/intel/gstreamer-media-SDK/issues/38
+https://devtalk.nvidia.com/default/topic/903438/jetson-tx1/hw-accelerated-jpeg-encoding-/
+
+
+
+
+gst-launch-1.0 multifilesrc location="./jpg/file_%d.jpg" caps="image/jpeg,framerate=30/1" ! omxh264enc ! h264parse !  qtmux ! filesink location=./test.mp4 -e
+gst-launch-1.0 multifilesrc location="./jpg/file_%d.jpg" caps="image/jpeg,framerate=30/1" ! omxh264enc ! h264parse !  qtmux ! filesink location=./test.mp4 -e
+
+apt-get install libgstreamer1.0-dev libgstreamer-plugins-base1.0-dev libgstreamer-plugins-good1.0-dev libgstreamer-plugins-bad1.0-dev
+gst-launch-1.0 multifilesrc location="./jpg/file_%d.jpg" caps="image/jpeg,framerate=30/1" ! avenc_h264_omx ! h264parse !  qtmux ! filesink location=./test.mp4 -e
+
+avenc_h264_omx
+https://blog.csdn.net/sakulafly/article/details/23128865
+
+
+
+
+
+#if 0
+gst-launch-1.0 multifilesrc location="img.%04d.png" index=0 caps="image/png,framerate=\(fraction\)12/1" ! \
+    pngdec ! videoconvert ! videorate ! theoraenc ! oggmux ! \
+    filesink location="images.ogg"
+https://gstreamer.freedesktop.org/data/doc/gstreamer/head/gst-plugins-good/html/gst-plugins-good-plugins-multifilesrc.html
+gst-launch-1.0 multifilesrc location="./jpg/file_%d.jpg" caps="image/jpeg,framerate=30/1" ! jpegdec ! videoconvert ! videorate ! theoraenc ! oggmux ! filesink location="./images.ogg"
+官方的範例看起來是single thread,留作紀錄
+#endif
+
+
+#if 0
+https://stackoverflow.com/questions/51131925/gstreamer-1-0-encode-raw-to-h-264-in-c
+#endif
+
+
+
+
+
+
+
+
+
+progressreport
+可以搜尋看看這個物件的功能
+
+
+
+底下的code是錯的,但一些關鍵字覺得用的到,記錄下來
+
+gst-launch-1.0 multifilesrc location="./jpg/file_%d.jpg" !  jpegdec ! videoconvert ! 'video/x-raw, interlace-mode=(string)progressive' ! videoparse format=2 width=640 height=512 !  x264enc ! mp4mux ! filesink location=./last.mp4
+
+
+
+
+    https://devtalk.nvidia.com/default/topic/1046325/jetson-tk1/jpeg-to-mp4-how-to-do-it-in-a-app-/
+
+    gst-launch-1.0 multifilesrc location="images/Image_%d.png" !  pngdec ! videoconvert ! 
+                  'video/x-raw, format=(string)I420, width=(int)640, height=(int)512, pixel-aspect-ratio=1/1, interlace-mode=(string)progressive' ! 
+                   videoparse format=2 width=640 height=512 !  x264enc ! mp4mux ! filesink location=last.mp4
+
+
+

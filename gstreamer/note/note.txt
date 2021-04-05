@@ -1,0 +1,25 @@
+
+
+https://foreachsam.github.io/book-framework-gstreamer/read/subject/command/gst-inspect-1.0/
+gst-inspect-1.0 playbin 
+可以用這個指令印出物件內容
+
+$ GST_DEBUG_DUMP_DOT_DIR=. gst-launch-1.0 playbin uri=https://www.freedesktop.org/software/gstreamer-sdk/data/media/sintel_trailer-480p.webm
+$ ls *.dot
+0.00.00.013715494-gst-launch.NULL_READY.dot    
+0.00.00.170999259-gst-launch.PAUSED_PLAYING.dot  
+0.00.07.642049256-gst-launch.PAUSED_READY.dot
+0.00.00.162033239-gst-launch.READY_PAUSED.dot  
+0.00.07.606477348-gst-launch.PLAYING_PAUSED.dot
+$ dot 0.00.00.170999259-gst-launch.PAUSED_PLAYING.dot -Tpng -o play.png
+上面的指令可以把pipeline化成png, 但*.dot的檔名會隨時間不同 
+
+
+
+
+GNOME
+https://developer.gnome.org/gtk3/stable/gtk-compiling.html
+https://developer.gnome.org/gstreamer-libs/stable/GstTestClock.html
+
+
+https://archive.fosdem.org/2016/schedule/event/synchronised_gstreamer/attachments/slides/889/export/events/attachments/synchronised_gstreamer/slides/889/synchronised_multidevice_media_playback_with_GStreamer.pdf

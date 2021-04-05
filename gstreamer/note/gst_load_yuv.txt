@@ -1,0 +1,40 @@
+gst-launch-1.0 -v filesrc location=dst1080.yuv ! videoparse width=1920 height=1080 framerate=60/1 format=GST_VIDEO_FORMAT_UYVY ! videoconvert ! autovideosink
+
+gst-launch-1.0 -v filesrc location=1080p_yuv422_uyvy.yuv ! videoparse width=1920 height=1080 framerate=20/1 format=GST_VIDEO_FORMAT_UYVY ! videoconvert ! x264enc ! avimux ! filesink location=./test.avi
+
+gst-launch-1.0 -v filesrc location=1080p_yuv422_uyvy.yuv ! videoparse width=1280 height=270 framerate=20/1 format=GST_VIDEO_FORMAT_UYVY ! videoconvert ! x264enc ! gdppay ! udpsink host=127.0.0.1 port=1234 blocksize=3
+
+
+
+
+gst-launch-1.0 -v filesrc location=/home/hidog/480p_rgb.yuv ! queue ! videoparse width=720 height=480 framerate=60/1 format=GST_VIDEO_FORMAT_BGR ! videoconvert ! nvh264enc ! filesink location=/dev/stdout | ffplay -
+
+
+####
+
+gst-launch-1.0 -v filesrc location=/media/andrea/DATA/480p_rgb.yuv ! queue ! videoparse width=720 height=480 framerate=60/1 format=GST_VIDEO_FORMAT_BGR ! videoconvert ! nvh264enc ! mpegtsmux ! queue ! filesink location=/dev/stdout sync=true | ./srt-live-transmit file://con/ srt://127.0.0.1:4201?pkg_size=1316 -v
+
+gst-launch-1.0 -v filesrc location=/media/andrea/DATA/dst1080.yuv ! queue ! videoparse width=1920 height=1080 framerate=60/1 format=GST_VIDEO_FORMAT_UYVY ! videoconvert ! nvh264enc ! mpegtsmux ! queue ! filesink location=/dev/stdout sync=true | ./srt-live-transmit file://con/ srt://127.0.0.1:4201?pkg_size=1316 -v
+
+####
+
+
+
+
+
+
+
+
+gst-launch-1.0 -v filesrc location=/home/hidog/dst1080.yuv ! videoparse width=1920 height=1080 framerate=60/1 format=GST_VIDEO_FORMAT_UYVY ! videoconvert ! nvh264enc ! h264parse ! mp4mux ! filesink location=/media/andrea/DATA/test.mp4
+
+
+
+gst-launch-1.0 -v filesrc location=/home/hidog/dst1080.yuv ! queue ! videoparse width=1920 height=1080 framerate=60/1 format=GST_VIDEO_FORMAT_UYVY ! videoconvert ! nvh264enc ! filesink location=/dev/stdout | ffplay -
+
+
+
+gst-launch.exe -v -e videotestsrc pattern=snow ! video/x-raw,width=3840,height=2160 ! x265enc ! h265parse ! matroskamux ! filesink location=test.mkv
+
+
+
+gst-launch-1.0 filesrc location=/media/andrea/DATA/480p_rgb.yuv ! queue ! "video/x-raw, width=720, height=480, format=GST_VIDEO_FORMAT_BGR, framerate=50/1" ! rawvideoparse use-sink-caps=true ! autovideosink
