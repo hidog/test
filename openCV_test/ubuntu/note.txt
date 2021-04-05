@@ -1,0 +1,10 @@
+
+應該可以用這個範例來連結到以安裝的openCV
+研究一下
+
+cmake_minimum_required(VERSION 2.8)
+find_package( OpenCV REQUIRED )
+target_link_libraries( ${PROJECT_NAME} ${OpenCV_LIBS} )
+
+
+
