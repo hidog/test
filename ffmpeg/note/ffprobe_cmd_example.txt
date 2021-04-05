@@ -1,0 +1,7 @@
+4. ffmpeg 教學網站
+ffprobe   https://zwindr.blogspot.com/2016/08/tool-ffprobe.html
+
+
+
+5.
+ffprobe -show_frames test.mp4  顯示細節
