@@ -1,0 +1,39 @@
+linux底下編譯成x64的作法
+cmake -DCMAKE_C_FLAGS=-m64 -DCMAKE_CXX_FLAGS=-m64 . 
+實際上測試結果,ub20環境下,預設就是x64了
+
+https://stackoverflow.com/questions/5805874/the-proper-way-of-forcing-a-32-bit-compile-using-cmake/28047073
+參考這邊想編議成x86
+實際上沒成功,會跳出錯誤
+
+似乎需要多安裝東西,就沒繼續研究了 
+https://stackoverflow.com/questions/22355436/how-to-compile-32-bit-apps-on-64-bit-ubuntu
+
+
+
+編譯成debug     (assert有作用)
+cmake -DCMAKE_BUILD_TYPE=Debug .
+編譯成Release   (assert無作用)
+cmake -DCMAKE_BUILD_TYPE=Release .
+
+或者用這邊判斷
+if( "${CMAKE_BUILD_TYPE}" STREQUAL "")
+    set(CMAKE_BUILD_TYPE Release)
+endif()
+
+
+
+
+
+https://stackoverflow.com/questions/7724569/debug-vs-release-in-cmake 參考這個網址
+set(CMAKE_CXX_FLAGS_DEBUG_INIT "-Wall")
+set(CMAKE_CXX_FLAGS_RELEASE_INIT "-Wall")
+
+add_compile_options(
+  "-Wall" "-Wpedantic" "-Wextra" "-fexceptions"
+  "$<$<CONFIG:DEBUG>:-O0;-g3;-ggdb>"
+)
+
+
+
+
