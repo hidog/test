@@ -27,12 +27,18 @@
     <ClCompile Include="..\..\thread.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\algorithm.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\json.h">
       <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="..\..\thread.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\algorithm.h">
       <Filter>src</Filter>
     </ClInclude>
   </ItemGroup>

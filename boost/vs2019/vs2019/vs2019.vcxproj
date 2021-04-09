@@ -143,11 +143,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\algorithm.cpp" />
     <ClCompile Include="..\..\json.cpp" />
     <ClCompile Include="..\..\thread.cpp" />
     <ClCompile Include="vs2019.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\algorithm.h" />
     <ClInclude Include="..\..\json.h" />
     <ClInclude Include="..\..\thread.h" />
   </ItemGroup>
