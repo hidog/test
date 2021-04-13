@@ -2,6 +2,7 @@
 #include "json.h"
 #include "thread.h"
 #include "algorithm.h"
+#include "uuid.h"
 
 
 using namespace std;
@@ -15,6 +16,8 @@ int main()
     thread_test();
     
     all_of_example();
+    find_not_example();
+    generate_uuid_example();
     
 // check x64 or x86
 #if __GNUC__

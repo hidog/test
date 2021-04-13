@@ -41,7 +41,8 @@ include_directories( ${INCLUDE_PATH} )
 set( SOURCE main.cpp 
             ${CMAKE_SOURCE_DIR}/../json.cpp
             ${CMAKE_SOURCE_DIR}/../thread.cpp
-            ${CMAKE_SOURCE_DIR}/../algorithm.cpp )
+            ${CMAKE_SOURCE_DIR}/../algorithm.cpp 
+            ${CMAKE_SOURCE_DIR}/../uuid.cpp )
 
 # head
 #set( HEAD ${CMAKE_SOURCE_DIR}/src/numeric/vector.h )
@@ -52,7 +53,7 @@ add_executable( ${PROJECT_NAME} ${SOURCE}  )
 find_package( Boost REQUIRED COMPONENTS
                     system thread )
                     
-target_link_libraries( ${PROJECT_NAME} Boost::system Boost::thread )
+target_link_libraries( ${PROJECT_NAME} Boost::system Boost::thread pthread )
 
 #target_link_libraries( ${PROJECT_NAME} boost_system boost_thread pthread)
 
