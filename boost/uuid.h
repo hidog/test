@@ -1,6 +1,6 @@
 #ifndef UUID_H
 #define UUID_H
 
-void uuid_test();
+void generate_uuid_example();
 
 #endif

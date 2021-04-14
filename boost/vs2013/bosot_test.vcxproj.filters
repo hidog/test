@@ -30,6 +30,12 @@
     <ClInclude Include="..\json.h">
       <Filter>src</Filter>
     </ClInclude>
+    <ClInclude Include="..\algorithm.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\thread.h">
+      <Filter>src</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -39,6 +45,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\json.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\algorithm.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\thread.cpp">
       <Filter>src</Filter>
     </ClCompile>
   </ItemGroup>
