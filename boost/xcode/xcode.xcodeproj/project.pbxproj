@@ -7,12 +7,12 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		6D30639B2625BB8700425BF8 /* libboost_thread.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6D30639A2625BB8700425BF8 /* libboost_thread.a */; };
-		6D3063A52625BBC000425BF8 /* algorithm.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6D30639D2625BBC000425BF8 /* algorithm.cpp */; };
-		6D3063A62625BBC000425BF8 /* uuid.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6D30639F2625BBC000425BF8 /* uuid.cpp */; };
-		6D3063A72625BBC000425BF8 /* json.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6D3063A12625BBC000425BF8 /* json.cpp */; };
-		6D3063A82625BBC000425BF8 /* thread.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6D3063A42625BBC000425BF8 /* thread.cpp */; };
 		6D5A9CCE19D244C9003587FD /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6D5A9CCD19D244C9003587FD /* main.cpp */; };
+		6D6DC78226267C4A00F80C4C /* json.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6D6DC77B26267C4A00F80C4C /* json.cpp */; };
+		6D6DC78326267C4A00F80C4C /* algorithm.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6D6DC77C26267C4A00F80C4C /* algorithm.cpp */; };
+		6D6DC78426267C4A00F80C4C /* thread.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6D6DC77D26267C4A00F80C4C /* thread.cpp */; };
+		6D6DC78526267C4A00F80C4C /* uuid.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6D6DC78026267C4A00F80C4C /* uuid.cpp */; };
+		6D6DC78B26267C7C00F80C4C /* libboost_thread.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6D6DC78A26267C7C00F80C4C /* libboost_thread.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -28,17 +28,17 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		6D30639A2625BB8700425BF8 /* libboost_thread.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libboost_thread.a; path = ../../../boost/stage/lib/libboost_thread.a; sourceTree = "<group>"; };
-		6D30639D2625BBC000425BF8 /* algorithm.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = algorithm.cpp; path = ../../algorithm.cpp; sourceTree = "<group>"; };
-		6D30639E2625BBC000425BF8 /* json.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = json.h; path = ../../json.h; sourceTree = "<group>"; };
-		6D30639F2625BBC000425BF8 /* uuid.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = uuid.cpp; path = ../../uuid.cpp; sourceTree = "<group>"; };
-		6D3063A02625BBC000425BF8 /* algorithm.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = algorithm.h; path = ../../algorithm.h; sourceTree = "<group>"; };
-		6D3063A12625BBC000425BF8 /* json.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = json.cpp; path = ../../json.cpp; sourceTree = "<group>"; };
-		6D3063A22625BBC000425BF8 /* uuid.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = uuid.h; path = ../../uuid.h; sourceTree = "<group>"; };
-		6D3063A32625BBC000425BF8 /* thread.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = thread.h; path = ../../thread.h; sourceTree = "<group>"; };
-		6D3063A42625BBC000425BF8 /* thread.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = thread.cpp; path = ../../thread.cpp; sourceTree = "<group>"; };
 		6D5A9CCA19D244C9003587FD /* xcode */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = xcode; sourceTree = BUILT_PRODUCTS_DIR; };
 		6D5A9CCD19D244C9003587FD /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
+		6D6DC77A26267C4A00F80C4C /* json.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = json.h; path = ../json.h; sourceTree = "<group>"; };
+		6D6DC77B26267C4A00F80C4C /* json.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = json.cpp; path = ../json.cpp; sourceTree = "<group>"; };
+		6D6DC77C26267C4A00F80C4C /* algorithm.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = algorithm.cpp; path = ../algorithm.cpp; sourceTree = "<group>"; };
+		6D6DC77D26267C4A00F80C4C /* thread.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = thread.cpp; path = ../thread.cpp; sourceTree = "<group>"; };
+		6D6DC77E26267C4A00F80C4C /* uuid.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = uuid.h; path = ../uuid.h; sourceTree = "<group>"; };
+		6D6DC77F26267C4A00F80C4C /* algorithm.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = algorithm.h; path = ../algorithm.h; sourceTree = "<group>"; };
+		6D6DC78026267C4A00F80C4C /* uuid.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = uuid.cpp; path = ../uuid.cpp; sourceTree = "<group>"; };
+		6D6DC78126267C4A00F80C4C /* thread.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = thread.h; path = ../thread.h; sourceTree = "<group>"; };
+		6D6DC78A26267C7C00F80C4C /* libboost_thread.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libboost_thread.a; path = ../../../boost/stage/lib/libboost_thread.a; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -46,32 +46,17 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				6DA19185261CB98A009D819A /* libboost_thread.a in Frameworks */,
+				6D6DC78B26267C7C00F80C4C /* libboost_thread.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		6D30639C2625BBB300425BF8 /* src */ = {
-			isa = PBXGroup;
-			children = (
-				6D30639D2625BBC000425BF8 /* algorithm.cpp */,
-				6D3063A02625BBC000425BF8 /* algorithm.h */,
-				6D3063A12625BBC000425BF8 /* json.cpp */,
-				6D30639E2625BBC000425BF8 /* json.h */,
-				6D3063A42625BBC000425BF8 /* thread.cpp */,
-				6D3063A32625BBC000425BF8 /* thread.h */,
-				6D30639F2625BBC000425BF8 /* uuid.cpp */,
-				6D3063A22625BBC000425BF8 /* uuid.h */,
-			);
-			path = src;
-			sourceTree = "<group>";
-		};
 		6D5A9CC119D244C9003587FD = {
 			isa = PBXGroup;
 			children = (
-				6DA19178261CB8EE009D819A /* src */,
+				6D6DC78726267C5000F80C4C /* src */,
 				6D5A9DD419D248CC003587FD /* boost_lib */,
 				6D5A9CCC19D244C9003587FD /* xcode */,
 				6D5A9CCB19D244C9003587FD /* Products */,
@@ -97,24 +82,24 @@
 		6D5A9DD419D248CC003587FD /* boost_lib */ = {
 			isa = PBXGroup;
 			children = (
-				6DA19184261CB98A009D819A /* libboost_thread.a */,
+				6D6DC78A26267C7C00F80C4C /* libboost_thread.a */,
 			);
 			name = boost_lib;
 			sourceTree = "<group>";
 		};
-		6DA19178261CB8EE009D819A /* src */ = {
+		6D6DC78726267C5000F80C4C /* src */ = {
 			isa = PBXGroup;
 			children = (
-				6DA1917A261CB900009D819A /* algorithm.cpp */,
-				6DA1917D261CB900009D819A /* algorithm.h */,
-				6DA1917B261CB900009D819A /* json.cpp */,
-				6DA1917E261CB900009D819A /* json.h */,
-				6DA1917C261CB900009D819A /* thread.cpp */,
-				6DA19179261CB900009D819A /* thread.h */,
-				6D63E79F2625B8370044B504 /* uuid.cpp */,
-				6D63E7A02625B8370044B504 /* uuid.h */,
+				6D6DC77C26267C4A00F80C4C /* algorithm.cpp */,
+				6D6DC77F26267C4A00F80C4C /* algorithm.h */,
+				6D6DC77B26267C4A00F80C4C /* json.cpp */,
+				6D6DC77A26267C4A00F80C4C /* json.h */,
+				6D6DC77D26267C4A00F80C4C /* thread.cpp */,
+				6D6DC78126267C4A00F80C4C /* thread.h */,
+				6D6DC78026267C4A00F80C4C /* uuid.cpp */,
+				6D6DC77E26267C4A00F80C4C /* uuid.h */,
 			);
-			path = src;
+			name = src;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -176,10 +161,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				6D5A9CCE19D244C9003587FD /* main.cpp in Sources */,
-				6DA1917F261CB900009D819A /* algorithm.cpp in Sources */,
-				6DA19180261CB900009D819A /* json.cpp in Sources */,
-				6D63E7A12625B8380044B504 /* uuid.cpp in Sources */,
-				6DA19181261CB900009D819A /* thread.cpp in Sources */,
+				6D6DC78226267C4A00F80C4C /* json.cpp in Sources */,
+				6D6DC78326267C4A00F80C4C /* algorithm.cpp in Sources */,
+				6D6DC78526267C4A00F80C4C /* uuid.cpp in Sources */,
+				6D6DC78426267C4A00F80C4C /* thread.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

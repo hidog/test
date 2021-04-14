@@ -144,8 +144,6 @@ void	boost_json_example_4()
 
 	//for( int i = 0; i < vec.size(); i++ )
 		//std::cout << vec[i] << " ";	
-
-	std::cout << "\n\n";
 }
 
 
@@ -164,5 +162,5 @@ void	boost_json_example()
 	boost_json_example_3();
 	boost_json_example_4();
 
-	std::cout << "\n\n\n";
+	std::cout << "\n";
 }
