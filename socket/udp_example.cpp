@@ -75,14 +75,13 @@ void udp_hello_server()
         return;
     }
 
-    //char * sendData = "hello, server.";
-    //sendto(sclient, sendData, strlen(sendData), 0, (sockaddr *)&sin, len);
+    printf( "bind success. wait for client data...\n" );
 
     // receive remote data
     sockaddr_in remote_addr;
     int remote_len = sizeof(remote_addr);
 
-    char recv_data[100];
+    char recv_data[100] = {0};
     int ret;
     ret = recvfrom( server_skt, recv_data, sizeof recv_data, 0, (sockaddr*)&remote_addr, &remote_len );
 
