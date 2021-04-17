@@ -1,7 +1,9 @@
 #include <iostream>
+#include "../udp_example.h"
 
 int main()
 {
-    std::cout << "test";
+    udp_hello_client();
+    
     return 0;
 }

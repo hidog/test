@@ -1,12 +1,27 @@
 #include "udp_example.h"
-#include <WinSock2.h>
 #include <stdio.h>
+#include <string.h>
 
+#ifdef _WIN32
+#include <WinSock2.h>
+#elif defined(UNIX)
+#include <unistd.h>
+#include <sys/socket.h>
+#include <sys/types.h> 
+#include <arpa/inet.h>  // 抽空研究這些header file
+#endif
+
+
+
+#ifdef UNIX
+typedef int SOCKET;
+#endif
 
 
 
 void udp_hello_client()
 {
+#ifdef _WIN32
     // windows need init
     WORD socket_version = MAKEWORD(2,2);
     WSADATA wsa_data; 
@@ -15,6 +30,7 @@ void udp_hello_client()
 		printf("init error\n");
         return;
     }
+#endif
 
     // create socket
     SOCKET client_skt = socket( PF_INET, SOCK_DGRAM, IPPROTO_UDP );
@@ -22,8 +38,15 @@ void udp_hello_client()
     sockaddr_in remote_addr;
     remote_addr.sin_family = AF_INET;
     remote_addr.sin_port = htons(12345);
+    
+#ifdef _WIN32
     remote_addr.sin_addr.S_un.S_addr = inet_addr("36.226.252.251");
-    int remote_len = sizeof(remote_addr);
+    int remote_len = sizeof(remote_addr); 
+#elif defined(UNIX)
+    remote_addr.sin_addr.s_addr = inet_addr( "36.226.252.251" );
+    //inet_pton( AF_INET, "127.0.0.1", &servaddr.sin_addr );  // 有空研究一下這些函數的差別,是否有多重寫法
+    socklen_t remote_len = sizeof(remote_addr);
+#endif
     
     // send data
     char send_data[100] = "hello, server. this is client\n";
@@ -39,16 +62,21 @@ void udp_hello_client()
     else    
         printf( "ret = %d <= 0. error\n", ret );
 
+#ifdef _WIN32
     closesocket( client_skt );
     WSACleanup();
+#elif defined(UNIX)
+    close(client_skt);
+#endif
 }
 
 
 
 
-
+#if 0
 void udp_hello_server()
 {
+#ifdef _WIN32
     // windows need init
 	WORD socket_version = MAKEWORD(2,2);
     WSADATA wsa_data; 
@@ -57,6 +85,7 @@ void udp_hello_server()
 		printf("init error\n");
         return;
     }
+#endif
 
     // bind server socket
     SOCKET server_skt = socket( PF_INET, SOCK_DGRAM, IPPROTO_UDP );
@@ -103,3 +132,4 @@ void udp_hello_server()
     closesocket(server_skt);
     WSACleanup();
 }
+#endif
