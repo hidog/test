@@ -3,7 +3,7 @@
 
 int main()
 {
-    udp_hello_server();
+    udp_hello_client();
 
     return 0;
 }
