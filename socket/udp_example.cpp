@@ -12,9 +12,21 @@
 #endif
 
 
+/*
+https://man7.org/linux/man-pages/man2/bind.2.html
+https://linux.die.net/man/3/close
+https://unix.stackexchange.com/questions/386536/when-how-does-linux-decides-to-close-a-socket-on-application-kill
+https://askubuntu.com/questions/320678/how-to-stop-socket-with-linux-command
+https://www.mdeditor.tw/pl/p8ys/zh-tw
+https://codertw.com/%E7%A8%8B%E5%BC%8F%E8%AA%9E%E8%A8%80/624590/
+https://codertw.com/%E5%89%8D%E7%AB%AF%E9%96%8B%E7%99%BC/392331/
+這幾個網站整理一下
+*/
+
 
 #ifdef UNIX
 typedef int SOCKET;
+#define SOCKET_ERROR -1
 #endif
 
 
@@ -73,7 +85,7 @@ void udp_hello_client()
 
 
 
-#if 0
+
 void udp_hello_server()
 {
 #ifdef _WIN32
@@ -93,14 +105,25 @@ void udp_hello_server()
     sockaddr_in local_addr;
     local_addr.sin_family = AF_INET;
     local_addr.sin_port = htons(12345);
+
+#ifdef _WIN32
     local_addr.sin_addr.S_un.S_addr = INADDR_ANY; // inet_addr("111.248.195.94");
+#elif defined(UNIX)
+    local_addr.sin_addr.s_addr = INADDR_ANY; 
+#endif
     int local_len = sizeof(local_addr);
     
+    
+    // https://man7.org/linux/man-pages/man2/bind.2.html   see how to handle error
     if( bind(server_skt, (sockaddr*)&local_addr, local_len ) == SOCKET_ERROR )
     {
         printf("bind error !\n");
+#ifdef _WIN32
         closesocket(server_skt);
         WSACleanup();
+#elif defined(UNIX)
+        close(server_skt);
+#endif
         return;
     }
 
@@ -108,7 +131,11 @@ void udp_hello_server()
 
     // receive remote data
     sockaddr_in remote_addr;
+#ifdef _WIN32
     int remote_len = sizeof(remote_addr);
+#elif defined(UNIX)
+    socklen_t remote_len = sizeof(remote_addr);
+#endif
 
     char recv_data[100] = {0};
     int ret;
@@ -119,8 +146,12 @@ void udp_hello_server()
     else
     {
         printf( "ret = %d, error\n", ret );
+#ifdef _WIN32
         closesocket( server_skt );
         WSACleanup();
+#elif defined(UNIX)
+        close( server_skt );
+#endif
         return;
     }
 
@@ -129,7 +160,11 @@ void udp_hello_server()
     ret = sendto( server_skt, send_data, strlen(send_data), 0, (sockaddr*)&remote_addr, remote_len );
     printf( "send back. ret = %d\n", ret );
 
+#ifdef _WIN32
     closesocket(server_skt);
     WSACleanup();
-}
+#elif defined(UNIX)
+    close(server_skt);
 #endif
+}
+
