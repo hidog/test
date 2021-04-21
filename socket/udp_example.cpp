@@ -96,7 +96,7 @@ void udp_hello_client( std::string ip, int port )
 
     // send data
     char send_data[100] = "hello, server. this is client\n";
-    ssize_t ret;
+    int ret;
     ret = sendto( client_skt, send_data, strlen(send_data), 0, (sockaddr *)&remote_addr, remote_len );
     printf( "client send, ret = %ld\n", ret );
 
@@ -167,13 +167,21 @@ void udp_hello_client_c( std::string ip, int port )
 
     // send data
     char send_data[100] = "hello, server. this is client\n";
-    ssize_t ret;
+    int ret;
+#if defined(UNIX) || defined(MACOS)
     ret = write( client_skt, send_data, strlen(send_data) );
+#elif defined(_WIN32)
+    ret = send( client_skt, send_data, strlen(send_data), 0 );
+#endif
     printf( "client send, ret = %ld\n", ret );
 
     // receive back
     char recv_data[100] = {0};
+#if defined(UNIX) || defined(MACOS)
     ret = read( client_skt, recv_data, 100 );
+#elif defined(_WIN32)
+    ret = recv( client_skt, recv_data, 100, 0 );
+#endif
     if( ret > 0 )
     {
         printf( "recv from ip = %s, port = %d\n", inet_ntoa(remote_addr.sin_addr), ntohs(remote_addr.sin_port) );
@@ -243,7 +251,7 @@ void udp_hello_server( int port )
     socklen_t remote_len = sizeof(remote_addr);
 
     char recv_data[100] = {0};
-    ssize_t ret;
+    int ret;
     ret = recvfrom( server_skt, recv_data, sizeof recv_data, 0, (sockaddr*)&remote_addr, &remote_len );
 
     if( ret > 0 )   
