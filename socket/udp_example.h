@@ -5,5 +5,6 @@
 
 void udp_hello_server( int port );
 void udp_hello_client( std::string ip, int port );
+void udp_hello_client_c( std::string ip, int port );
 
 #endif

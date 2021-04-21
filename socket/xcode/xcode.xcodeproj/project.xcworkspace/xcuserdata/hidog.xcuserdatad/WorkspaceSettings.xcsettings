@@ -5,7 +5,7 @@
 	<key>BuildLocationStyle</key>
 	<string>CustomLocation</string>
 	<key>CustomBuildIntermediatesPath</key>
-	<string>/Users/hidog/Desktop/Build/Intermediates.noindex</string>
+	<string>/Users/hidog/code/build</string>
 	<key>CustomBuildLocationType</key>
 	<string>Absolute</string>
 	<key>CustomBuildProductsPath</key>
