@@ -1,6 +1,6 @@
 #include "udp_example.h"
 #include <stdio.h>
-#include <string.h>
+#include <string>
 
 #ifdef _WIN32
 #include <WinSock2.h>
@@ -27,11 +27,14 @@ https://codertw.com/%E5%89%8D%E7%AB%AF%E9%96%8B%E7%99%BC/392331/
 #ifdef UNIX
 typedef int SOCKET;
 #define SOCKET_ERROR -1
+#elif defined(_WIN32)
+#define bzero(ptr,size)     memset( (ptr), 0, (size) )
+typedef int socklen_t;
 #endif
 
 
 
-void udp_hello_client()
+void udp_hello_client( std::string ip, int port )
 {
 #ifdef _WIN32
     // windows need init
@@ -46,20 +49,53 @@ void udp_hello_client()
 
     // create socket
     SOCKET client_skt = socket( PF_INET, SOCK_DGRAM, IPPROTO_UDP );
-    
+    if( client_skt == INVALID_SOCKET )
+    {
+        printf("create socket error.\n");
+        return;
+    }
+   
+    // 用底下的bind可以做到指定client port的效果,但不設定也會自動設定port.
+#if 0
+    sockaddr_in local_addr;
+    bzero(&local_addr, sizeof local_addr);  // windows沒有bzero
+    local_addr.sin_family = AF_INET;
+    local_addr.sin_port = htons(24256);
+
+#ifdef _WIN32
+    local_addr.sin_addr.S_un.S_addr = INADDR_ANY; // inet_addr("111.248.195.94");
+#elif defined(UNIX)
+    local_addr.sin_addr.s_addr = INADDR_ANY;
+#endif
+    int local_len = sizeof(local_addr);
+
+    // https://man7.org/linux/man-pages/man2/bind.2.html   see how to handle error
+    if (bind(client_skt, (sockaddr*)&local_addr, local_len) == SOCKET_ERROR)
+    {
+        printf("bind error !\n");
+#ifdef _WIN32
+        closesocket(client_skt);
+        WSACleanup();
+#elif defined(UNIX)
+        close(server_skt);
+#endif
+        return;
+    }
+#endif
+
     sockaddr_in remote_addr;
+    bzero( &remote_addr, sizeof remote_addr );
     remote_addr.sin_family = AF_INET;
-    remote_addr.sin_port = htons(12345);
+    remote_addr.sin_port = htons(port);
     
 #ifdef _WIN32
-    remote_addr.sin_addr.S_un.S_addr = inet_addr("36.226.252.251");
-    int remote_len = sizeof(remote_addr); 
+    remote_addr.sin_addr.S_un.S_addr = inet_addr( ip.c_str() );  
 #elif defined(UNIX)
-    remote_addr.sin_addr.s_addr = inet_addr( "36.226.252.251" );
+    remote_addr.sin_addr.s_addr = inet_addr( ip.c_str() );
     //inet_pton( AF_INET, "127.0.0.1", &servaddr.sin_addr );  // 有空研究一下這些函數的差別,是否有多重寫法
-    socklen_t remote_len = sizeof(remote_addr);
 #endif
-    
+    socklen_t remote_len = sizeof(remote_addr);
+
     // send data
     char send_data[100] = "hello, server. this is client\n";
     int ret;
@@ -67,10 +103,13 @@ void udp_hello_client()
     printf( "client send, ret = %d\n", ret );
 
     // receive back
-    char recv_data[100];
+    char recv_data[100] = {0};
     ret = recvfrom( client_skt, recv_data, 100, 0, (sockaddr *)&remote_addr, &remote_len );
     if( ret > 0 )
+    {
+        printf( "recv from ip = %s, port = %d\n", inet_ntoa(remote_addr.sin_addr), ntohs(remote_addr.sin_port) );
         printf( "receive message from server. ret = %d, data = %s\n", ret, recv_data );
+    }
     else    
         printf( "ret = %d <= 0. error\n", ret );
 
@@ -86,7 +125,7 @@ void udp_hello_client()
 
 
 
-void udp_hello_server()
+void udp_hello_server( int port )
 {
 #ifdef _WIN32
     // windows need init
@@ -103,8 +142,9 @@ void udp_hello_server()
     SOCKET server_skt = socket( PF_INET, SOCK_DGRAM, IPPROTO_UDP );
     
     sockaddr_in local_addr;
+    bzero( &local_addr, sizeof local_addr );  // windows沒有bzero
     local_addr.sin_family = AF_INET;
-    local_addr.sin_port = htons(12345);
+    local_addr.sin_port = htons(port);
 
 #ifdef _WIN32
     local_addr.sin_addr.S_un.S_addr = INADDR_ANY; // inet_addr("111.248.195.94");
@@ -112,7 +152,6 @@ void udp_hello_server()
     local_addr.sin_addr.s_addr = INADDR_ANY; 
 #endif
     int local_len = sizeof(local_addr);
-    
     
     // https://man7.org/linux/man-pages/man2/bind.2.html   see how to handle error
     if( bind(server_skt, (sockaddr*)&local_addr, local_len ) == SOCKET_ERROR )
@@ -131,18 +170,18 @@ void udp_hello_server()
 
     // receive remote data
     sockaddr_in remote_addr;
-#ifdef _WIN32
-    int remote_len = sizeof(remote_addr);
-#elif defined(UNIX)
+    bzero( &remote_addr, sizeof remote_addr );
     socklen_t remote_len = sizeof(remote_addr);
-#endif
 
     char recv_data[100] = {0};
     int ret;
     ret = recvfrom( server_skt, recv_data, sizeof recv_data, 0, (sockaddr*)&remote_addr, &remote_len );
 
-    if( ret > 0 )    
+    if( ret > 0 )   
+    {
+        printf( "recv from ip = %s, port = %d\n", inet_ntoa(remote_addr.sin_addr), ntohs(remote_addr.sin_port) );
         printf( "recv data. ret = %d, recv_data = %s\n", ret, recv_data );    
+    }
     else
     {
         printf( "ret = %d, error\n", ret );
@@ -166,5 +205,7 @@ void udp_hello_server()
 #elif defined(UNIX)
     close(server_skt);
 #endif
+
+
 }
 
