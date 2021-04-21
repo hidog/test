@@ -1,9 +1,9 @@
-﻿#include "tool.h"
+#include "tool.h"
 
 #ifdef _WIN32
 #include <WinSock2.h>
 #include <ws2tcpip.h>
-#elif defined(UNIX)
+#elif defined(UNIX) || defined(MACOS)
 #include <arpa/inet.h>
 #endif
 
