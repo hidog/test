@@ -1,6 +1,7 @@
 ﻿#include "udp_example.h"
 #include <stdio.h>
 #include <string>
+#include <string.h>
 
 #ifdef _WIN32
 #include <WinSock2.h>
@@ -8,25 +9,22 @@
 #include <unistd.h>
 #include <sys/socket.h>
 #include <sys/types.h> 
-#include <arpa/inet.h>  // 抽空研究這些header file
+#include <arpa/inet.h>
 #endif
 
 
 /*
 https://man7.org/linux/man-pages/man2/bind.2.html
-https://linux.die.net/man/3/close
-https://unix.stackexchange.com/questions/386536/when-how-does-linux-decides-to-close-a-socket-on-application-kill
-https://askubuntu.com/questions/320678/how-to-stop-socket-with-linux-command
 https://www.mdeditor.tw/pl/p8ys/zh-tw
 https://codertw.com/%E7%A8%8B%E5%BC%8F%E8%AA%9E%E8%A8%80/624590/
 https://codertw.com/%E5%89%8D%E7%AB%AF%E9%96%8B%E7%99%BC/392331/
-這幾個網站整理一下
 */
 
 
 #ifdef UNIX
 typedef int SOCKET;
 #define SOCKET_ERROR -1
+#define INVALID_SOCKET -1
 #elif defined(_WIN32)
 #define bzero(ptr,size)     memset( (ptr), 0, (size) )
 typedef int socklen_t;
@@ -92,7 +90,7 @@ void udp_hello_client( std::string ip, int port )
     remote_addr.sin_addr.S_un.S_addr = inet_addr( ip.c_str() );  
 #elif defined(UNIX)
     remote_addr.sin_addr.s_addr = inet_addr( ip.c_str() );
-    //inet_pton( AF_INET, "127.0.0.1", &servaddr.sin_addr );  // 有空研究一下這些函數的差別,是否有多重寫法
+    //inet_pton( AF_INET, "127.0.0.1", &servaddr.sin_addr );  // 另一個作法
 #endif
     socklen_t remote_len = sizeof(remote_addr);
 

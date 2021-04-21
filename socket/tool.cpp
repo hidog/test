@@ -1,14 +1,20 @@
 ﻿#include "tool.h"
+
+#ifdef _WIN32
 #include <WinSock2.h>
 #include <ws2tcpip.h>
+#elif defined(UNIX)
+#include <arpa/inet.h>
+#endif
+
 #include <stdio.h>
+
 
 
 void transform_test()
 {
     // 參考 http://haoyuanliu.github.io/2017/01/15/%E5%9C%B0%E5%9D%80%E8%BD%AC%E6%8D%A2%E5%87%BD%E6%95%B0inet-addr-inet-aton-inet-ntoa-%E5%92%8Cinet-ntop-inet-pton/
 
-    int i;
     char lo[] = "127.0.0.1";
     struct in_addr netAddr;
 
@@ -19,7 +25,7 @@ void transform_test()
     printf("StrIP: %s\n", strAddr);
 
 #ifdef UNIX
-    int ret = inet_aton(strAddr, &netAddr);
+    inet_aton(strAddr, &netAddr);
     printf("NetIP: 0x%x\n", netAddr.s_addr);
 #endif
 

@@ -17,11 +17,16 @@ message("define unix")
 set( DEFINE ${DEFINE} -DUNIX )
 add_definitions( ${DEFINE} ) 
 
+# head
+set( HEAD ${CMAKE_SOURCE_DIR}/../udp_example.h
+          ${CMAKE_SOURCE_DIR}/../tool.h )
+
 # source 
 set( SOURCE main.cpp 
-            ${CMAKE_SOURCE_DIR}/../udp_example.cpp )
+            ${CMAKE_SOURCE_DIR}/../udp_example.cpp 
+            ${CMAKE_SOURCE_DIR}/../tool.cpp )
 
 # exec file
-add_executable( ${PROJECT_NAME} ${SOURCE} )
+add_executable( ${PROJECT_NAME} ${SOURCE} ${HEAD} )
 
 
