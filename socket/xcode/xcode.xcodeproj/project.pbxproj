@@ -7,9 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		6D2DDB3A2630DB130097A4D5 /* tool.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6D2DDB372630DB130097A4D5 /* tool.cpp */; };
+		6D2DDB3B2630DB130097A4D5 /* udp_example.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6D2DDB382630DB130097A4D5 /* udp_example.cpp */; };
 		6D72F0C6263053A4007DC83F /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6D72F0C5263053A4007DC83F /* main.cpp */; };
-		6D72F0D2263054A1007DC83F /* tool.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6D72F0CE263054A1007DC83F /* tool.cpp */; };
-		6D72F0D3263054A1007DC83F /* udp_example.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6D72F0D1263054A1007DC83F /* udp_example.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -25,12 +25,12 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		6D2DDB362630DB130097A4D5 /* udp_example.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = udp_example.h; path = ../udp_example.h; sourceTree = "<group>"; };
+		6D2DDB372630DB130097A4D5 /* tool.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = tool.cpp; path = ../tool.cpp; sourceTree = "<group>"; };
+		6D2DDB382630DB130097A4D5 /* udp_example.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = udp_example.cpp; path = ../udp_example.cpp; sourceTree = "<group>"; };
+		6D2DDB392630DB130097A4D5 /* tool.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = tool.h; path = ../tool.h; sourceTree = "<group>"; };
 		6D72F0C2263053A4007DC83F /* xcode */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = xcode; sourceTree = BUILT_PRODUCTS_DIR; };
 		6D72F0C5263053A4007DC83F /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
-		6D72F0CE263054A1007DC83F /* tool.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = tool.cpp; path = ../../tool.cpp; sourceTree = "<group>"; };
-		6D72F0CF263054A1007DC83F /* tool.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = tool.h; path = ../../tool.h; sourceTree = "<group>"; };
-		6D72F0D0263054A1007DC83F /* udp_example.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = udp_example.h; path = ../../udp_example.h; sourceTree = "<group>"; };
-		6D72F0D1263054A1007DC83F /* udp_example.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = udp_example.cpp; path = ../../udp_example.cpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -44,10 +44,21 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		6D2DDB352630DB020097A4D5 /* src */ = {
+			isa = PBXGroup;
+			children = (
+				6D2DDB372630DB130097A4D5 /* tool.cpp */,
+				6D2DDB392630DB130097A4D5 /* tool.h */,
+				6D2DDB382630DB130097A4D5 /* udp_example.cpp */,
+				6D2DDB362630DB130097A4D5 /* udp_example.h */,
+			);
+			name = src;
+			sourceTree = "<group>";
+		};
 		6D72F0B9263053A4007DC83F = {
 			isa = PBXGroup;
 			children = (
-				6D72F0CD26305491007DC83F /* src */,
+				6D2DDB352630DB020097A4D5 /* src */,
 				6D72F0C4263053A4007DC83F /* xcode */,
 				6D72F0C3263053A4007DC83F /* Products */,
 			);
@@ -67,17 +78,6 @@
 				6D72F0C5263053A4007DC83F /* main.cpp */,
 			);
 			path = xcode;
-			sourceTree = "<group>";
-		};
-		6D72F0CD26305491007DC83F /* src */ = {
-			isa = PBXGroup;
-			children = (
-				6D72F0CE263054A1007DC83F /* tool.cpp */,
-				6D72F0CF263054A1007DC83F /* tool.h */,
-				6D72F0D1263054A1007DC83F /* udp_example.cpp */,
-				6D72F0D0263054A1007DC83F /* udp_example.h */,
-			);
-			path = src;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -137,8 +137,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				6D72F0C6263053A4007DC83F /* main.cpp in Sources */,
-				6D72F0D3263054A1007DC83F /* udp_example.cpp in Sources */,
-				6D72F0D2263054A1007DC83F /* tool.cpp in Sources */,
+				6D2DDB3B2630DB130097A4D5 /* udp_example.cpp in Sources */,
+				6D2DDB3A2630DB130097A4D5 /* tool.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
