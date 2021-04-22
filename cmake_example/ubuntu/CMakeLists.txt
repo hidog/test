@@ -8,6 +8,24 @@ message("root path =" ${CMAKE_SOURCE_DIR} )
 set( PROJECT_NAME cmake_ub_test )
 project(${PROJECT_NAME})
 
+
+
+
+# 參考這個網址  設置一些flag的作法
+# https://stackoverflow.com/questions/10085945/set-cflags-and-cxxflags-options-using-cmake/41843596   
+# set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -O0 -ggdb")
+# set(CMAKE_BUILD_TYPE DEBUG)
+# set(CMAKE_C_FLAGS "-O0 -ggdb")
+# set(CMAKE_C_FLAGS_DEBUG "-O0 -ggdb")
+# set(CMAKE_C_FLAGS_RELEASE "-O0 -ggdb")
+# set(CMAKE_CXX_FLAGS "-O0 -ggdb")
+# set(CMAKE_CXX_FLAGS_DEBUG "-O0 -ggdb")
+# set(CMAKE_CXX_FLAGS_RELEASE "-O0 -ggdb")
+
+
+
+
+
 # output path
 set( CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin )
 
