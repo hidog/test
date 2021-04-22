@@ -4,6 +4,10 @@
 #include <string.h>
 #include <stdio.h>
 
+// 使用qtcreator的時候報錯, flag設c11雖然能解決,卻遇到其他錯誤,所以最後直接定義
+#ifndef NULL
+#define NULL 0
+#endif
 
 
 
@@ -21,41 +25,43 @@ void *get_in_addr(struct sockaddr *sa)
 
 
 
-void udp_hello_server_2( int port )
+void udp_hello_server_2( const char* port )
 {
-
-    int *ptr = NULL;
-
 #if 0
-    int sockfd;
-    struct addrinfo hints, *servinfo, *p;
-    int rv;
-    int numbytes;
+    int ret;
+
+    struct addrinfo hints, *servinfo, *ptr;
+
+    int skt;
+    /*int numbytes;
     struct sockaddr_storage their_addr;
     char buf[200];
     socklen_t addr_len;
-    char s[INET6_ADDRSTRLEN];
+    char str[INET6_ADDRSTRLEN];*/
 
     memset(&hints, 0, sizeof hints);
 
-    hints.ai_family = AF_UNSPEC; // 設定 AF_INET 以強制使用 IPv4
-    hints.ai_socktype = SOCK_DGRAM;
-    hints.ai_flags = AI_PASSIVE; // 使用我的 IP
+    hints.ai_family     =   AF_UNSPEC; // 設定 AF_INET 以強制使用 IPv4
+    hints.ai_socktype   =   SOCK_DGRAM;
+    hints.ai_flags      =   AI_PASSIVE; // 使用我的 IP
 
-    if ((rv = getaddrinfo( std::nullptr, port, &hints, &servinfo)) != 0)
+
+    ret = getaddrinfo( NULL, port, &hints, &servinfo );
+    if( ret != 0)
     {
-      fprintf(stderr, "getaddrinfo: %s\n", gai_strerror(rv));
-      return 1;
+        printf(  "getaddrinfo: %s\n", gai_strerror(ret) );
+        return ;
     }
 
     // 用迴圈來找出全部的結果，並 bind 到首先找到能 bind 的
-    for(p = servinfo; p != NULL; p = p->ai_next) {
+    for( ptr = servinfo; ptr != NULL; ptr = ptr->ai_next)
+    {
+        skt = socket( ptr->ai_family, ptr->ai_socktype, ptr->ai_protocol);
 
-      if ((sockfd = socket(p->ai_family, p->ai_socktype,
-        p->ai_protocol)) == -1) {
-        perror("listener: socket");
-        continue;
-      }
+        if ( skt == -1) {
+            perror("listener: socket");
+            continue;
+          }
 
       if (bind(sockfd, p->ai_addr, p->ai_addrlen) == -1) {
         close(sockfd);
@@ -68,8 +74,10 @@ void udp_hello_server_2( int port )
 
     if (p == NULL) {
       fprintf(stderr, "listener: failed to bind socket\n");
-      return 2;
+      return ;
     }
+
+    #if 0
 
     freeaddrinfo(servinfo);
     printf("listener: waiting to recvfrom...\n");

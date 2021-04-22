@@ -9,8 +9,10 @@ message("root path =" ${CMAKE_SOURCE_DIR} )
 set( PROJECT_NAME socket_test )
 project(${PROJECT_NAME})
 
-set( CMAKE_C_FLAGS ${CMAKE_C_FLAGS} "-std=c++0x" )
-set( CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS} "-std=c++0x" )
+# 不設定C FLAG, 使用qtcreator的時候,會在 NULL的地方報錯
+# 設 c11, c++11, 使用 addrinfo 的時候會跳出 storage size of ‘hints’ isn’t known 的錯誤
+set( CMAKE_C_FLAGS ${CMAKE_C_FLAGS} "-std=gnu11" )
+set( CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS} "-std=gnu++11" )
 
 # output path
 set( CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin )
@@ -22,14 +24,16 @@ add_definitions( ${DEFINE} )
 
 # head
 set( HEAD ${CMAKE_SOURCE_DIR}/../udp_example.h
-	  ${CMAKE_SOURCE_DIR}/../udp_example_2.h
-          ${CMAKE_SOURCE_DIR}/../tool.h )
+          ${CMAKE_SOURCE_DIR}/../udp_example_2.h
+          ${CMAKE_SOURCE_DIR}/../tool.h 
+          ${CMAKE_SOURCE_DIR}/../tool_2.h )
 
 # source 
 set( SOURCE main.cpp 
             ${CMAKE_SOURCE_DIR}/../udp_example.cpp 
             ${CMAKE_SOURCE_DIR}/../udp_example_2.c
-            ${CMAKE_SOURCE_DIR}/../tool.cpp )
+            ${CMAKE_SOURCE_DIR}/../tool.cpp 
+            ${CMAKE_SOURCE_DIR}/../tool_2.cpp )
 
 # exec file
 add_executable( ${PROJECT_NAME} ${SOURCE} ${HEAD} )
