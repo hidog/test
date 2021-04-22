@@ -2,13 +2,24 @@
 #include "../../udp_example.h"
 #include "../../tool.h"
 
+extern "C" {
+#include "../../tool_2.h"
+#include "../../udp_example_2.h"
+}
+
+
+
 int main()
 {
-    transform_test();
+    //transform_test();
+    //test_getaddrinfo();
         
-    //udp_hello_server( 12345 );
-    udp_hello_client( std::string("122.116.84.59"), 12345 );
+    //udp_hello_server( 12349 );
+    //udp_hello_client( std::string("127.0.0.1"), 12349 );
     // 122.116.84.59
+    udp_hello_server_2( "12349" );
+    //udp_hello_client_2( "127.0.0.1", "12349" );
+
 
     system("PAUSE");
     return 0;

@@ -1,17 +1,27 @@
 #include "udp_example_2.h"
 
 #include <string.h>
-
-#include <netdb.h>
 #include <stdio.h>
+
+#if defined(UNIX)
+#include <netdb.h>
 #include <unistd.h>
 #include <arpa/inet.h>
+#elif defined(_WIN32)
+#include <WinSock2.h>
+#include <WS2tcpip.h>   // for sockaddr_in6
+#endif
+
 
 // 使用qtcreator的時候報錯, flag設c11雖然能解決,卻遇到其他錯誤,所以最後直接定義
 #ifndef NULL
 #define NULL 0
 #endif
 
+
+#ifdef _WIN32
+typedef int socklen_t;
+#endif
 
 
 // get sockaddr, IPv4 or IPv6:
@@ -68,13 +78,23 @@ int get_udp_socket( const char* ip, const char* port )
     ret = getaddrinfo( ip, port, &hints, &servinfo );
     if( ret != 0 )
     {
-        printf(  "gai_strerror: %s\n", gai_strerror(ret) );
+#ifdef UNICODE
+        printf(  "gai_strerror: %ws\n", gai_strerror(ret) );
+#else
+        printf("gai_strerror: %s\n", gai_strerror(ret));
+#endif
         return -1;
     }
 
     // 用迴圈來找出全部的結果，並 bind 到首先找到能 bind 的
     for( ptr = servinfo; ptr != NULL; ptr = ptr->ai_next )
     {
+#ifdef _WIN32
+        // windows平台會綁到ip6, 只好加workaround
+        if( ptr->ai_family == AF_INET6 )
+            continue;
+#endif
+
         skt = socket( ptr->ai_family, ptr->ai_socktype, ptr->ai_protocol );
 
         if ( skt == -1 )
@@ -96,7 +116,11 @@ int get_udp_socket( const char* ip, const char* port )
 
         if( ret == -1 )
         {
+#ifdef _WIN32
+            closesocket(skt);
+#else
             close(skt);
+#endif
             printf("bind or connect next skt...\n");
             continue;
         }
@@ -123,11 +147,16 @@ int get_udp_socket( const char* ip, const char* port )
 
 void udp_hello_server_2( const char* port )
 {
-    /*int numbytes;
-
-    char buf[200];
-
-    char str[INET6_ADDRSTRLEN];*/
+#ifdef _WIN32
+    // windows need init
+    WORD socket_version = MAKEWORD(2,2);
+    WSADATA wsa_data; 
+    if( WSAStartup( socket_version, &wsa_data ) != 0 )
+    {
+        printf("init error\n");
+        return;
+    }
+#endif
 
     struct sockaddr_storage remote_addr;
     socklen_t remote_len;
@@ -168,8 +197,13 @@ void udp_hello_server_2( const char* port )
     else
         printf("send back success, ret = %d\n", ret );
 
-
+#ifdef _WIN32
+    closesocket( skt );
+    WSACleanup();
+#elif defined(UNIX)
     close(skt);
+#endif
+
 }
 
 
@@ -177,11 +211,26 @@ void udp_hello_server_2( const char* port )
 
 void udp_hello_client_2( const char* ip, const char* port )
 {
+#ifdef _WIN32
+    // windows need init
+    WORD socket_version = MAKEWORD(2,2);
+    WSADATA wsa_data; 
+    if( WSAStartup( socket_version, &wsa_data ) != 0 )
+    {
+        printf("init error\n");
+        return;
+    }
+#endif
+
     int skt = get_udp_socket( ip, port );
 
     // send
     char send_buf[100] = "Hello, this is client\n";
+#ifdef _WIN32
+    int ret = send( skt, send_buf, strlen(send_buf), 0 );
+#else
     int ret = write( skt, send_buf, strlen(send_buf) );
+#endif
 
     if( ret < 0 )
     {
@@ -193,7 +242,11 @@ void udp_hello_client_2( const char* ip, const char* port )
 
     // recv
     char recv_buf[100] = {0};
+#ifdef _WIN32
+    ret = recv( skt, recv_buf, 100, 0 );
+#else
     ret = read( skt, recv_buf, 100 );
+#endif
 
     if( ret < 0 )
     {
@@ -203,5 +256,10 @@ void udp_hello_client_2( const char* ip, const char* port )
     else
         printf("recv from server. ret = %d, msg = %s\n", ret, recv_buf );
 
+#ifdef _WIN32
+    closesocket( skt );
+    WSACleanup();
+#elif defined(UNIX)
     close(skt);
+#endif
 }

@@ -1,21 +1,44 @@
 #include "tool_2.h"
 
+#if defined(UNIX)
 #include <netdb.h>
 #include <arpa/inet.h>  // 解決 inet_ntop 的 warning
+#elif defined(_WIN32)
+#include <WinSock2.h>
+#include <WS2tcpip.h>     // for getaddrinfo
+#include <ws2ipdef.h>     // for INET6_ADDRSTRLEN
+#endif
 
 #include <stdio.h>
 #include <string.h>
 
 
 
+// ubuntu下用qtcreator編譯會跳錯,最後決定直接定義.  
 #ifndef NULL
 #define NULL 0
 #endif
 
 
 
+// link with Ws2_32.lib
+//#pragma comment (lib, "Ws2_32.lib")
+
+
+
 void test_getaddrinfo()
 {
+#ifdef _WIN32
+    // windows need init
+    WORD socket_version = MAKEWORD(2,2);
+    WSADATA wsa_data; 
+    if( WSAStartup( socket_version, &wsa_data ) != 0 )
+    {
+        printf("init error\n");
+        return;
+    }
+#endif
+
     char ip_str[INET6_ADDRSTRLEN];
 
     int ret;
@@ -28,9 +51,14 @@ void test_getaddrinfo()
     hints.ai_flags      =   AI_PASSIVE;
 
     ret = getaddrinfo( NULL, "12345", &hints, &servinfo );
-    if( ret != 0)
+
+    if( ret != 0 )
     {
+#ifdef UNICODE
+        printf(  "getaddrinfo: %ws\n", gai_strerror(ret) );
+#else
         printf(  "getaddrinfo: %s\n", gai_strerror(ret) );
+#endif
         return;
     }
 
