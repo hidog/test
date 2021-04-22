@@ -88,7 +88,7 @@ void udp_hello_client( std::string ip, int port )
     remote_addr.sin_port = htons(port);
 #ifdef _WIN32
     remote_addr.sin_addr.S_un.S_addr = inet_addr( ip.c_str() );  
-#elif defined(UNIX)
+#elif defined(UNIX) || defined(MACOS)
     remote_addr.sin_addr.s_addr = inet_addr( ip.c_str() );
     //inet_pton( AF_INET, "127.0.0.1", &servaddr.sin_addr );  // 另一個作法
 #endif
@@ -98,7 +98,7 @@ void udp_hello_client( std::string ip, int port )
     char send_data[100] = "hello, server. this is client\n";
     int ret;
     ret = sendto( client_skt, send_data, strlen(send_data), 0, (sockaddr *)&remote_addr, remote_len );
-    printf( "client send, ret = %ld\n", ret );
+    printf( "client send, ret = %d\n", ret );
 
     // receive back
     char recv_data[100] = {0};
@@ -106,10 +106,10 @@ void udp_hello_client( std::string ip, int port )
     if( ret > 0 )
     {
         printf( "recv from ip = %s, port = %d\n", inet_ntoa(remote_addr.sin_addr), ntohs(remote_addr.sin_port) );
-        printf( "receive message from server. ret = %ld, data = %s\n", ret, recv_data );
+        printf( "receive message from server. ret = %d, data = %s\n", ret, recv_data );
     }
     else    
-        printf( "ret = %ld <= 0. error\n", ret );
+        printf( "ret = %d <= 0. error\n", ret );
 
 #ifdef _WIN32
     closesocket( client_skt );
@@ -173,7 +173,7 @@ void udp_hello_client_c( std::string ip, int port )
 #elif defined(_WIN32)
     ret = send( client_skt, send_data, strlen(send_data), 0 );
 #endif
-    printf( "client send, ret = %ld\n", ret );
+    printf( "client send, ret = %d\n", ret );
 
     // receive back
     char recv_data[100] = {0};
@@ -185,10 +185,10 @@ void udp_hello_client_c( std::string ip, int port )
     if( ret > 0 )
     {
         printf( "recv from ip = %s, port = %d\n", inet_ntoa(remote_addr.sin_addr), ntohs(remote_addr.sin_port) );
-        printf( "receive message from server. ret = %ld, data = %s\n", ret, recv_data );
+        printf( "receive message from server. ret = %d, data = %s\n", ret, recv_data );
     }
     else
-        printf( "ret = %ld <= 0. error\n", ret );
+        printf( "ret = %d <= 0. error\n", ret );
 
 #ifdef _WIN32
     closesocket( client_skt );
@@ -257,11 +257,11 @@ void udp_hello_server( int port )
     if( ret > 0 )   
     {
         printf( "recv from ip = %s, port = %d\n", inet_ntoa(remote_addr.sin_addr), ntohs(remote_addr.sin_port) );
-        printf( "recv data. ret = %ld, recv_data = %s\n", ret, recv_data );
+        printf( "recv data. ret = %d, recv_data = %s\n", ret, recv_data );
     }
     else
     {
-        printf( "ret = %ld, error\n", ret );
+        printf( "ret = %d, error\n", ret );
 #ifdef _WIN32
         closesocket( server_skt );
         WSACleanup();
@@ -274,7 +274,7 @@ void udp_hello_server( int port )
     // send back
     char send_data[100] = "hello, this is server.\n";
     ret = sendto( server_skt, send_data, strlen(send_data), 0, (sockaddr*)&remote_addr, remote_len );
-    printf( "send back. ret = %ld\n", ret );
+    printf( "send back. ret = %d\n", ret );
 
 #ifdef _WIN32
     closesocket(server_skt);

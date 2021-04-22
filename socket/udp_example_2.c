@@ -27,7 +27,6 @@ void *get_in_addr(struct sockaddr *sa)
 
 void udp_hello_server_2( const char* port )
 {
-#if 0
     int ret;
 
     struct addrinfo hints, *servinfo, *ptr;
@@ -52,6 +51,7 @@ void udp_hello_server_2( const char* port )
         printf(  "getaddrinfo: %s\n", gai_strerror(ret) );
         return ;
     }
+#if 0
 
     // 用迴圈來找出全部的結果，並 bind 到首先找到能 bind 的
     for( ptr = servinfo; ptr != NULL; ptr = ptr->ai_next)
@@ -77,7 +77,6 @@ void udp_hello_server_2( const char* port )
       return ;
     }
 
-    #if 0
 
     freeaddrinfo(servinfo);
     printf("listener: waiting to recvfrom...\n");

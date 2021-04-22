@@ -33,7 +33,7 @@ set( SOURCE main.cpp
             ${CMAKE_SOURCE_DIR}/../udp_example.cpp 
             ${CMAKE_SOURCE_DIR}/../udp_example_2.c
             ${CMAKE_SOURCE_DIR}/../tool.cpp 
-            ${CMAKE_SOURCE_DIR}/../tool_2.cpp )
+            ${CMAKE_SOURCE_DIR}/../tool_2.c )
 
 # exec file
 add_executable( ${PROJECT_NAME} ${SOURCE} ${HEAD} )
