@@ -1,6 +1,6 @@
 #include "tool_2.h"
 
-#if defined(UNIX)
+#if defined(UNIX) || defined(MACOS)
 #include <netdb.h>
 #include <arpa/inet.h>  // 解決 inet_ntop 的 warning
 #elif defined(_WIN32)

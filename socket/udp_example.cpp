@@ -28,7 +28,12 @@ typedef int SOCKET;
 #elif defined(_WIN32)
 #define bzero(ptr,size)     memset( (ptr), 0, (size) )
 typedef int socklen_t;
+#elif defined(_WIN32)
+typedef int ssize_t; // 查了一下windows沒找到ssize_t這個定義,在研究一下. 看討論目前非標準定義
 #endif
+
+
+
 
 
 
@@ -96,9 +101,9 @@ void udp_hello_client( std::string ip, int port )
 
     // send data
     char send_data[100] = "hello, server. this is client\n";
-    int ret;
+    ssize_t ret;
     ret = sendto( client_skt, send_data, strlen(send_data), 0, (sockaddr *)&remote_addr, remote_len );
-    printf( "client send, ret = %d\n", ret );
+    printf( "client send, ret = %ld\n", ret );
 
     // receive back
     char recv_data[100] = {0};
@@ -106,10 +111,10 @@ void udp_hello_client( std::string ip, int port )
     if( ret > 0 )
     {
         printf( "recv from ip = %s, port = %d\n", inet_ntoa(remote_addr.sin_addr), ntohs(remote_addr.sin_port) );
-        printf( "receive message from server. ret = %d, data = %s\n", ret, recv_data );
+        printf( "receive message from server. ret = %ld, data = %s\n", ret, recv_data );
     }
     else    
-        printf( "ret = %d <= 0. error\n", ret );
+        printf( "ret = %ld <= 0. error\n", ret );
 
 #ifdef _WIN32
     closesocket( client_skt );
@@ -167,13 +172,13 @@ void udp_hello_client_c( std::string ip, int port )
 
     // send data
     char send_data[100] = "hello, server. this is client\n";
-    int ret;
+    ssize_t ret;
 #if defined(UNIX) || defined(MACOS)
     ret = write( client_skt, send_data, strlen(send_data) );
 #elif defined(_WIN32)
     ret = send( client_skt, send_data, strlen(send_data), 0 );
 #endif
-    printf( "client send, ret = %d\n", ret );
+    printf( "client send, ret = %ld\n", ret );
 
     // receive back
     char recv_data[100] = {0};
@@ -185,10 +190,10 @@ void udp_hello_client_c( std::string ip, int port )
     if( ret > 0 )
     {
         printf( "recv from ip = %s, port = %d\n", inet_ntoa(remote_addr.sin_addr), ntohs(remote_addr.sin_port) );
-        printf( "receive message from server. ret = %d, data = %s\n", ret, recv_data );
+        printf( "receive message from server. ret = %ld, data = %s\n", ret, recv_data );
     }
     else
-        printf( "ret = %d <= 0. error\n", ret );
+        printf( "ret = %ld <= 0. error\n", ret );
 
 #ifdef _WIN32
     closesocket( client_skt );
@@ -225,7 +230,7 @@ void udp_hello_server( int port )
 
 #ifdef _WIN32
     local_addr.sin_addr.S_un.S_addr = INADDR_ANY; // inet_addr("111.248.195.94");
-#elif defined(UNIX)
+#elif defined(UNIX) || defined(MACOS)
     local_addr.sin_addr.s_addr = INADDR_ANY; 
 #endif
     int local_len = sizeof(local_addr);
@@ -251,17 +256,17 @@ void udp_hello_server( int port )
     socklen_t remote_len = sizeof(remote_addr);
 
     char recv_data[100] = {0};
-    int ret;
+    ssize_t ret;
     ret = recvfrom( server_skt, recv_data, sizeof recv_data, 0, (sockaddr*)&remote_addr, &remote_len );
 
     if( ret > 0 )   
     {
         printf( "recv from ip = %s, port = %d\n", inet_ntoa(remote_addr.sin_addr), ntohs(remote_addr.sin_port) );
-        printf( "recv data. ret = %d, recv_data = %s\n", ret, recv_data );
+        printf( "recv data. ret = %ld, recv_data = %s\n", ret, recv_data );
     }
     else
     {
-        printf( "ret = %d, error\n", ret );
+        printf( "ret = %ld, error\n", ret );
 #ifdef _WIN32
         closesocket( server_skt );
         WSACleanup();
@@ -274,7 +279,7 @@ void udp_hello_server( int port )
     // send back
     char send_data[100] = "hello, this is server.\n";
     ret = sendto( server_skt, send_data, strlen(send_data), 0, (sockaddr*)&remote_addr, remote_len );
-    printf( "send back. ret = %d\n", ret );
+    printf( "send back. ret = %ld\n", ret );
 
 #ifdef _WIN32
     closesocket(server_skt);
@@ -286,3 +291,111 @@ void udp_hello_server( int port )
 
 }
 
+
+
+struct OrderData
+{
+    int order_index;
+    char filling[1490];
+};
+
+
+void udp_package_order_server()
+{
+    int ret = 0;
+    SOCKET server_skt = socket( PF_INET, SOCK_DGRAM, IPPROTO_UDP );
+    
+    sockaddr_in local_addr;
+    bzero( &local_addr, sizeof local_addr );
+    local_addr.sin_family = AF_INET;
+    local_addr.sin_port = htons( 23491 );
+    local_addr.sin_addr.s_addr = INADDR_ANY;
+    int local_len = sizeof local_addr;
+    
+    ret = bind( server_skt, (sockaddr *)&local_addr, local_len );
+    if( ret == SOCKET_ERROR )
+    {
+        printf( "bind fail.\n" );
+        return;
+    }
+    
+    // start recv data
+    sockaddr_in remote_addr;
+    socklen_t remote_len = sizeof remote_addr;
+    char *recv_buf = new char[sizeof(OrderData)];
+    ssize_t recv_ret;
+    
+    OrderData od;
+    int last_order = -1;
+    int count = 0;
+    
+    while(true)
+    {
+        recv_ret = recvfrom( server_skt, recv_buf, sizeof(OrderData), 0, 
+                             (sockaddr *)&remote_addr, &remote_len );
+        
+        if( recv_ret < 0 )
+        {
+            printf("recv end.\n");
+            break;
+        }
+        
+        // 理論上可以不用複製,不過通常用途會需要複製資料出來,讓socket可以收其他資料
+        memcpy( &od, recv_buf, sizeof(OrderData) );
+        
+        if( od.order_index - last_order != 1 )
+            printf("\norder fall od.order_index = %d, last_order = %d!!\n", od.order_index, last_order );
+        last_order = od.order_index;
+        
+        //printf( "index = %d\n", od.order_index );
+        if( count++ % 10000 == 0 )
+        {
+            printf(".");
+            fflush(stdout);
+        }
+    }
+                 
+    delete [] recv_buf;
+    recv_buf = nullptr;
+}
+
+
+
+void udp_package_order_client()
+{
+    SOCKET skt = socket( PF_INET, SOCK_DGRAM, IPPROTO_UDP );
+    
+    sockaddr_in remote_addr;
+    bzero( &remote_addr, sizeof remote_addr );
+    
+    remote_addr.sin_port = htons( 23491 );
+    remote_addr.sin_family = AF_INET;
+    remote_addr.sin_addr.s_addr = inet_addr( "127.0.0.1" );
+    
+    int remote_len = sizeof remote_addr;
+    
+    OrderData od;
+    od.order_index = 0;
+    sprintf( od.filling, "This is client message. index = %d.", od.order_index );
+    
+    char *send_buf = new char[sizeof(OrderData)];
+    ssize_t send_ret;
+    
+    while(true)
+    {
+        memcpy( send_buf, &od, sizeof(OrderData) );
+        send_ret = sendto( skt, send_buf, sizeof(OrderData), 0, (sockaddr*)&remote_addr, remote_len );
+        
+        if( send_ret < 0 )
+        {
+            printf("send fail\n");
+            break;
+        }
+        
+        od.order_index++;
+        sprintf( od.filling, "This is client message. index = %d.", od.order_index );
+    }
+    
+    delete [] send_buf;
+    send_buf = nullptr;
+}

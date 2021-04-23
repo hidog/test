@@ -3,7 +3,7 @@
 #include <string.h>
 #include <stdio.h>
 
-#if defined(UNIX)
+#if defined(UNIX) || defined(MACOS)
 #include <netdb.h>
 #include <unistd.h>
 #include <arpa/inet.h>
@@ -63,7 +63,7 @@ static int get_in_port( struct sockaddr *addr )
 */
 int get_udp_socket( const char* ip, const char* port )
 {
-    int ret, skt;
+    int ret, skt = -1;
     struct addrinfo hints, *servinfo, *ptr;
 
     memset(&hints, 0, sizeof hints);
@@ -161,7 +161,7 @@ void udp_hello_server_2( const char* port )
     struct sockaddr_storage remote_addr;
     socklen_t remote_len;
     int skt = get_udp_socket( NULL, port );
-    int ret;
+    ssize_t ret;
     char recv_buf[200] = {0};
 
     printf( "listener: waiting to recvfrom...\n" );
@@ -170,7 +170,7 @@ void udp_hello_server_2( const char* port )
     ret = recvfrom( skt, recv_buf, 200, 0, (struct sockaddr *)&remote_addr, &remote_len );
     if( ret == -1 )
     {
-        printf( "recv error, ret = %d\n", ret );
+        printf( "recv error, ret = %ld\n", ret );
         return;
     }
 
@@ -183,7 +183,7 @@ void udp_hello_server_2( const char* port )
     //strcpy( ip_str, inet_ntoa( ((struct sockaddr_in *)&remote_addr)->sin_addr) );
 
     printf( "listener: got packet from %s, port = %d\n", ip_str, remote_port );
-    printf( "listener: packet is %d bytes long\n", ret );
+    printf( "listener: packet is %d bytes long\n", (int)ret );
     printf( "listener: msg : %s\n", recv_buf );
 
     // send back
@@ -191,11 +191,11 @@ void udp_hello_server_2( const char* port )
     ret = sendto( skt, send_buf, strlen(send_buf), 0, (struct sockaddr *)&remote_addr, remote_len );
     if( ret < 0 )
     {
-        printf("error. ret = %d\n", ret );
+        printf("error. ret = %ld\n", ret );
         return;
     }
     else
-        printf("send back success, ret = %d\n", ret );
+        printf("send back success, ret = %d\n", (int)ret );
 
 #ifdef _WIN32
     closesocket( skt );
@@ -229,7 +229,7 @@ void udp_hello_client_2( const char* ip, const char* port )
 #ifdef _WIN32
     int ret = send( skt, send_buf, strlen(send_buf), 0 );
 #else
-    int ret = write( skt, send_buf, strlen(send_buf) );
+    ssize_t ret = write( skt, send_buf, strlen(send_buf) );
 #endif
 
     if( ret < 0 )
@@ -238,7 +238,7 @@ void udp_hello_client_2( const char* ip, const char* port )
         return;
     }
     else
-        printf("send success!! ret = %d\n", ret );
+        printf("send success!! ret = %d\n", (int)ret );
 
     // recv
     char recv_buf[100] = {0};
@@ -254,7 +254,7 @@ void udp_hello_client_2( const char* ip, const char* port )
         return;
     }
     else
-        printf("recv from server. ret = %d, msg = %s\n", ret, recv_buf );
+        printf("recv from server. ret = %d, msg = %s\n", (int)ret, recv_buf );
 
 #ifdef _WIN32
     closesocket( skt );

@@ -2,7 +2,7 @@
 #define TOOL_2_H
 
 
-void test_getaddrinfo();
+void test_getaddrinfo(void);
 
 
 #endif
