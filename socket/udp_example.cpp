@@ -308,7 +308,7 @@ void udp_package_order_server()
     sockaddr_in local_addr;
     bzero( &local_addr, sizeof local_addr );
     local_addr.sin_family = AF_INET;
-    local_addr.sin_port = htons( 23491 );
+    local_addr.sin_port = htons( 3891 );
     local_addr.sin_addr.s_addr = INADDR_ANY;
     int local_len = sizeof local_addr;
     
@@ -327,10 +327,12 @@ void udp_package_order_server()
     
     OrderData od;
     int last_order = -1;
-    int count = 0;
+    int cc = 0;
+    int total = 0, miss = 0;
     
     while(true)
     {
+        total++;
         recv_ret = recvfrom( server_skt, recv_buf, sizeof(OrderData), 0, 
                              (sockaddr *)&remote_addr, &remote_len );
         
@@ -344,11 +346,15 @@ void udp_package_order_server()
         memcpy( &od, recv_buf, sizeof(OrderData) );
         
         if( od.order_index - last_order != 1 )
+        {
+            miss++;
             printf("\norder fall od.order_index = %d, last_order = %d!!\n", od.order_index, last_order );
+            printf("miss rate = %d/%d = %lf\n", miss, total, 1.0*miss/total );
+        }
         last_order = od.order_index;
         
         //printf( "index = %d\n", od.order_index );
-        if( count++ % 10000 == 0 )
+        if( cc++ % 10000 == 0 )
         {
             printf(".");
             fflush(stdout);
