@@ -21,6 +21,7 @@
 
 #ifdef _WIN32
 typedef int socklen_t;
+typedef int ssize_t;
 #endif
 
 

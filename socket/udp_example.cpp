@@ -28,11 +28,16 @@ typedef int SOCKET;
 #elif defined(_WIN32)
 #define bzero(ptr,size)     memset( (ptr), 0, (size) )
 typedef int socklen_t;
-#elif defined(_WIN32)
 typedef int ssize_t; // 查了一下windows沒找到ssize_t這個定義,在研究一下. 看討論目前非標準定義
 #endif
 
 
+
+struct OrderData
+{
+    int order_index;
+    char filling[1490];
+};
 
 
 
@@ -293,15 +298,20 @@ void udp_hello_server( int port )
 
 
 
-struct OrderData
-{
-    int order_index;
-    char filling[1490];
-};
-
 
 void udp_package_order_server()
 {
+#ifdef _WIN32
+    // windows need init
+    WORD socket_version = MAKEWORD(2,2);
+    WSADATA wsa_data; 
+    if( WSAStartup( socket_version, &wsa_data ) != 0 )
+    {
+        printf("init error\n");
+        return;
+    }
+#endif
+
     int ret = 0;
     SOCKET server_skt = socket( PF_INET, SOCK_DGRAM, IPPROTO_UDP );
     
@@ -363,14 +373,25 @@ void udp_package_order_server()
 
 void udp_package_order_client()
 {
+#ifdef _WIN32
+    // windows need init
+    WORD socket_version = MAKEWORD(2,2);
+    WSADATA wsa_data; 
+    if( WSAStartup( socket_version, &wsa_data ) != 0 )
+    {
+        printf("init error\n");
+        return;
+    }
+#endif
+
     SOCKET skt = socket( PF_INET, SOCK_DGRAM, IPPROTO_UDP );
     
     sockaddr_in remote_addr;
     bzero( &remote_addr, sizeof remote_addr );
     
-    remote_addr.sin_port = htons( 23491 );
+    remote_addr.sin_port = htons( 3891 );
     remote_addr.sin_family = AF_INET;
-    remote_addr.sin_addr.s_addr = inet_addr( "127.0.0.1" );
+    remote_addr.sin_addr.s_addr = inet_addr( "1.163.100.76" );
     
     int remote_len = sizeof remote_addr;
     
@@ -394,8 +415,17 @@ void udp_package_order_client()
         
         od.order_index++;
         sprintf( od.filling, "This is client message. index = %d.", od.order_index );
+
+        printf("send index = %d\n", od.order_index );
     }
     
     delete [] send_buf;
     send_buf = nullptr;
+
+#ifdef _WIN32
+    closesocket( skt );
+    WSACleanup();
+#elif defined(UNIX)
+    close(client_skt);
+#endif
 }
