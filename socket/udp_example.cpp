@@ -41,6 +41,29 @@ struct OrderData
 
 
 
+void udp_bind_client_socket( int skt )
+{
+    // 用底下的bind可以做到指定client port的效果,但不設定也會自動設定port.
+    sockaddr_in local_addr;
+    bzero(&local_addr, sizeof local_addr);  // windows沒有bzero
+    local_addr.sin_family = AF_INET;
+    local_addr.sin_port = htons(24256);  // local port指定24256
+
+#ifdef _WIN32
+    local_addr.sin_addr.S_un.S_addr = INADDR_ANY; // inet_addr("111.248.195.94");
+#elif defined(UNIX)
+    local_addr.sin_addr.s_addr = INADDR_ANY;
+#endif
+    int local_len = sizeof(local_addr);
+
+    // https://man7.org/linux/man-pages/man2/bind.2.html   see how to handle error
+    if( bind(skt, (sockaddr*)&local_addr, local_len) == SOCKET_ERROR )
+    { 
+        printf("bind error !\n");
+        return;
+    }
+}
+
 
 void udp_hello_client( std::string ip, int port )
 {
@@ -63,33 +86,8 @@ void udp_hello_client( std::string ip, int port )
         return;
     }
    
-    // 用底下的bind可以做到指定client port的效果,但不設定也會自動設定port.
-#if 0
-    sockaddr_in local_addr;
-    bzero(&local_addr, sizeof local_addr);  // windows沒有bzero
-    local_addr.sin_family = AF_INET;
-    local_addr.sin_port = htons(24256);
-
-#ifdef _WIN32
-    local_addr.sin_addr.S_un.S_addr = INADDR_ANY; // inet_addr("111.248.195.94");
-#elif defined(UNIX)
-    local_addr.sin_addr.s_addr = INADDR_ANY;
-#endif
-    int local_len = sizeof(local_addr);
-
-    // https://man7.org/linux/man-pages/man2/bind.2.html   see how to handle error
-    if (bind(client_skt, (sockaddr*)&local_addr, local_len) == SOCKET_ERROR)
-    {
-        printf("bind error !\n");
-#ifdef _WIN32
-        closesocket(client_skt);
-        WSACleanup();
-#elif defined(UNIX)
-        close(server_skt);
-#endif
-        return;
-    }
-#endif
+    // 用來指定本地端的port
+    udp_bind_client_socket(client_skt);
 
     // set remote address, port
     sockaddr_in remote_addr;

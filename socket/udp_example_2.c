@@ -22,7 +22,15 @@
 #ifdef _WIN32
 typedef int socklen_t;
 typedef int ssize_t;
+#define bzero(ptr,size)     memset( (ptr), 0, (size) )
 #endif
+
+
+struct LossData
+{
+    int index;
+    char filling[1490];
+};
 
 
 // get sockaddr, IPv4 or IPv6:
@@ -262,5 +270,86 @@ void udp_hello_client_2( const char* ip, const char* port )
     WSACleanup();
 #elif defined(UNIX)
     close(skt);
+#endif
+}
+
+
+
+
+
+void udp_test_package_loss(void)
+{
+#ifdef _WIN32
+    // windows need init
+    WORD socket_version = MAKEWORD(2,2);
+    WSADATA wsa_data; 
+    if( WSAStartup( socket_version, &wsa_data ) != 0 )
+    {
+        printf("init error\n");
+        return;
+    }
+#endif
+
+    int ret = 0;
+    SOCKET server_skt = socket( PF_INET, SOCK_DGRAM, IPPROTO_UDP );
+
+    struct sockaddr_in local_addr;
+    bzero( &local_addr, sizeof local_addr );
+    local_addr.sin_family = AF_INET;
+    local_addr.sin_port = htons( 7229 );
+    local_addr.sin_addr.s_addr = INADDR_ANY;
+    int local_len = sizeof local_addr;
+
+    ret = bind( server_skt, (struct sockaddr *)&local_addr, local_len );
+    if( ret == SOCKET_ERROR )
+    {
+        printf( "bind fail.\n" );
+        return;
+    }
+
+    // study 
+    int timeout = 10000; // 10s
+    setsockopt( server_skt, SOL_SOCKET, SO_RCVTIMEO, &timeout, sizeof timeout );
+
+    // start recv data
+    struct sockaddr_in remote_addr;
+    socklen_t remote_len = sizeof remote_addr;
+    char *recv_buf = (char*)malloc( sizeof(struct LossData) ); 
+    if( recv_buf == NULL )
+    {
+        printf("malloc fail.\n");
+        return;
+    }
+
+    ssize_t recv_ret;
+
+    struct LossData ld;
+    char flag[999999] = {0};
+
+    for( int i = 0; i < 999999; i++ )
+    {
+        recv_ret = recvfrom( server_skt, recv_buf, sizeof(struct LossData), 0, 
+                             (struct sockaddr *)&remote_addr, &remote_len );
+
+        if( recv_ret < 0 )
+        {
+            printf("recv end.\n");
+            break;
+        }
+
+        // 理論上可以不用複製,不過通常用途會需要複製資料出來,讓socket可以收其他資料
+        memcpy( &ld, recv_buf, sizeof(struct LossData) );
+
+        flag[ld.index] = 1;
+    }
+
+    free(recv_buf);
+    recv_buf = NULL;
+
+#ifdef _WIN32
+    closesocket( server_skt );
+    WSACleanup();
+#elif defined(UNIX)
+    close(server_skt);
 #endif
 }
