@@ -346,6 +346,13 @@ void udp_test_package_loss(void)
     free(recv_buf);
     recv_buf = NULL;
 
+    // check flag
+    for( int i = 0; i < 999999; i++ )
+    {
+        if( flag[i] == 0 )
+            printf("packet %d miss!!\n", i );
+    }
+
 #ifdef _WIN32
     closesocket( server_skt );
     WSACleanup();
