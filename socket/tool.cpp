@@ -5,9 +5,17 @@
 #include <ws2tcpip.h>
 #elif defined(UNIX) || defined(MACOS)
 #include <arpa/inet.h>
+#include <unistd.h>
+#include <errno.h>
 #endif
 
 #include <stdio.h>
+
+
+#ifdef UNIX
+typedef int SOCKET;
+#define SOCKET_ERROR -1
+#endif
 
 
 
@@ -36,4 +44,77 @@ void transform_test()
     char str[20];
     if ( inet_ntop(AF_INET, &addr.s_addr, str, sizeof str))
         printf("StrIP: %s\n", str);
+}
+
+
+
+
+void error_handle_test()
+{
+#ifdef UNIX
+    // 這邊印出0, 下面會印出22.
+    printf("errno = %d\n", errno);
+#endif
+    
+
+#ifdef _WIN32
+    // windows need init
+    WORD socket_version = MAKEWORD(2,2);
+    WSADATA wsa_data; 
+    if( WSAStartup(socket_version,&wsa_data) != 0 )
+    {
+        printf("init error\n");
+        return;
+    }
+#endif
+
+    // bind server socket
+    SOCKET server_skt = socket( PF_INET, SOCK_DGRAM, IPPROTO_UDP );
+
+    sockaddr_in local_addr;
+    local_addr.sin_family = AF_INET;
+    local_addr.sin_port = htons(12345);
+
+#ifdef _WIN32
+    local_addr.sin_addr.S_un.S_addr = INADDR_ANY; // inet_addr("111.248.195.94");
+#elif defined(UNIX) || defined(MACOS)
+    local_addr.sin_addr.s_addr = INADDR_ANY; 
+#endif
+    int local_len = sizeof(local_addr);
+
+    // https://man7.org/linux/man-pages/man2/bind.2.html   see how to handle error
+    if( bind(server_skt, (sockaddr*)&local_addr, local_len ) == SOCKET_ERROR )
+    {
+        printf("bind error !\n");
+#ifdef _WIN32
+        closesocket(server_skt);
+        WSACleanup();
+#elif defined(UNIX)
+        close(server_skt);
+#endif
+        return;
+    }
+
+
+    // 這邊會跳error
+    if( bind(server_skt, (sockaddr*)&local_addr, local_len ) == SOCKET_ERROR )
+    {
+#ifdef _WIN32    
+        printf("bind error ! %d\n", WSAGetLastError() );
+#elif defined(UNIX)
+        printf("bind error ! %d\n", errno );
+#endif
+        
+        
+#ifdef _WIN32
+        closesocket(server_skt);
+        WSACleanup();
+#elif defined(UNIX)
+        close(server_skt);
+#endif
+        return;
+    }
+
+
+
 }

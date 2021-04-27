@@ -16,8 +16,10 @@ int main()
     //udp_hello_server( 12345 );
     //udp_hello_client( std::string("127.0.0.1"), 12345 );
     
-    udp_hello_server_2( "12345" );
+    //udp_hello_server_2( "12345" );
     //udp_hello_client_2( "127.0.0.1", "12345" );
+    
+    error_handle_test();
 
     return 0;
 }
