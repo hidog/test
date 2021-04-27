@@ -5,9 +5,17 @@
 #include <ws2tcpip.h>
 #elif defined(UNIX) || defined(MACOS)
 #include <arpa/inet.h>
+#include <unistd.h>
+#include <errno.h>
 #endif
 
 #include <stdio.h>
+
+
+#ifdef UNIX
+typedef int SOCKET;
+#define SOCKET_ERROR -1
+#endif
 
 
 
@@ -43,6 +51,12 @@ void transform_test()
 
 void error_handle_test()
 {
+#ifdef UNIX
+    // 這邊印出0, 下面會印出22.
+    printf("errno = %d\n", errno);
+#endif
+    
+
 #ifdef _WIN32
     // windows need init
     WORD socket_version = MAKEWORD(2,2);
@@ -85,7 +99,13 @@ void error_handle_test()
     // 這邊會跳error
     if( bind(server_skt, (sockaddr*)&local_addr, local_len ) == SOCKET_ERROR )
     {
+#ifdef _WIN32    
         printf("bind error ! %d\n", WSAGetLastError() );
+#elif defined(UNIX)
+        printf("bind error ! %d\n", errno );
+#endif
+        
+        
 #ifdef _WIN32
         closesocket(server_skt);
         WSACleanup();

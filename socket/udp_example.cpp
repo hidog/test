@@ -432,6 +432,6 @@ void udp_package_order_client()
     closesocket( skt );
     WSACleanup();
 #elif defined(UNIX)
-    close(client_skt);
+    close( skt );
 #endif
 }
