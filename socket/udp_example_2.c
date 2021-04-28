@@ -307,9 +307,10 @@ void udp_test_package_loss(void)
         return;
     }
 
-    // study 
-    int timeout = 10000; // 10s
-    setsockopt( server_skt, SOL_SOCKET, SO_RCVTIMEO, &timeout, sizeof timeout );
+    // set timeout的code
+    // 收到封包後才等timeout
+    //int timeout = 10000; // 10s
+    //setsockopt( server_skt, SOL_SOCKET, SO_RCVTIMEO, &timeout, sizeof timeout );
 
     // start recv data
     struct sockaddr_in remote_addr;
@@ -325,11 +326,18 @@ void udp_test_package_loss(void)
 
     struct LossData ld;
     char flag[999999] = {0};
+    int first_recv = 1;
 
-    for( int i = 0; i < 999999; i++ )
+    while(1)
     {
-        recv_ret = recvfrom( server_skt, recv_buf, sizeof(struct LossData), 0, 
-                             (struct sockaddr *)&remote_addr, &remote_len );
+        recv_ret = recvfrom( server_skt, recv_buf, sizeof(struct LossData), 0, (struct sockaddr *)&remote_addr, &remote_len );
+
+        if( first_recv == 1 )
+        {
+            int timeout = 10000; // 10s
+            setsockopt( server_skt, SOL_SOCKET, SO_RCVTIMEO, &timeout, sizeof timeout );
+            first_recv = 0;
+        }
 
         if( recv_ret < 0 )
         {
@@ -341,17 +349,23 @@ void udp_test_package_loss(void)
         memcpy( &ld, recv_buf, sizeof(struct LossData) );
 
         flag[ld.index] = 1;
+        printf( "recv index = %d\n", ld.index );
     }
 
     free(recv_buf);
     recv_buf = NULL;
 
     // check flag
+    int count = 0;
     for( int i = 0; i < 999999; i++ )
     {
         if( flag[i] == 0 )
+        {
+            count++;
             printf("packet %d miss!!\n", i );
+        }
     }
+    printf("loss rate %d/%d = %lf\n", count, 999999, 1.0*count/999999 );
 
 #ifdef _WIN32
     closesocket( server_skt );
