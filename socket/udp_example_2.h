@@ -7,7 +7,9 @@ int get_udp_socket( const char* ip, const char* port );
 void udp_hello_server_2( const char* port );
 void udp_hello_client_2( const char* ip, const char* port );
 
-void udp_test_package_loss(void);
+void udp_test_package_loss_server(void);
+void udp_test_package_loss_client(void);
+
 
 
 #endif

@@ -17,6 +17,11 @@ set( CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS} "-std=gnu++11" )
 # output path
 set( CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin )
 
+# set default release build
+if( "${CMAKE_BUILD_TYPE}" STREQUAL "")
+    set(CMAKE_BUILD_TYPE Release)
+endif()
+
 # preprocessor define
 message("define unix")
 set( DEFINE ${DEFINE} -DUNIX )

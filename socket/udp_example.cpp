@@ -65,6 +65,9 @@ void udp_bind_client_socket( int skt )
 }
 
 
+
+
+
 void udp_hello_client( std::string ip, int port )
 {
 #ifdef _WIN32
@@ -87,7 +90,7 @@ void udp_hello_client( std::string ip, int port )
     }
    
     // 用來指定本地端的port
-    udp_bind_client_socket(client_skt);
+    //udp_bind_client_socket(client_skt);
 
     // set remote address, port
     sockaddr_in remote_addr;
@@ -126,6 +129,9 @@ void udp_hello_client( std::string ip, int port )
     close(client_skt);
 #endif
 }
+
+
+
 
 
 
