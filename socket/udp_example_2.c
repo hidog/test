@@ -300,7 +300,7 @@ void udp_test_package_loss_server(void)
     struct sockaddr_in local_addr;
     bzero( &local_addr, sizeof local_addr );
     local_addr.sin_family = AF_INET;
-    local_addr.sin_port = htons( 7229 );
+    local_addr.sin_port = htons( 7227 );
     local_addr.sin_addr.s_addr = INADDR_ANY;
     int local_len = sizeof local_addr;
 
@@ -313,8 +313,15 @@ void udp_test_package_loss_server(void)
 
     // set timeout的code
     // 收到封包後才等timeout
-    //int timeout = 10000; // 10s
-    //setsockopt( server_skt, SOL_SOCKET, SO_RCVTIMEO, &timeout, sizeof timeout );
+#ifdef _WIN32
+    //int timeout = 1000; // 10s
+    //int set_ret = setsockopt( server_skt, SOL_SOCKET, SO_RCVTIMEO, &timeout, sizeof timeout );
+    //printf("set_ret = %d\n", set_ret );
+#elif defined(UNIX)
+    //struct timeval tm = { 1, 0 }; // 1s, 第二個參數是us
+    //int set_ret = setsockopt( server_skt, SOL_SOCKET, SO_RCVTIMEO, &tm, sizeof tm );
+    //printf("set_ret = %d\n", set_ret );
+#endif
 
     // start recv data
     struct sockaddr_in remote_addr;
@@ -339,6 +346,7 @@ void udp_test_package_loss_server(void)
 
         if( first_recv == 1 )
         {
+#ifdef _WIN32
             int timeout = 10000; // 10s
             set_res = setsockopt( server_skt, SOL_SOCKET, SO_RCVTIMEO, &timeout, sizeof timeout );
             if( set_res == SOCKET_ERROR )
@@ -347,6 +355,10 @@ void udp_test_package_loss_server(void)
                 printf("setsockopt timeout fail. res = %d, error code = %d\n", set_res, err_code );
                 return;
             }
+#elif defined(UNIX)
+            struct timeval timeout = { 10, 0 }; // 10s, 0us
+#endif
+            setsockopt( server_skt, SOL_SOCKET, SO_RCVTIMEO, &timeout, sizeof timeout );
             first_recv = 0;
         }
 

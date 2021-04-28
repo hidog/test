@@ -20,7 +20,8 @@ int main()
     //udp_hello_client_2( "127.0.0.1", "12345" );
     
     //error_handle_test();
-    udp_test_package_loss_client();
+    //udp_test_package_loss_client();
+    udp_test_package_loss_server();
 
     return 0;
 }
