@@ -1,4 +1,4 @@
-#include "udp_example_2.h"
+﻿#include "udp_example_2.h"
 
 #include <string.h>
 #include <stdio.h>
@@ -352,7 +352,7 @@ void udp_test_package_loss_server(void)
 #elif defined(UNIX) || defined(MACOS)
             struct timeval timeout = { 10, 0 }; // 10s, 0us
 #endif
-            set_res = setsockopt( server_skt, SOL_SOCKET, SO_RCVTIMEO, &timeout, sizeof timeout );
+            set_res = setsockopt( server_skt, SOL_SOCKET, SO_RCVTIMEO, (char*)&timeout, sizeof timeout );
             if( set_res == SOCKET_ERROR )
             {
 #ifdef _WIN32
@@ -364,7 +364,7 @@ void udp_test_package_loss_server(void)
                 return;
             }
 
-            setsockopt( server_skt, SOL_SOCKET, SO_RCVTIMEO, &timeout, sizeof timeout );
+            setsockopt( server_skt, SOL_SOCKET, SO_RCVTIMEO, (char*)&timeout, sizeof timeout );
             first_recv = 0;
         }
 

@@ -1,4 +1,4 @@
-#ifndef TOOL_2_H
+﻿#ifndef TOOL_2_H
 #define TOOL_2_H
 
 

@@ -1,4 +1,4 @@
-#include "tool_2.h"
+﻿#include "tool_2.h"
 
 #if defined(UNIX) || defined(MACOS)
 #include <netdb.h>

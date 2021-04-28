@@ -1,4 +1,4 @@
-#include "tool.h"
+﻿#include "tool.h"
 
 #ifdef _WIN32
 #include <WinSock2.h>
