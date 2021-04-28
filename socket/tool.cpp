@@ -1,4 +1,4 @@
-﻿#include "tool.h"
+#include "tool.h"
 
 #ifdef _WIN32
 #include <WinSock2.h>
@@ -7,6 +7,8 @@
 #include <arpa/inet.h>
 #include <unistd.h>
 #include <errno.h>
+#include <sys/socket.h>
+#include <sys/types.h> 
 #endif
 
 #include <stdio.h>
@@ -15,6 +17,8 @@
 #if defined(UNIX) || defined(MACOS)
 typedef int SOCKET;
 #define SOCKET_ERROR -1
+#else
+typedef int socklen_t;
 #endif
 
 
@@ -142,9 +146,18 @@ void sockopt_test()
     /* 
         SO_SNDTIMEO
     */
+#ifdef _WIN32
     int timeout = 0;
-    int timeout_len = sizeof timeout;
+#else
+    timeval timeout;
+#endif
+    socklen_t timeout_len = sizeof timeout;
+    
+#ifdef _WIN32
     res = getsockopt( skt, SOL_SOCKET, SO_SNDTIMEO, (char*)&timeout, &timeout_len );
+#else
+    res = getsockopt( skt, SOL_SOCKET, SO_SNDTIMEO, &timeout, &timeout_len );
+#endif
     if( res == SOCKET_ERROR )
     {
 #ifdef _WIN32
@@ -155,9 +168,21 @@ void sockopt_test()
         printf("error code = %d\n", err_code );
         return;
     }
+#ifdef _WIN32
     printf( "timeout = %d\n", timeout );
+#else
+    printf("timeout = %ld s, %d us\n", timeout.tv_sec, timeout.tv_usec );
+#endif
 
+    
+#ifdef _WIN32
     timeout = 1000; // 1s
+#else
+    timeout.tv_sec = 1;
+    timeout.tv_usec = 250;
+#endif 
+    
+    
     res = setsockopt( skt, SOL_SOCKET, SO_SNDTIMEO, (char*)&timeout, sizeof timeout );
     if( res == SOCKET_ERROR )
     {
@@ -182,8 +207,11 @@ void sockopt_test()
         printf("error code = %d\n", err_code );
         return;
     }
+#ifdef _WIN32
     printf( "timeout = %d\n", timeout );
-
+#else
+    printf("timeout = %ld s, %d us\n", timeout.tv_sec, timeout.tv_usec );
+#endif
 
 
 
@@ -192,7 +220,7 @@ void sockopt_test()
         SO_RCVBUF
     */
     int recvbuf = 0;
-    int recvbuf_len = sizeof recvbuf;
+    socklen_t recvbuf_len = sizeof recvbuf;
     res = getsockopt( skt, SOL_SOCKET, SO_RCVBUF, (char*)&recvbuf, &recvbuf_len );
     if( res == SOCKET_ERROR )
     {
