@@ -23,7 +23,7 @@ int main()
     //udp_package_order_client();s
     //error_handle_test();
 
-    udp_test_package_loss();
+    udp_test_package_loss_client();
 
     system("PAUSE");
     return 0;

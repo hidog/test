@@ -331,6 +331,7 @@ void udp_test_package_loss_server(void)
     struct LossData ld;
     char flag[999999] = {0};
     int first_recv = 1;
+    int set_res = 0;
 
     while(1)
     {
@@ -339,7 +340,13 @@ void udp_test_package_loss_server(void)
         if( first_recv == 1 )
         {
             int timeout = 10000; // 10s
-            setsockopt( server_skt, SOL_SOCKET, SO_RCVTIMEO, &timeout, sizeof timeout );
+            set_res = setsockopt( server_skt, SOL_SOCKET, SO_RCVTIMEO, &timeout, sizeof timeout );
+            if( set_res == SOCKET_ERROR )
+            {
+                int err_code = WSAGetLastError();
+                printf("setsockopt timeout fail. res = %d, error code = %d\n", set_res, err_code );
+                return;
+            }
             first_recv = 0;
         }
 
@@ -403,8 +410,8 @@ void udp_test_package_loss_client(void)
     struct sockaddr_in remote_addr;
     bzero( &remote_addr, sizeof remote_addr );
     remote_addr.sin_family = AF_INET;
-    remote_addr.sin_port = htons( 7229 );
-    remote_addr.sin_addr.s_addr = inet_addr("111.248.192.70");
+    remote_addr.sin_port = htons( 7227 );
+    remote_addr.sin_addr.s_addr = inet_addr("36.231.100.250");
     int remote_len = sizeof remote_addr;
 
     // start recv data
@@ -434,7 +441,11 @@ void udp_test_package_loss_client(void)
         printf("index = %d, send ret = %d\n", i, (int)send_ret );
 
         if( i % 100 == 0 )
+#ifdef _WIN32
+            Sleep(1);
+#elif defined(UNIX)
             usleep(100000);
+#endif
 
     }
 
@@ -442,7 +453,7 @@ void udp_test_package_loss_client(void)
     send_buf = NULL;
 
 #ifdef _WIN32
-    closesocket( server_skt );
+    closesocket( skt );
     WSACleanup();
 #elif defined(UNIX)
     close(skt);
