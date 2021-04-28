@@ -51,7 +51,7 @@ void udp_bind_client_socket( int skt )
 
 #ifdef _WIN32
     local_addr.sin_addr.S_un.S_addr = INADDR_ANY; // inet_addr("111.248.195.94");
-#elif defined(UNIX)
+#else
     local_addr.sin_addr.s_addr = INADDR_ANY;
 #endif
     int local_len = sizeof(local_addr);
@@ -125,7 +125,7 @@ void udp_hello_client( std::string ip, int port )
 #ifdef _WIN32
     closesocket( client_skt );
     WSACleanup();
-#elif defined(UNIX)
+#elif defined(UNIX) || defined(MACOS)
     close(client_skt);
 #endif
 }
@@ -164,7 +164,7 @@ void udp_hello_client_c( std::string ip, int port )
     remote_addr.sin_port = htons(port);
 #ifdef _WIN32
     remote_addr.sin_addr.S_un.S_addr = inet_addr( ip.c_str() );
-#elif defined(UNIX)
+#elif defined(UNIX) || defined(MACOS)
     remote_addr.sin_addr.s_addr = inet_addr( ip.c_str() );
     //inet_pton( AF_INET, "127.0.0.1", &servaddr.sin_addr );  // 另一個作法
 #endif
@@ -207,7 +207,7 @@ void udp_hello_client_c( std::string ip, int port )
 #ifdef _WIN32
     closesocket( client_skt );
     WSACleanup();
-#elif defined(UNIX)
+#else
     close(client_skt);
 #endif
     
@@ -251,7 +251,7 @@ void udp_hello_server( int port )
 #ifdef _WIN32
         closesocket(server_skt);
         WSACleanup();
-#elif defined(UNIX)
+#elif defined(UNIX) || defined(MACOS)
         close(server_skt);
 #endif
         return;
@@ -279,7 +279,7 @@ void udp_hello_server( int port )
 #ifdef _WIN32
         closesocket( server_skt );
         WSACleanup();
-#elif defined(UNIX)
+#elif defined(UNIX) || defined(MACOS)
         close( server_skt );
 #endif
         return;
@@ -293,7 +293,7 @@ void udp_hello_server( int port )
 #ifdef _WIN32
     closesocket(server_skt);
     WSACleanup();
-#elif defined(UNIX)
+#elif defined(UNIX) || defined(MACOS)
     close(server_skt);
 #endif
 
@@ -435,7 +435,7 @@ void udp_package_order_client()
 #ifdef _WIN32
     closesocket( skt );
     WSACleanup();
-#elif defined(UNIX)
+#elif defined(UNIX) || defined(MACOS)
     close( skt );
 #endif
 }

@@ -12,7 +12,7 @@
 #include <stdio.h>
 
 
-#ifdef UNIX
+#if defined(UNIX) || defined(MACOS)
 typedef int SOCKET;
 #define SOCKET_ERROR -1
 #endif
@@ -89,7 +89,7 @@ void error_handle_test()
 #ifdef _WIN32
         closesocket(server_skt);
         WSACleanup();
-#elif defined(UNIX)
+#else
         close(server_skt);
 #endif
         return;
@@ -101,7 +101,7 @@ void error_handle_test()
     {
 #ifdef _WIN32    
         printf("bind error ! %d\n", WSAGetLastError() );
-#elif defined(UNIX)
+#else
         printf("bind error ! %d\n", errno );
 #endif
         
@@ -109,7 +109,7 @@ void error_handle_test()
 #ifdef _WIN32
         closesocket(server_skt);
         WSACleanup();
-#elif defined(UNIX)
+#else
         close(server_skt);
 #endif
         return;

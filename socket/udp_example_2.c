@@ -8,6 +8,7 @@
 #include <netdb.h>
 #include <unistd.h>
 #include <arpa/inet.h>
+#include <errno.h>
 #elif defined(_WIN32)
 #include <WinSock2.h>
 #include <WS2tcpip.h>   // for sockaddr_in6
@@ -24,7 +25,7 @@
 typedef int socklen_t;
 typedef int ssize_t;
 #define bzero(ptr,size)     memset( (ptr), 0, (size) )
-#elif defined(UNIX)
+#elif defined(UNIX) || defined(MACOS)
 typedef int SOCKET;
 #define SOCKET_ERROR -1
 #endif
@@ -131,7 +132,7 @@ int get_udp_socket( const char* ip, const char* port )
         {
 #ifdef _WIN32
             closesocket(skt);
-#else
+#elif defined(UNIX) || defined(MACOS)
             close(skt);
 #endif
             printf("bind or connect next skt...\n");
@@ -213,7 +214,7 @@ void udp_hello_server_2( const char* port )
 #ifdef _WIN32
     closesocket( skt );
     WSACleanup();
-#elif defined(UNIX)
+#elif defined(UNIX) || defined(MACOS)
     close(skt);
 #endif
 
@@ -272,7 +273,7 @@ void udp_hello_client_2( const char* ip, const char* port )
 #ifdef _WIN32
     closesocket( skt );
     WSACleanup();
-#elif defined(UNIX)
+#elif defined(UNIX) || defined(MACOS)
     close(skt);
 #endif
 }
@@ -317,7 +318,7 @@ void udp_test_package_loss_server(void)
     //int timeout = 1000; // 10s
     //int set_ret = setsockopt( server_skt, SOL_SOCKET, SO_RCVTIMEO, &timeout, sizeof timeout );
     //printf("set_ret = %d\n", set_ret );
-#elif defined(UNIX)
+#elif defined(UNIX) || defined(MACOS)
     //struct timeval tm = { 1, 0 }; // 1s, 第二個參數是us
     //int set_ret = setsockopt( server_skt, SOL_SOCKET, SO_RCVTIMEO, &tm, sizeof tm );
     //printf("set_ret = %d\n", set_ret );
@@ -348,16 +349,21 @@ void udp_test_package_loss_server(void)
         {
 #ifdef _WIN32
             int timeout = 10000; // 10s
+#elif defined(UNIX) || defined(MACOS)
+            struct timeval timeout = { 10, 0 }; // 10s, 0us
+#endif
             set_res = setsockopt( server_skt, SOL_SOCKET, SO_RCVTIMEO, &timeout, sizeof timeout );
             if( set_res == SOCKET_ERROR )
             {
+#ifdef _WIN32
                 int err_code = WSAGetLastError();
+#elif defined(UNIX) || defined(MACOS)
+                int err_code = errno;
+#endif
                 printf("setsockopt timeout fail. res = %d, error code = %d\n", set_res, err_code );
                 return;
             }
-#elif defined(UNIX)
-            struct timeval timeout = { 10, 0 }; // 10s, 0us
-#endif
+
             setsockopt( server_skt, SOL_SOCKET, SO_RCVTIMEO, &timeout, sizeof timeout );
             first_recv = 0;
         }
@@ -393,7 +399,7 @@ void udp_test_package_loss_server(void)
 #ifdef _WIN32
     closesocket( server_skt );
     WSACleanup();
-#elif defined(UNIX)
+#elif defined(UNIX) || defined(MACOS)
     close(server_skt);
 #endif
 }
@@ -416,7 +422,6 @@ void udp_test_package_loss_client(void)
     }
 #endif
 
-    int ret = 0;
     SOCKET skt = socket( PF_INET, SOCK_DGRAM, IPPROTO_UDP );
 
     struct sockaddr_in remote_addr;
@@ -455,7 +460,7 @@ void udp_test_package_loss_client(void)
         if( i % 100 == 0 )
 #ifdef _WIN32
             Sleep(1);
-#elif defined(UNIX)
+#elif defined(UNIX) || defined(MACOS)
             usleep(100000);
 #endif
 
@@ -467,7 +472,7 @@ void udp_test_package_loss_client(void)
 #ifdef _WIN32
     closesocket( skt );
     WSACleanup();
-#elif defined(UNIX)
+#else
     close(skt);
 #endif
 }
