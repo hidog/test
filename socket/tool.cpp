@@ -170,8 +170,10 @@ void sockopt_test()
     }
 #ifdef _WIN32
     printf( "timeout = %d\n", timeout );
-#else
+#elif defined(UNIX)
     printf("timeout = %ld s, %ld us\n", timeout.tv_sec, timeout.tv_usec );
+#elif defined(MACOS)
+    printf("timeout = %ld s, %d us\n", timeout.tv_sec, timeout.tv_usec );
 #endif
 
     
@@ -209,8 +211,10 @@ void sockopt_test()
     }
 #ifdef _WIN32
     printf( "timeout = %d\n", timeout );
-#else
+#elif defined(UNIX)
     printf("timeout = %ld s, %ld us\n", timeout.tv_sec, timeout.tv_usec );
+#elif defined(MACOS)
+    printf("timeout = %ld s, %d us\n", timeout.tv_sec, timeout.tv_usec );
 #endif
 
 
