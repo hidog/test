@@ -2,6 +2,7 @@
 
 #include <string.h>
 #include <stdio.h>
+#include <stdlib.h>
 
 #if defined(UNIX) || defined(MACOS)
 #include <netdb.h>
@@ -23,6 +24,9 @@
 typedef int socklen_t;
 typedef int ssize_t;
 #define bzero(ptr,size)     memset( (ptr), 0, (size) )
+#elif defined(UNIX)
+typedef int SOCKET;
+#define SOCKET_ERROR -1
 #endif
 
 
@@ -277,7 +281,7 @@ void udp_hello_client_2( const char* ip, const char* port )
 
 
 
-void udp_test_package_loss(void)
+void udp_test_package_loss_server(void)
 {
 #ifdef _WIN32
     // windows need init
@@ -360,3 +364,75 @@ void udp_test_package_loss(void)
     close(server_skt);
 #endif
 }
+
+
+
+
+
+
+void udp_test_package_loss_client(void)
+{
+#ifdef _WIN32
+    // windows need init
+    WORD socket_version = MAKEWORD(2,2);
+    WSADATA wsa_data; 
+    if( WSAStartup( socket_version, &wsa_data ) != 0 )
+    {
+        printf("init error\n");
+        return;
+    }
+#endif
+
+    int ret = 0;
+    SOCKET skt = socket( PF_INET, SOCK_DGRAM, IPPROTO_UDP );
+
+    struct sockaddr_in remote_addr;
+    bzero( &remote_addr, sizeof remote_addr );
+    remote_addr.sin_family = AF_INET;
+    remote_addr.sin_port = htons( 7229 );
+    remote_addr.sin_addr.s_addr = inet_addr("111.248.192.70");
+    int remote_len = sizeof remote_addr;
+
+    // start recv data
+    char *send_buf = (char*)malloc( sizeof(struct LossData) ); 
+    if( send_buf == NULL )
+    {
+        printf("malloc fail.\n");
+        return;
+    }
+
+    ssize_t send_ret;
+
+    struct LossData ld;
+
+    for( int i = 0; i < 999999; i++ )
+    {
+        ld.index = i;
+        memcpy( send_buf, &ld, sizeof(struct LossData) );
+        send_ret = sendto( skt, send_buf, sizeof(struct LossData), 0, (struct sockaddr *)&remote_addr, remote_len );
+
+        if( send_ret < 0 )
+        {
+            printf("recv end.\n");
+            break;
+        }
+        
+        printf("index = %d, send ret = %d\n", i, (int)send_ret );
+
+        if( i % 100 == 0 )
+            usleep(100000);
+
+    }
+
+    free(send_buf);
+    send_buf = NULL;
+
+#ifdef _WIN32
+    closesocket( server_skt );
+    WSACleanup();
+#elif defined(UNIX)
+    close(skt);
+#endif
+}
+
+
