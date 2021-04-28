@@ -14,10 +14,10 @@ void udp_package_order_client();
 
 /*
     1. 測量RTT (封包送達時間) 
-    2. 測試掉封包 
-    * 完成 3. 測試封包順序問題   
+    * 2. 測試掉封包 
+    * 3. 測試封包順序問題   
     4. 測試一個server多個client
-    5. 設置timeout
+    * 5. 設置timeout
     6. 設置non-blocking
     7. 廣播
  */

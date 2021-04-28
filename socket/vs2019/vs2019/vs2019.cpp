@@ -23,7 +23,9 @@ int main()
     //udp_package_order_client();s
     //error_handle_test();
 
-    udp_test_package_loss_client();
+    //udp_test_package_loss_client();
+
+    sockopt_test();
 
     system("PAUSE");
     return 0;

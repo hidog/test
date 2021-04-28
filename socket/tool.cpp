@@ -114,7 +114,131 @@ void error_handle_test()
 #endif
         return;
     }
+}
 
 
 
+
+/*
+    windows ref: https://docs.microsoft.com/en-us/windows/win32/api/winsock/nf-winsock-setsockopt
+                 https://docs.microsoft.com/en-us/windows/win32/api/winsock/nf-winsock-getsockopt
+*/
+void sockopt_test()
+{
+#ifdef _WIN32
+    // windows need init
+    WORD socket_version = MAKEWORD(2,2);
+    WSADATA wsa_data; 
+    if( WSAStartup(socket_version,&wsa_data) != 0 )
+    {
+        printf("init error\n");
+        return;
+    }
+#endif
+
+    SOCKET skt = socket( PF_INET, SOCK_DGRAM, IPPROTO_UDP );
+    int res;
+
+    /* 
+        SO_SNDTIMEO
+    */
+    int timeout = 0;
+    int timeout_len = sizeof timeout;
+    res = getsockopt( skt, SOL_SOCKET, SO_SNDTIMEO, (char*)&timeout, &timeout_len );
+    if( res == SOCKET_ERROR )
+    {
+#ifdef _WIN32
+        int err_code = WSAGetLastError();
+#else
+        int err_code = errno;
+#endif
+        printf("error code = %d\n", err_code );
+        return;
+    }
+    printf( "timeout = %d\n", timeout );
+
+    timeout = 1000; // 1s
+    res = setsockopt( skt, SOL_SOCKET, SO_SNDTIMEO, (char*)&timeout, sizeof timeout );
+    if( res == SOCKET_ERROR )
+    {
+#ifdef _WIN32
+        int err_code = WSAGetLastError();
+#else
+        int err_code = errno;
+#endif
+        printf("error code = %d\n", err_code );
+        return;
+    }
+
+    // reget sent timeout
+    res = getsockopt( skt, SOL_SOCKET, SO_SNDTIMEO, (char*)&timeout, &timeout_len );
+    if( res == SOCKET_ERROR )
+    {
+#ifdef _WIN32
+        int err_code = WSAGetLastError();
+#else
+        int err_code = errno;
+#endif
+        printf("error code = %d\n", err_code );
+        return;
+    }
+    printf( "timeout = %d\n", timeout );
+
+
+
+
+
+    /* 
+        SO_RCVBUF
+    */
+    int recvbuf = 0;
+    int recvbuf_len = sizeof recvbuf;
+    res = getsockopt( skt, SOL_SOCKET, SO_RCVBUF, (char*)&recvbuf, &recvbuf_len );
+    if( res == SOCKET_ERROR )
+    {
+#ifdef _WIN32
+        int err_code = WSAGetLastError();
+#else
+        int err_code = errno;
+#endif
+        printf("error code = %d\n", err_code );
+        return;
+    }
+    printf( "recvbuf = %d\n", recvbuf );
+
+    recvbuf = 30; // 1s
+    res = setsockopt( skt, SOL_SOCKET, SO_RCVBUF, (char*)&recvbuf, sizeof recvbuf_len );
+    if( res == SOCKET_ERROR )
+    {
+#ifdef _WIN32
+        int err_code = WSAGetLastError();
+#else
+        int err_code = errno;
+#endif
+        printf("error code = %d\n", err_code );
+        return;
+    }
+
+    // reget sent timeout
+    res = getsockopt( skt, SOL_SOCKET, SO_RCVBUF, (char*)&recvbuf, &recvbuf_len );
+    if( res == SOCKET_ERROR )
+    {
+#ifdef _WIN32
+        int err_code = WSAGetLastError();
+#else
+        int err_code = errno;
+#endif
+        printf("error code = %d\n", err_code );
+        return;
+    }
+    printf( "recvbuf = %d\n", recvbuf );
+
+
+
+
+#ifdef _WIN32
+    closesocket(skt);
+#else
+    close(skt);
+#endif
 }

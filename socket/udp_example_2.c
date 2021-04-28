@@ -454,7 +454,7 @@ void udp_test_package_loss_client(void)
 
         if( i % 100 == 0 )
 #ifdef _WIN32
-            Sleep(1);
+            Sleep(100);
 #elif defined(UNIX)
             usleep(100000);
 #endif
