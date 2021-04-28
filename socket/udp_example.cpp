@@ -127,7 +127,7 @@ void udp_RTT_client()
         ret = recvfrom( client_skt, recv_buf, sizeof(RTT_Data), 0, (sockaddr*)&remote_addr, &remote_len );
         if( ret < 0 )
         {
-            printf("recv end. %d\n", (int)ret );
+            printf("recv end. %d, err code = %d\n", (int)ret, errno );
             break;
         }
         else if( ret == 0 )
@@ -146,7 +146,7 @@ void udp_RTT_client()
         auto time_now = time_point_cast<milliseconds>(steady_clock::now());
         auto diff_1 = duration_cast<milliseconds>( time_now - rtt_recv.time_stamp ).count();
         auto diff_2 = duration_cast<milliseconds>( time_now - rtt_recv.server_ts ).count();
-        printf("index = %d, RTT = %lld, sts = %lld\n", index, diff_1, diff_2 );
+        printf("index = %d, RTT = %lld, sts = %lld\n", index, (long long int)diff_1, (long long int)diff_2 );
         
         index++;
     }

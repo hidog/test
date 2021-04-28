@@ -23,7 +23,8 @@ int main()
     //udp_test_package_loss_client();
     //udp_test_package_loss_server();
     
-    sockopt_test();
+    //sockopt_test();
+    udp_RTT_client();
 
     return 0;
 }
