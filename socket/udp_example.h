@@ -1,4 +1,4 @@
-﻿#ifndef UDP_EXAMPLE_H
+#ifndef UDP_EXAMPLE_H
 #define UDP_EXAMPLE_H
 
 #include <string>
@@ -11,6 +11,10 @@ void udp_hello_client_c( std::string ip, int port );
 
 void udp_package_order_server();
 void udp_package_order_client();
+
+void udp_RTT_server(); // RTT = Round Trip Time (RTT)
+void udp_RTT_client();
+
 
 /*
     1. 測量RTT (封包送達時間) 

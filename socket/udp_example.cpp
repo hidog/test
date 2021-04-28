@@ -1,7 +1,8 @@
-﻿#include "udp_example.h"
+#include "udp_example.h"
 #include <stdio.h>
 #include <string>
 #include <string.h>
+#include <chrono>
 
 #ifdef _WIN32
 #include <WinSock2.h>
@@ -38,6 +39,243 @@ struct OrderData
     int order_index;
     char filling[1490];
 };
+
+
+using namespace std::chrono;
+
+
+struct RTT_Data
+{
+    int index;
+    time_point<steady_clock,milliseconds> time_stamp;
+    time_point<steady_clock,milliseconds> server_ts;
+};
+
+
+
+
+
+void udp_RTT_client()
+{
+#ifdef _WIN32
+    // windows need init
+    WORD socket_version = MAKEWORD(2,2);
+    WSADATA wsa_data; 
+    if( WSAStartup( socket_version, &wsa_data ) != 0 )
+    {
+        printf("init error\n");
+        return;
+    }
+#endif
+
+    // create socket
+    SOCKET client_skt = socket( PF_INET, SOCK_DGRAM, IPPROTO_UDP );
+    if( client_skt == INVALID_SOCKET )
+    {
+        printf("create socket error.\n");
+        return;
+    }
+   
+    // set remote address, port
+    sockaddr_in remote_addr;
+    bzero( &remote_addr, sizeof remote_addr );
+    remote_addr.sin_family = AF_INET;
+    remote_addr.sin_port = htons(6178);
+#ifdef _WIN32
+    remote_addr.sin_addr.S_un.S_addr = inet_addr( ip.c_str() );  
+#else
+    inet_pton( AF_INET, "36.226.248.130", &remote_addr.sin_addr );  // 另一個作法
+#endif
+    socklen_t remote_len = sizeof(remote_addr);
+
+    // send data
+    char *send_buf = new char[sizeof(RTT_Data)];
+    char *recv_buf = new char[sizeof(RTT_Data)];
+    ssize_t ret;
+    RTT_Data rtt_data, rtt_recv;
+    int index = 0;
+    bool first_flag = true;
+    
+    while(true)
+    {
+        rtt_data.index = index;
+        rtt_data.time_stamp = time_point_cast<milliseconds>(steady_clock::now());
+        memcpy( send_buf, &rtt_data, sizeof(RTT_Data) );
+        
+        ret = sendto( client_skt, send_buf, sizeof(RTT_Data), 0, (sockaddr*)&remote_addr, remote_len );
+        if( ret <= 0 )
+        {
+            printf( "send end. %d\n", (int)ret );
+            break;
+        }
+        
+        //
+        if( first_flag == true )
+        {
+            first_flag = false;
+            timeval timeout = { 20, 500000 };
+            socklen_t timeout_len = sizeof(timeval);
+            auto set_res = setsockopt( client_skt, SOL_SOCKET, SO_RCVTIMEO, &timeout, timeout_len );
+            if( set_res == SOCKET_ERROR )
+            {
+                printf( "set timeout fail %d\n", set_res );
+                break;
+            }
+        }
+        
+        //
+        ret = recvfrom( client_skt, recv_buf, sizeof(RTT_Data), 0, (sockaddr*)&remote_addr, &remote_len );
+        if( ret < 0 )
+        {
+            printf("recv end. %d\n", (int)ret );
+            break;
+        }
+        else if( ret == 0 )
+        {
+            printf("time out.");
+            continue;
+        }
+        
+        memcpy( &rtt_recv, recv_buf, sizeof(RTT_Data) );
+        if( rtt_recv.index != index )
+        {
+            printf("index diff. %d != %d. error\n", rtt_recv.index, index );
+            break;
+        }
+        
+        auto time_now = time_point_cast<milliseconds>(steady_clock::now());
+        auto diff_1 = duration_cast<milliseconds>( time_now - rtt_recv.time_stamp ).count();
+        auto diff_2 = duration_cast<milliseconds>( time_now - rtt_recv.server_ts ).count();
+        printf("index = %d, RTT = %lld, sts = %lld\n", index, diff_1, diff_2 );
+        
+        index++;
+    }
+    
+    delete [] send_buf;
+    send_buf = nullptr;
+    
+    delete [] recv_buf;
+    recv_buf = nullptr;
+
+#ifdef _WIN32
+    closesocket( client_skt );
+    WSACleanup();
+#elif defined(UNIX) || defined(MACOS)
+    close(client_skt);
+#endif
+    
+}
+
+
+
+void udp_RTT_server()
+{
+#ifdef _WIN32
+    // windows need init
+    WORD socket_version = MAKEWORD(2,2);
+    WSADATA wsa_data;
+    if( WSAStartup(socket_version,&wsa_data) != 0 )
+    {
+        printf("init error\n");
+        return;
+    }
+#endif
+
+    // bind server socket
+    SOCKET server_skt = socket( PF_INET, SOCK_DGRAM, IPPROTO_UDP );
+    
+    sockaddr_in local_addr;
+    bzero( &local_addr, sizeof local_addr );  // windows沒有bzero
+    local_addr.sin_family = AF_INET;
+    local_addr.sin_port = htons(6178);
+
+#ifdef _WIN32
+    local_addr.sin_addr.S_un.S_addr = INADDR_ANY;
+#else
+    local_addr.sin_addr.s_addr = INADDR_ANY;
+#endif
+    int local_len = sizeof(local_addr);
+    
+    //
+    if( bind(server_skt, (sockaddr*)&local_addr, local_len ) == SOCKET_ERROR )
+    {
+        printf("bind error !\n");
+        return;
+    }
+
+    printf( "bind success. wait for client data...\n" );
+
+    // receive remote data
+    sockaddr_in remote_addr;
+    bzero( &remote_addr, sizeof remote_addr );
+    socklen_t remote_len = sizeof(remote_addr);
+
+    char *recv_buf = new char[sizeof(RTT_Data)];
+    char *send_buf = new char[sizeof(RTT_Data)];
+    ssize_t ret;
+    RTT_Data rtt_data;
+    bool first_flag = true;
+    
+    while(true)
+    {
+        ret = recvfrom( server_skt, recv_buf, sizeof(RTT_Data), 0, (sockaddr*)&remote_addr, &remote_len );
+        if( ret < 0 )
+        {
+            printf("recv end. %d\n", (int)ret );
+            break;
+        }
+        else if( ret == 0 )
+        {
+            printf("recv timeout. %d\n", (int)ret );
+            continue;
+        }
+        
+        if( first_flag == true )
+        {
+            first_flag = false;
+            timeval timeout = { 20, 500000 }; // 20.500 s
+            socklen_t timeout_len = sizeof(timeval);
+            auto set_res = setsockopt( server_skt, SOL_SOCKET, SO_RCVTIMEO, &timeout, timeout_len );
+            if( set_res == SOCKET_ERROR )
+            {
+                printf("set timeout fail. set_res = %d\n", set_res );
+                break;
+            }
+        }
+        
+        memcpy( &rtt_data, recv_buf, sizeof(RTT_Data) );
+        auto sepoch = rtt_data.time_stamp.time_since_epoch();
+        auto tse_hour = duration_cast<hours>(sepoch).count();
+        printf("recv data %d. index = %d, hour since epoch = %ld\n", (int)ret, rtt_data.index, tse_hour );
+        
+        // prepare send back data;
+        rtt_data.server_ts = time_point_cast<milliseconds>(steady_clock::now());
+        memcpy( send_buf, &rtt_data, sizeof(RTT_Data) );
+        ret = sendto( server_skt, send_buf, sizeof(RTT_Data), 0, (sockaddr*)&remote_addr, remote_len );
+        if( ret < 0 )
+        {
+            printf("send end. %d\n", (int)ret);
+            break;
+        }
+    }
+    
+    delete [] recv_buf;
+    recv_buf = nullptr;
+    
+    delete [] send_buf;
+    send_buf = nullptr;
+
+#ifdef _WIN32
+    closesocket(server_skt);
+    WSACleanup();
+#elif defined(UNIX) || defined(MACOS)
+    close(server_skt);
+#endif
+}
+
+
+
+
 
 
 

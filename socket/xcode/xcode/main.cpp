@@ -20,7 +20,10 @@ int main(int argc, const char * argv[])
     //udp_package_order_server();
     //udp_package_order_client();
     
-    sockopt_test();
+    //sockopt_test();
+    
+    //udp_RTT_server();
+    udp_RTT_client();
     
     return 0;
 }
