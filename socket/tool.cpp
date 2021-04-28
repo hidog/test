@@ -171,15 +171,15 @@ void sockopt_test()
 #ifdef _WIN32
     printf( "timeout = %d\n", timeout );
 #else
-    printf("timeout = %ld s, %d us\n", timeout.tv_sec, timeout.tv_usec );
+    printf("timeout = %ld s, %ld us\n", timeout.tv_sec, timeout.tv_usec );
 #endif
 
     
 #ifdef _WIN32
     timeout = 1000; // 1s
 #else
-    timeout.tv_sec = 1;
-    timeout.tv_usec = 250;
+    timeout.tv_sec = 3;
+    timeout.tv_usec = 12000; // ubuntu有精確度問題,會自動變成ms.  (最小值4000倍數)
 #endif 
     
     
@@ -210,7 +210,7 @@ void sockopt_test()
 #ifdef _WIN32
     printf( "timeout = %d\n", timeout );
 #else
-    printf("timeout = %ld s, %d us\n", timeout.tv_sec, timeout.tv_usec );
+    printf("timeout = %ld s, %ld us\n", timeout.tv_sec, timeout.tv_usec );
 #endif
 
 
