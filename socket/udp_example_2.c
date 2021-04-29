@@ -141,6 +141,10 @@ void udp_multi_client(void)
     {
 #ifdef _WIN32
         sprintf( multi_data.message, "Hello, this is windows" );
+#elif defined(UNIX)
+        sprintf( multi_data.message, "Hello, this is ubuntu" );
+#elif defined(MACOS)
+        sprintf( multi_data.message, "Hello, this is MACOS" );
 #endif
         memcpy( send_buf, &multi_data, multi_data_size );
         ret = sendto( client_skt, send_buf, multi_data_size, 0, (struct sockaddr*)&remote_addr, remote_len );
