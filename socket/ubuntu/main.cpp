@@ -24,7 +24,8 @@ int main()
     //udp_test_package_loss_server();
     
     //sockopt_test();
-    udp_RTT_client();
+    //udp_RTT_client();
+    udp_RTT_server();
 
     return 0;
 }
