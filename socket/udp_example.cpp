@@ -159,7 +159,7 @@ void udp_RTT_client()
         auto diff = time_now - rtt_recv.time_stamp;
         if( diff > max )
             max = diff;
-        printf("index = %d, RTT = %lld, max = %lld\n", index, diff, max );
+        printf("index = %d, RTT = %lld, max = %lld\n", index, (long long int)diff, (long long int)max );
         
         //std::this_thread::sleep_for( milliseconds(50) );
 
@@ -268,7 +268,7 @@ void udp_RTT_server()
         }
         
         memcpy( &rtt_data, recv_buf, sizeof(RTT_Data) );
-        printf("recv data %d. index = %d, hour since epoch = %lld\n", (int)ret, rtt_data.index, rtt_data.time_stamp );
+        printf("recv data %d. index = %d, hour since epoch = %lld\n", (int)ret, rtt_data.index, (long long int)rtt_data.time_stamp );
         
         // prepare send back data;
         memcpy( send_buf, &rtt_data, sizeof(RTT_Data) );

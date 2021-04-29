@@ -118,7 +118,7 @@ void udp_multi_client(void)
 #ifdef _WIN32
     remote_addr.sin_addr.S_un.S_addr = inet_addr( "122.116.84.59" );  
 #else
-    remote_addr.sin_addr.s_addr = inet_addr( ip.c_str() );
+    remote_addr.sin_addr.s_addr = inet_addr( "122.116.84.59" );
 #endif
     socklen_t remote_len = sizeof(remote_addr);
 
@@ -149,7 +149,7 @@ void udp_multi_client(void)
             printf("send fail.\n");
             break;
         }
-        printf("send to server. ret = %d\n", ret );
+        printf("send to server. ret = %d\n", (int)ret );
 
         ret = recvfrom( client_skt, recv_buf, 300, 0, (struct sockaddr*)&remote_addr, &remote_len );
         if( ret < 0 )
@@ -158,7 +158,7 @@ void udp_multi_client(void)
             break;
         }
 
-        printf("recv from server. ret = %d, msg = %s\n", ret, recv_buf );
+        printf("recv from server. ret = %d, msg = %s\n", (int)ret, recv_buf );
         printf( "\n" );
 
 #ifdef _WIN32
