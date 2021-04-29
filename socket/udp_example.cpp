@@ -11,6 +11,7 @@
 #include <sys/socket.h>
 #include <sys/types.h> 
 #include <arpa/inet.h>
+#include <errno.h>
 #endif
 
 
@@ -127,13 +128,14 @@ void udp_RTT_client()
         ret = recvfrom( client_skt, recv_buf, sizeof(RTT_Data), 0, (sockaddr*)&remote_addr, &remote_len );
         if( ret < 0 )
         {
-            printf("recv end. %d\n", (int)ret );
-            break;
+            int err = errno;
+            printf("recv timeout. %d, err code = %d\n", (int)ret, err );
+            continue;
         }
         else if( ret == 0 )
         {
-            printf("time out.");
-            continue;
+            printf("recv end.\n");
+            break;
         }
         
         memcpy( &rtt_recv, recv_buf, sizeof(RTT_Data) );
