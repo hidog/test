@@ -24,8 +24,10 @@ int main()
     //error_handle_test();
 
     //udp_test_package_loss_client();
+    //sockopt_test();
 
-    sockopt_test();
+    udp_RTT_server();
+
 
     system("PAUSE");
     return 0;

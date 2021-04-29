@@ -6,6 +6,7 @@
 
 #ifdef _WIN32
 #include <WinSock2.h>
+#include <WS2tcpip.h>
 #elif defined(UNIX) || defined(MACOS)
 #include <unistd.h>
 #include <sys/socket.h>
@@ -82,7 +83,7 @@ void udp_RTT_client()
     remote_addr.sin_family = AF_INET;
     remote_addr.sin_port = htons(6178);
 #ifdef _WIN32
-    remote_addr.sin_addr.S_un.S_addr = inet_addr( ip.c_str() );  
+    inet_pton( AF_INET, "36.226.248.130", &remote_addr.sin_addr );  // 另一個作法
 #else
     inet_pton( AF_INET, "36.226.248.130", &remote_addr.sin_addr );  // 另一個作法
 #endif
@@ -115,12 +116,12 @@ void udp_RTT_client()
             first_flag = false;
             timeval timeout = { 20, 500000 };
             socklen_t timeout_len = sizeof(timeval);
-            auto set_res = setsockopt( client_skt, SOL_SOCKET, SO_RCVTIMEO, &timeout, timeout_len );
+           /* auto set_res = setsockopt( client_skt, SOL_SOCKET, SO_RCVTIMEO, &timeout, timeout_len );
             if( set_res == SOCKET_ERROR )
             {
                 printf( "set timeout fail %d\n", set_res );
                 break;
-            }
+            }*/
         }
         
         //
@@ -221,21 +222,26 @@ void udp_RTT_server()
         ret = recvfrom( server_skt, recv_buf, sizeof(RTT_Data), 0, (sockaddr*)&remote_addr, &remote_len );
         if( ret < 0 )
         {
-            printf("recv end. %d\n", (int)ret );
-            break;
+            int err = WSAGetLastError();
+            printf("recv timeout %d, err = %d\n", (int)ret, err );
+            continue;
         }
         else if( ret == 0 )
         {
-            printf("recv timeout. %d\n", (int)ret );
-            continue;
+            printf("recv end. %d\n", (int)ret );
+            break;
         }
         
         if( first_flag == true )
         {
             first_flag = false;
+#ifdef _WIN32
+            int timeout = 20500;
+#else
             timeval timeout = { 20, 500000 }; // 20.500 s
+#endif
             socklen_t timeout_len = sizeof(timeval);
-            auto set_res = setsockopt( server_skt, SOL_SOCKET, SO_RCVTIMEO, &timeout, timeout_len );
+            auto set_res = setsockopt( server_skt, SOL_SOCKET, SO_RCVTIMEO, (char*)&timeout, timeout_len );
             if( set_res == SOCKET_ERROR )
             {
                 printf("set timeout fail. set_res = %d\n", set_res );

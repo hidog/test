@@ -145,6 +145,7 @@ void sockopt_test()
 
     /* 
         SO_SNDTIMEO
+        windows跟linux用的方式不同,不能混用.
     */
 #ifdef _WIN32
     int timeout = 0;
