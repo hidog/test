@@ -3,6 +3,7 @@
 #include <string>
 #include <string.h>
 #include <chrono>
+#include <thread>
 
 #ifdef _WIN32
 #include <WinSock2.h>
@@ -50,9 +51,6 @@ struct RTT_Data
 {
     int index;
     int64_t time_stamp;
-    int64_t server_ts;
-    //time_point<steady_clock,milliseconds> time_stamp;
-    //time_point<steady_clock,milliseconds> server_ts;
 };
 
 
@@ -99,6 +97,7 @@ void udp_RTT_client()
     RTT_Data rtt_data, rtt_recv;
     int index = 0;
     bool first_flag = true;
+    int max = 0;
     
     while(true)
     {
@@ -157,10 +156,13 @@ void udp_RTT_client()
         }
         
         auto time_now = time_point_cast<milliseconds>(steady_clock::now()).time_since_epoch().count();
-        auto diff_1 = time_now - rtt_recv.time_stamp;
-        auto diff_2 = time_now - rtt_recv.server_ts;
-        printf("index = %d, RTT = %lld, sts = %lld\n", index, diff_1, diff_2 );
+        auto diff = time_now - rtt_recv.time_stamp;
+        if( diff > max )
+            max = diff;
+        printf("index = %d, RTT = %lld, max = %d\n", index, diff, max );
         
+        std::this_thread::sleep_for( milliseconds(50) );
+
         index++;
     }
     
@@ -262,10 +264,9 @@ void udp_RTT_server()
         }
         
         memcpy( &rtt_data, recv_buf, sizeof(RTT_Data) );
-        printf("recv data %d. index = %d, hour since epoch = %ld\n", (int)ret, rtt_data.index, rtt_data.time_stamp );
+        printf("recv data %d. index = %d, hour since epoch = %lld\n", (int)ret, rtt_data.index, rtt_data.time_stamp );
         
         // prepare send back data;
-        rtt_data.server_ts = steady_clock::now().time_since_epoch().count();
         memcpy( send_buf, &rtt_data, sizeof(RTT_Data) );
         ret = sendto( server_skt, send_buf, sizeof(RTT_Data), 0, (sockaddr*)&remote_addr, remote_len );
         if( ret < 0 )
