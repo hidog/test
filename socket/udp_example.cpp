@@ -49,8 +49,10 @@ using namespace std::chrono;
 struct RTT_Data
 {
     int index;
-    time_point<steady_clock,milliseconds> time_stamp;
-    time_point<steady_clock,milliseconds> server_ts;
+    int64_t time_stamp;
+    int64_t server_ts;
+    //time_point<steady_clock,milliseconds> time_stamp;
+    //time_point<steady_clock,milliseconds> server_ts;
 };
 
 
@@ -101,7 +103,7 @@ void udp_RTT_client()
     while(true)
     {
         rtt_data.index = index;
-        rtt_data.time_stamp = time_point_cast<milliseconds>(steady_clock::now());
+        rtt_data.time_stamp = time_point_cast<milliseconds>(steady_clock::now()).time_since_epoch().count();
         memcpy( send_buf, &rtt_data, sizeof(RTT_Data) );
         
         ret = sendto( client_skt, send_buf, sizeof(RTT_Data), 0, (sockaddr*)&remote_addr, remote_len );
@@ -252,12 +254,10 @@ void udp_RTT_server()
         }
         
         memcpy( &rtt_data, recv_buf, sizeof(RTT_Data) );
-        auto sepoch = rtt_data.time_stamp.time_since_epoch();
-        auto tse_hour = duration_cast<hours>(sepoch).count();
-        printf("recv data %d. index = %d, hour since epoch = %ld\n", (int)ret, rtt_data.index, tse_hour );
+        printf("recv data %d. index = %d, hour since epoch = %ld\n", (int)ret, rtt_data.index, rtt_data.time_stamp );
         
         // prepare send back data;
-        rtt_data.server_ts = time_point_cast<milliseconds>(steady_clock::now());
+        rtt_data.server_ts = steady_clock::now().time_since_epoch().count();
         memcpy( send_buf, &rtt_data, sizeof(RTT_Data) );
         ret = sendto( server_skt, send_buf, sizeof(RTT_Data), 0, (sockaddr*)&remote_addr, remote_len );
         if( ret < 0 )
