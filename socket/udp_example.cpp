@@ -86,7 +86,7 @@ void udp_RTT_client()
 #ifdef _WIN32
     inet_pton( AF_INET, "122.116.84.59", &remote_addr.sin_addr );  // 另一個作法
 #else
-    inet_pton( AF_INET, "36.231.100.250", &remote_addr.sin_addr );  // 另一個作法
+    inet_pton( AF_INET, "36.226.248.130", &remote_addr.sin_addr );  // 另一個作法
 #endif
     socklen_t remote_len = sizeof(remote_addr);
 
