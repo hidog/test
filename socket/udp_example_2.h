@@ -10,6 +10,9 @@ void udp_hello_client_2( const char* ip, const char* port );
 void udp_test_package_loss_server(void);
 void udp_test_package_loss_client(void);
 
+void udp_multi_server(void);
+void udp_multi_client(void);
+
 
 
 #endif

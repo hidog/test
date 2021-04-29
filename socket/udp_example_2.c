@@ -3,6 +3,7 @@
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <time.h>
 
 #if defined(UNIX) || defined(MACOS)
 #include <netdb.h>
@@ -29,6 +30,16 @@ typedef int ssize_t;
 typedef int SOCKET;
 #define SOCKET_ERROR -1
 #endif
+
+
+
+struct MultiData
+{
+    int identity;
+    char message[200];
+};
+
+
 
 
 struct LossData
@@ -68,6 +79,215 @@ static int get_in_port( struct sockaddr *addr )
         return ntohs( ptr->sin6_port );
     }
 }
+
+
+
+
+
+
+
+void udp_multi_client(void)
+{
+    srand( (unsigned int)time(NULL) );
+
+#ifdef _WIN32
+    // windows need init
+    WORD socket_version = MAKEWORD(2,2);
+    WSADATA wsa_data; 
+    if( WSAStartup( socket_version, &wsa_data ) != 0 )
+    {
+        printf("init error\n");
+        return;
+    }
+#endif
+
+    // create socket
+    SOCKET client_skt = socket( PF_INET, SOCK_DGRAM, IPPROTO_UDP );
+    if( client_skt == INVALID_SOCKET )
+    {
+        printf("create socket error.\n");
+        return;
+    }
+
+    // set remote address, port
+    struct sockaddr_in remote_addr;
+    bzero( &remote_addr, sizeof remote_addr );
+    remote_addr.sin_family = AF_INET;
+    remote_addr.sin_port = htons(38871);
+#ifdef _WIN32
+    remote_addr.sin_addr.S_un.S_addr = inet_addr( "122.116.84.59" );  
+#else
+    remote_addr.sin_addr.s_addr = inet_addr( ip.c_str() );
+#endif
+    socklen_t remote_len = sizeof(remote_addr);
+
+    //
+    struct MultiData multi_data;
+    const int multi_data_size = sizeof( struct MultiData );
+    char *send_buf = (char*)malloc(multi_data_size);
+    if( send_buf == NULL )
+    {
+        printf("malloc fail.\n");
+        return;
+    }
+
+    multi_data.identity = rand() % 10000;
+    ssize_t ret;
+
+    char recv_buf[300];
+
+    while(1)
+    {
+#ifdef _WIN32
+        sprintf( multi_data.message, "Hello, this is windows" );
+#endif
+        memcpy( send_buf, &multi_data, multi_data_size );
+        ret = sendto( client_skt, send_buf, multi_data_size, 0, (struct sockaddr*)&remote_addr, remote_len );
+        if( ret < 0 )
+        {
+            printf("send fail.\n");
+            break;
+        }
+        printf("send to server. ret = %d\n", ret );
+
+        ret = recvfrom( client_skt, recv_buf, 300, 0, (struct sockaddr*)&remote_addr, &remote_len );
+        if( ret < 0 )
+        {
+            printf("recv fail.\n");
+            break;
+        }
+
+        printf("recv from server. ret = %d, msg = %s\n", ret, recv_buf );
+        printf( "\n" );
+
+#ifdef _WIN32
+        Sleep(1000);
+#endif
+    }
+
+    free(send_buf);
+    send_buf = NULL;
+
+#ifdef _WIN32
+    closesocket( client_skt );
+    WSACleanup();
+#elif defined(UNIX) || defined(MACOS)
+    close(client_skt);
+#endif
+}
+
+
+
+void udp_multi_server(void)
+{
+#ifdef _WIN32
+    // windows need init
+    WORD socket_version = MAKEWORD(2,2);
+    WSADATA wsa_data; 
+    if( WSAStartup(socket_version,&wsa_data) != 0 )
+    {
+        printf("init error\n");
+        return;
+    }
+#endif
+
+    // bind server socket
+    SOCKET server_skt = socket( PF_INET, SOCK_DGRAM, IPPROTO_UDP );
+
+    struct sockaddr_in local_addr;
+    bzero( &local_addr, sizeof local_addr );  // windows沒有bzero
+    local_addr.sin_family = AF_INET;
+    local_addr.sin_port = htons(38871);
+
+#ifdef _WIN32
+    local_addr.sin_addr.S_un.S_addr = INADDR_ANY;
+#else
+    local_addr.sin_addr.s_addr = INADDR_ANY; 
+#endif
+    int local_len = sizeof(local_addr);
+
+    // https://man7.org/linux/man-pages/man2/bind.2.html   see how to handle error
+    if( bind(server_skt, (struct sockaddr*)&local_addr, local_len ) == SOCKET_ERROR )
+    {
+        printf("bind error !\n");
+        return;
+    }
+
+    printf( "bind success. wait for client data...\n" );
+
+    // receive remote data
+    struct sockaddr_in remote_addr;
+    bzero( &remote_addr, sizeof remote_addr );
+    socklen_t remote_len = sizeof(remote_addr);
+
+    char send_data[100] = {"hello, this is server."};
+
+    const int multi_data_size = sizeof(struct MultiData);
+    char *recv_buf = (char*)malloc(multi_data_size);
+    if( recv_buf == NULL )
+    {
+        printf("malloc error\n");
+        return;
+    }
+    ssize_t ret;
+
+    struct MultiData multi_data;
+
+    int id_map[100];
+    int max_user = 0;
+    for( int i = 0; i < 100; i++ )
+        id_map[i] = -1;
+    int find_in_map;
+
+    while(1)
+    {
+        ret = recvfrom( server_skt, recv_buf, multi_data_size, 0, (struct sockaddr*)&remote_addr, &remote_len );
+
+        if( ret > 0 )   
+        {
+            memcpy( &multi_data, recv_buf, multi_data_size );
+            find_in_map = 0;
+            for( int i = 0; i <= max_user; i++ )
+            {
+                if( id_map[i] == multi_data.identity )
+                {
+                    find_in_map = 1;
+                    break;
+                }
+            }
+            if( find_in_map == 0 )
+            {
+                id_map[max_user] = multi_data.identity;
+                max_user++;
+            }
+
+            printf( "max user = %d\n", max_user );
+            printf( "recv from ip = %s, port = %d\n", inet_ntoa(remote_addr.sin_addr), ntohs(remote_addr.sin_port) );
+            printf( "recv data. ret = %ld, id = %d, message = %s\n", ret, multi_data.identity, multi_data.message );
+            printf( "\n" );
+        }
+        else
+        {
+            printf( "ret = %ld, error\n", ret );
+            return;
+        }
+
+        // send back
+        ret = sendto( server_skt, send_data, 100, 0, (struct sockaddr*)&remote_addr, remote_len );
+        printf( "send back. ret = %ld\n", ret );
+    }
+
+    free(recv_buf);
+    recv_buf = NULL;
+
+#ifdef _WIN32
+    closesocket(server_skt);
+    WSACleanup();
+#elif defined(UNIX) || defined(MACOS)
+    close(server_skt);
+#endif
+}
+
 
 
 
@@ -201,7 +421,7 @@ void udp_hello_server_2( const char* port )
     printf( "listener: msg : %s\n", recv_buf );
 
     // send back
-    char send_buf[100] = "This is server. response your message.";
+    char send_buf[100] = {"This is server. response your message."};
     ret = sendto( skt, send_buf, strlen(send_buf), 0, (struct sockaddr *)&remote_addr, remote_len );
     if( ret < 0 )
     {
@@ -239,7 +459,7 @@ void udp_hello_client_2( const char* ip, const char* port )
     int skt = get_udp_socket( ip, port );
 
     // send
-    char send_buf[100] = "Hello, this is client\n";
+    char send_buf[100] = {"Hello, this is client\n"};
 #ifdef _WIN32
     int ret = send( skt, send_buf, strlen(send_buf), 0 );
 #else
@@ -388,9 +608,6 @@ void udp_test_package_loss_server(void)
         printf( "recv index = %d\n", ld.index );
     }
 
-    free(flag);
-    flag = NULL;
-
     free(recv_buf);
     recv_buf = NULL;
 
@@ -405,6 +622,9 @@ void udp_test_package_loss_server(void)
         }
     }
     printf("loss rate %d/%d = %lf\n", count, 999999, 1.0*count/999999 );
+
+    free(flag);
+    flag = NULL;
 
 #ifdef _WIN32
     closesocket( server_skt );

@@ -97,7 +97,7 @@ void udp_RTT_client()
     RTT_Data rtt_data, rtt_recv;
     int index = 0;
     bool first_flag = true;
-    int max = 0;
+    int64_t max = 0;
     
     while(true)
     {
@@ -159,7 +159,7 @@ void udp_RTT_client()
         auto diff = time_now - rtt_recv.time_stamp;
         if( diff > max )
             max = diff;
-        printf("index = %d, RTT = %lld, max = %d\n", index, diff, max );
+        printf("index = %d, RTT = %lld, max = %lld\n", index, diff, max );
         
         //std::this_thread::sleep_for( milliseconds(50) );
 
@@ -555,8 +555,6 @@ void udp_hello_server( int port )
 #elif defined(UNIX) || defined(MACOS)
     close(server_skt);
 #endif
-
-
 }
 
 
