@@ -86,7 +86,7 @@ void udp_RTT_client()
     remote_addr.sin_family = AF_INET;
     remote_addr.sin_port = htons(6178);
 #ifdef _WIN32
-    inet_pton( AF_INET, "36.226.248.130", &remote_addr.sin_addr );  // 另一個作法
+    inet_pton( AF_INET, "122.116.84.59", &remote_addr.sin_addr );  // 另一個作法
 #else
     inet_pton( AF_INET, "36.226.248.130", &remote_addr.sin_addr );  // 另一個作法
 #endif
@@ -117,21 +117,29 @@ void udp_RTT_client()
         if( first_flag == true )
         {
             first_flag = false;
+#ifdef _WIN32
+            int timeout = 20500;
+#else
             timeval timeout = { 20, 500000 };
+#endif
             socklen_t timeout_len = sizeof(timeval);
-           /* auto set_res = setsockopt( client_skt, SOL_SOCKET, SO_RCVTIMEO, &timeout, timeout_len );
+            int set_res = setsockopt( client_skt, SOL_SOCKET, SO_RCVTIMEO, (char*)&timeout, timeout_len );
             if( set_res == SOCKET_ERROR )
             {
                 printf( "set timeout fail %d\n", set_res );
                 break;
-            }*/
+            }
         }
         
         //
         ret = recvfrom( client_skt, recv_buf, sizeof(RTT_Data), 0, (sockaddr*)&remote_addr, &remote_len );
         if( ret < 0 )
         {
+#ifdef _WIN32
+            int err = WSAGetLastError();
+#else
             int err = errno;
+#endif
             printf("recv timeout. %d, err code = %d\n", (int)ret, err );
             continue;
         }
