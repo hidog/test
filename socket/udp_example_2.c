@@ -302,7 +302,7 @@ void udp_test_package_loss_server(void)
     bzero( &local_addr, sizeof local_addr );
     local_addr.sin_family = AF_INET;
     local_addr.sin_port = htons( 7227 );
-    local_addr.sin_addr.s_addr = INADDR_ANY;
+    local_addr.sin_addr.s_addr = INADDR_ANY;  // windows有定義,能work. 舊版visual studio或許不行
     int local_len = sizeof local_addr;
 
     ret = bind( server_skt, (struct sockaddr *)&local_addr, local_len );
@@ -337,7 +337,14 @@ void udp_test_package_loss_server(void)
     ssize_t recv_ret;
 
     struct LossData ld;
-    char flag[999999] = {0};
+    char *flag = (char*)malloc(999999); //  [999999] = {0};
+    if( flag == NULL )
+    {
+        printf("malloc fail.\n");
+        return;
+    }
+    memset( flag, 0, 999999 );
+
     int first_recv = 1;
     int set_res = 0;
 
@@ -381,6 +388,9 @@ void udp_test_package_loss_server(void)
         printf( "recv index = %d\n", ld.index );
     }
 
+    free(flag);
+    flag = NULL;
+
     free(recv_buf);
     recv_buf = NULL;
 
@@ -423,6 +433,11 @@ void udp_test_package_loss_client(void)
 #endif
 
     SOCKET skt = socket( PF_INET, SOCK_DGRAM, IPPROTO_UDP );
+    if( skt == INVALID_SOCKET )
+    {
+        printf("get socket fail.\n");
+        return;
+    }
 
     struct sockaddr_in remote_addr;
     bzero( &remote_addr, sizeof remote_addr );

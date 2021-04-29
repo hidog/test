@@ -23,11 +23,12 @@ int main()
     //udp_package_order_client();s
     //error_handle_test();
 
+    udp_test_package_loss_server();
     //udp_test_package_loss_client();
     //sockopt_test();
 
     //udp_RTT_server();
-    udp_RTT_client();
+    //udp_RTT_client();
 
 
     system("PAUSE");
