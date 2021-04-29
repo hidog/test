@@ -236,7 +236,11 @@ void udp_RTT_server()
         ret = recvfrom( server_skt, recv_buf, sizeof(RTT_Data), 0, (sockaddr*)&remote_addr, &remote_len );
         if( ret < 0 )
         {
+#ifdef _WIN32
             int err = WSAGetLastError();
+#else
+            int err = errno;
+#endif
             printf("recv timeout %d, err = %d\n", (int)ret, err );
             continue;
         }
