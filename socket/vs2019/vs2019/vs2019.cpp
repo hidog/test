@@ -26,8 +26,8 @@ int main()
     //udp_test_package_loss_client();
     //sockopt_test();
 
-    udp_RTT_server();
-    //udp_RTT_client();
+    //udp_RTT_server();
+    udp_RTT_client();
 
 
     system("PAUSE");

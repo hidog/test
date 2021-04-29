@@ -161,7 +161,7 @@ void udp_RTT_client()
             max = diff;
         printf("index = %d, RTT = %lld, max = %d\n", index, diff, max );
         
-        std::this_thread::sleep_for( milliseconds(50) );
+        //std::this_thread::sleep_for( milliseconds(50) );
 
         index++;
     }
