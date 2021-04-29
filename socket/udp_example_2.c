@@ -1,4 +1,4 @@
-﻿#include "udp_example_2.h"
+#include "udp_example_2.h"
 
 #include <string.h>
 #include <stdio.h>
@@ -276,7 +276,7 @@ void udp_multi_server(void)
         else
         {
             printf( "ret = %ld, error\n", ret );
-            return;
+            break;
         }
 
         // send back

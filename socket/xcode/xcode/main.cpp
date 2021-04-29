@@ -23,7 +23,10 @@ int main(int argc, const char * argv[])
     //sockopt_test();
     
     //udp_RTT_server();
-    udp_RTT_client();
+    //udp_RTT_client();
+    
+    udp_multi_client();
+    //udp_multi_server();
     
     return 0;
 }
