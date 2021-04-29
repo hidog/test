@@ -29,6 +29,7 @@ typedef int ssize_t;
 #elif defined(UNIX) || defined(MACOS)
 typedef int SOCKET;
 #define SOCKET_ERROR -1
+#define INVALID_SOCKET -1
 #endif
 
 
@@ -663,7 +664,7 @@ void udp_test_package_loss_client(void)
     bzero( &remote_addr, sizeof remote_addr );
     remote_addr.sin_family = AF_INET;
     remote_addr.sin_port = htons( 7227 );
-    remote_addr.sin_addr.s_addr = inet_addr("36.231.100.250");
+    remote_addr.sin_addr.s_addr = inet_addr("122.116.84.59");
     int remote_len = sizeof remote_addr;
 
     // start recv data
