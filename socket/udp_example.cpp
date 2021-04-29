@@ -156,10 +156,10 @@ void udp_RTT_client()
             break;
         }
         
-        auto time_now = time_point_cast<milliseconds>(steady_clock::now());
-        auto diff_1 = duration_cast<milliseconds>( time_now - rtt_recv.time_stamp ).count();
-        auto diff_2 = duration_cast<milliseconds>( time_now - rtt_recv.server_ts ).count();
-        printf("index = %d, RTT = %lld, sts = %lld\n", index, (long long int)diff_1, (long long int)diff_2 );
+        auto time_now = time_point_cast<milliseconds>(steady_clock::now()).time_since_epoch().count();
+        auto diff_1 = time_now - rtt_recv.time_stamp;
+        auto diff_2 = time_now - rtt_recv.server_ts;
+        printf("index = %d, RTT = %lld, sts = %lld\n", index, diff_1, diff_2 );
         
         index++;
     }
