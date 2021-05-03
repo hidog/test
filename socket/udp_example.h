@@ -15,6 +15,9 @@ void udp_package_order_client();
 void udp_RTT_server(); // RTT = Round Trip Time (RTT)
 void udp_RTT_client();
 
+void udp_nonblocking_server();
+
+
 
 /*
     * 1. 測量RTT (封包送達時間) 

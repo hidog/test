@@ -14,6 +14,7 @@
 #include <sys/types.h> 
 #include <arpa/inet.h>
 #include <errno.h>
+#include <fcntl.h>
 #endif
 
 
@@ -52,6 +53,126 @@ struct RTT_Data
     int index;
     int64_t time_stamp;
 };
+
+
+struct NonBkData
+{
+    int index;
+    int port;
+    char message[1400];
+};
+
+
+
+
+void udp_nonblocking_server()
+{
+#ifdef _WIN32
+    WORD socket_version = MAKEWORD(2,2);
+    WSADATA wsa_data; 
+    if( WSAStartup(socket_version,&wsa_data) != 0 )
+    {
+        printf("init error\n");
+        return;
+    }
+#endif
+
+    // 
+    sockaddr_in local_addr;
+    SOCKET server_skt[10];
+    SOCKET max_skt = -1;
+    for( int i = 0; i < 10; i++ )
+    {
+        // create socket
+        server_skt[i] = socket( PF_INET, SOCK_DGRAM, IPPROTO_UDP );
+        if( max_skt < server_skt[i] )
+            max_skt = server_skt[i];
+        
+        // set non-blocking
+        fcntl( server_skt[i], F_SETFL, O_NONBLOCK );
+        
+        //
+        bzero( &local_addr, sizeof local_addr );  // windows沒有bzero
+        local_addr.sin_family = AF_INET;
+        local_addr.sin_port = htons( (27271+i) );
+        local_addr.sin_addr.s_addr = INADDR_ANY; 
+        int local_len = sizeof(local_addr);
+
+        // 
+        if( bind( server_skt[i], (sockaddr*)&local_addr, local_len ) == SOCKET_ERROR )
+        {
+            printf("bind error %d!\n", i );
+            return;
+        }
+    }
+    
+    printf( "bind success. wait for client data...\n" );
+
+    // receive remote data
+    sockaddr_in remote_addr;
+    socklen_t remote_len = sizeof(remote_addr);
+
+    const int nbk_data_size = sizeof(NonBkData);
+    char *recv_buf = (char*)malloc(nbk_data_size);
+    if( recv_buf == NULL )
+    {
+        printf("malloc error\n");
+        return;
+    }
+    ssize_t ret;
+    NonBkData nbk_data;
+    
+    //
+    fd_set read_set;
+    FD_ZERO( &read_set );
+    
+    for( int i = 0; i < 10; i++ )
+        FD_SET( server_skt[i], &read_set );
+    
+    timeval timeout = { 2, 500000 };
+    int select_ret;
+
+    // start
+    while(true)
+    {
+        select_ret = select( max_skt+1, &read_set, NULL, NULL, &timeout );
+        if( select_ret == SOCKET_ERROR )
+        {
+            printf("select error\n");
+            break;
+        }
+        
+        for( int i = 0; i < 10; i++ )
+        {
+            if( FD_ISSET( server_skt[i], &read_set) )
+            {
+                bzero( &remote_addr, sizeof remote_addr );
+                ret = recvfrom( server_skt[i], recv_buf, nbk_data_size, 0, (sockaddr*)&remote_addr, &remote_len );
+                if( ret <= 0 )
+                    printf("error, ret = %d\n", (int)ret );
+                else
+                {
+                    memcpy( &nbk_data, recv_buf, nbk_data_size );
+                    printf("ret = %d, rec from %s %d\n", (int)ret, inet_ntoa(remote_addr.sin_addr), ntohs(remote_addr.sin_port) );
+                    printf("index = %d, port = %d, msg = %s\n", nbk_data.index, nbk_data.port, nbk_data.message );
+                }
+            }
+        }
+    }
+
+    free(recv_buf);
+    recv_buf = NULL;
+
+#ifdef _WIN32
+    closesocket(server_skt);
+    WSACleanup();
+#elif defined(UNIX) || defined(MACOS)
+    for( int i = 0; i < 10; i++ )
+        close(server_skt[i]);
+#endif
+}
+
+
 
 
 
