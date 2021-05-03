@@ -156,7 +156,8 @@ void udp_nonblocking_2(void)
     socklen_t remote_len = sizeof(remote_addr);
     
     char ip_list[9][100] = { "192.168.1.106",  // imac
-                             "192.168.3.240"   // room
+                             "192.168.3.240",  // room
+                             "192.168.3.191",  // 2F
                            };
     
     //
