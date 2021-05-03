@@ -81,11 +81,15 @@ void udp_nonblockint_client()
 #endif
 
     int res;
+#ifdef _WIN32
     /* 
         If blcok_mode = 0, blocking is enabled; 
         If blcok_mode != 0, non-blocking mode is enabled.
     */
     u_long block_mode = 1;
+#else
+    int skt_flags;
+#endif
 
     // create socket
     SOCKET client_skt[3], max_skt = -1;
@@ -100,12 +104,23 @@ void udp_nonblockint_client()
         if( client_skt[i] > max_skt )
             max_skt = client_skt[i];
 
+#ifdef _WIN32
         res = ioctlsocket( client_skt[i], FIONBIO, &block_mode );
         if( res != NO_ERROR )
         {
             printf("set non-block fail\n");
             return;
         }
+#else
+        skt_flags = fcntl( client_skt[i], F_GETFL, 0 );
+        skt_flags |= O_NONBLOCK;
+        res = fcntl( client_skt[i], F_SETFL, skt_flags );
+        if( res == -1 )
+        {
+            printf("set non-block fai.\n");
+            return;
+        }
+#endif
     }
     
 
@@ -127,7 +142,7 @@ void udp_nonblockint_client()
     }
 
     ssize_t ret;
-    char recv_buf[500];
+    //char recv_buf[500];
 
     //
     fd_set write_set;
@@ -222,6 +237,8 @@ void udp_nonblocking_server()
         If blcok_mode != 0, non-blocking mode is enabled.
     */
     u_long blcok_mode = 1;
+#else
+    int skt_flags;
 #endif
 
     for( int i = 0; i < 10; i++ )
@@ -240,7 +257,15 @@ void udp_nonblocking_server()
             return;
         }
 #else
-        fcntl( server_skt[i], F_SETFL, O_NONBLOCK );
+        skt_flags = fcntl( server_skt[i], F_GETFL, 0 );
+        skt_flags |= O_NONBLOCK;
+        res = fcntl( server_skt[i], F_SETFL, skt_flags );
+        if( res == -1 )
+        {
+            printf("set non-block fail.\n");
+            return;
+        }
+        //fcntl( server_skt[i], F_SETFL, O_NONBLOCK ); 也可以用這段code直接設置 non-blocking
 #endif
         
         //
@@ -278,8 +303,8 @@ void udp_nonblocking_server()
     fd_set read_set;
     timeval timeout = { 2, 500000 };
     int select_ret;
-    char send_buf[300];
-    int total_count = 0;
+    //char send_buf[300];
+    //int total_count = 0;
     
     // start
     while(true)
