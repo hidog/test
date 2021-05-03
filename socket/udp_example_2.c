@@ -108,7 +108,7 @@ void udp_nonblocking_2(void)
     int flag;
 
 #ifdef _WIN32
-    u_long blcok_mode = 1;
+    u_long block_mode = 1;   // zero = blocking, not zero = non-blocking
 #endif
 
     // 一般來講,需要檢查socket是否create成功.
@@ -117,7 +117,9 @@ void udp_nonblocking_2(void)
     max_skt = send_skt > recv_skt ? send_skt : recv_skt;
     
 #ifdef _WIN32
-#error need maintain
+    // note: 一般來講應該要檢查設置是否成功
+    ioctlsocket( send_skt, FIONBIO, &block_mode );
+    ioctlsocket( recv_skt, FIONBIO, &block_mode );
 #else
     // note: 一般來講應該要檢查設置是否成功.
     fcntl( send_skt, F_SETFL, fcntl(send_skt,F_GETFL,0) | O_NONBLOCK ); 
@@ -153,18 +155,15 @@ void udp_nonblocking_2(void)
     struct sockaddr_in remote_addr;
     socklen_t remote_len = sizeof(remote_addr);
     
-    bzero( &remote_addr, sizeof remote_addr );
-    //remote_addr.sin_family = AF_INET;
-    //remote_addr.sin_addr.s_addr = inet_addr("192.168.1.1");
-    
-    char ip_list[9][100] = { "192.168.1.106" // imac
-        };
+    char ip_list[9][100] = { "192.168.1.106",  // imac
+                             "192.168.3.240"   // room
+                           };
     
     //
     fd_set read_set, write_set;
     struct timeval timeout = { 2, 500000 };
     char recv_buf[1400], send_buf[1400];
-    char *my_ip = "192.168.1.106";
+    char *my_ip = "192.168.3.240";
     ssize_t ret;
     int target;
     
@@ -202,6 +201,8 @@ void udp_nonblocking_2(void)
             {
 #ifdef MACOS
                 sprintf( send_buf, "I am %s, my ip is %s", "MACOS", my_ip );
+#elif defined(_WIN32)
+                sprintf( send_buf, "I am %s, my ip is %s", "WINDOWS", my_ip );
 #endif
                 
                 bzero( &remote_addr, sizeof(remote_addr) );
@@ -221,8 +222,8 @@ void udp_nonblocking_2(void)
     }
 
 #ifdef _WIN32
-    for( int i = 0; i < 10; i++ )
-        closesocket(server_skt[i]);
+    closesocket(send_skt);
+    closesocket(recv_skt);
     WSACleanup();
 #elif defined(UNIX) || defined(MACOS)
     close(send_skt);
