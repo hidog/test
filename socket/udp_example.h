@@ -15,9 +15,6 @@ void udp_package_order_client();
 void udp_RTT_server(); // RTT = Round Trip Time (RTT)
 void udp_RTT_client();
 
-/*
-    簡單的server/client
- */
 void udp_nonblocking_server();
 void udp_nonblockint_client();
 

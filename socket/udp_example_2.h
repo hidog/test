@@ -13,6 +13,7 @@ void udp_test_package_loss_client(void);
 void udp_multi_server(void);
 void udp_multi_client(void);
 
+void udp_nonblocking_2(void);
 
 
 #endif

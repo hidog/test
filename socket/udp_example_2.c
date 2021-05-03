@@ -10,6 +10,7 @@
 #include <unistd.h>
 #include <arpa/inet.h>
 #include <errno.h>
+#include <fcntl.h>
 #elif defined(_WIN32)
 #include <WinSock2.h>
 #include <WS2tcpip.h>   // for sockaddr_in6
@@ -79,6 +80,155 @@ static int get_in_port( struct sockaddr *addr )
         struct sockaddr_in6* ptr = (struct sockaddr_in6 *)addr;
         return ntohs( ptr->sin6_port );
     }
+}
+
+
+
+
+
+
+void udp_nonblocking_2(void)
+{
+    srand( (unsigned char)time(NULL) );
+    
+#ifdef _WIN32
+    WORD socket_version = MAKEWORD(2,2);
+    WSADATA wsa_data; 
+    if( WSAStartup(socket_version,&wsa_data) != 0 )
+    {
+        printf("init error\n");
+        return;
+    }
+#endif
+
+    // 
+    struct sockaddr_in local_addr;
+    SOCKET send_skt, recv_skt;
+    SOCKET max_skt = -1;
+    int flag;
+
+#ifdef _WIN32
+    u_long blcok_mode = 1;
+#endif
+
+    // 一般來講,需要檢查socket是否create成功.
+    send_skt = socket( PF_INET, SOCK_DGRAM, IPPROTO_UDP );
+    recv_skt = socket( PF_INET, SOCK_DGRAM, IPPROTO_UDP );
+    max_skt = send_skt > recv_skt ? send_skt : recv_skt;
+    
+#ifdef _WIN32
+#error need maintain
+#else
+    // note: 一般來講應該要檢查設置是否成功.
+    fcntl( send_skt, F_SETFL, fcntl(send_skt,F_GETFL,0) | O_NONBLOCK ); 
+    fcntl( recv_skt, F_SETFL, fcntl(send_skt,F_GETFL,0) | O_NONBLOCK ); 
+#endif
+    
+    //
+    bzero( &local_addr, sizeof local_addr );
+    local_addr.sin_family = AF_INET;
+    local_addr.sin_addr.s_addr = INADDR_ANY;
+ 
+    //
+    local_addr.sin_port = htons( 1234 );
+    flag = bind( send_skt, (struct sockaddr*)&local_addr, sizeof local_addr );
+    if( flag == SOCKET_ERROR )
+    {
+        printf("bind send skt fail\n");
+        return;
+    }
+    
+    //
+    local_addr.sin_port = htons( 1235 );
+    flag = bind( recv_skt, (struct sockaddr*)&local_addr, sizeof local_addr );
+    if( flag == SOCKET_ERROR )
+    {
+        printf("bind send skt fail\n");
+        return;
+    }
+    
+    printf( "bind success. wait for client data...\n" );
+
+    // receive remote data
+    struct sockaddr_in remote_addr;
+    socklen_t remote_len = sizeof(remote_addr);
+    
+    bzero( &remote_addr, sizeof remote_addr );
+    //remote_addr.sin_family = AF_INET;
+    //remote_addr.sin_addr.s_addr = inet_addr("192.168.1.1");
+    
+    char ip_list[9][100] = { "192.168.1.106" // imac
+        };
+    
+    //
+    fd_set read_set, write_set;
+    struct timeval timeout = { 2, 500000 };
+    char recv_buf[1400], send_buf[1400];
+    char *my_ip = "192.168.1.106";
+    ssize_t ret;
+    int target;
+    
+    while(1)
+    {
+        target = rand() % 18;
+        
+        FD_ZERO( &read_set );
+        FD_ZERO( &write_set );
+        
+        FD_SET( send_skt, &write_set );
+        FD_SET( recv_skt, &read_set );
+        
+        flag = select( max_skt+1, &read_set, &write_set, 0, &timeout );
+        if( flag == SOCKET_ERROR )
+        {
+            printf("select error\n");
+            break;
+        }
+        
+        if( FD_ISSET( recv_skt, &read_set ) )
+        {
+            ret = recvfrom( recv_skt, recv_buf, 1400, 0, (struct sockaddr*)&remote_addr, &remote_len );
+            if( ret != 1400 )
+            {
+                printf("recv ret != 1400. error!!\n");
+                break;
+            }
+            printf( "recv msg = %s\n", recv_buf );
+        }
+        
+        if( FD_ISSET( send_skt, &write_set ) )
+        {
+            if( target < 9 )
+            {
+#ifdef MACOS
+                sprintf( send_buf, "I am %s, my ip is %s", "MACOS", my_ip );
+#endif
+                
+                bzero( &remote_addr, sizeof(remote_addr) );
+                remote_addr.sin_family = AF_INET;
+                remote_addr.sin_addr.s_addr = inet_addr( ip_list[target] );
+                remote_addr.sin_port = htons(1235);
+                
+                ret = sendto( send_skt, send_buf, 1400, 0, (struct sockaddr*)&remote_addr, remote_len );
+                if( ret != 1400 )
+                {
+                    printf("send ret != 1400, error!!\n");
+                    break;
+                }
+                printf("send to %s, ret = %d\n", ip_list[target], (int)ret );
+            }
+        }
+    }
+
+#ifdef _WIN32
+    for( int i = 0; i < 10; i++ )
+        closesocket(server_skt[i]);
+    WSACleanup();
+#elif defined(UNIX) || defined(MACOS)
+    close(send_skt);
+    close(recv_skt);
+#endif 
+    
 }
 
 
