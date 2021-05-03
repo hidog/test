@@ -80,6 +80,13 @@ void udp_nonblockint_client()
     }
 #endif
 
+    int res;
+    /* 
+        If blcok_mode = 0, blocking is enabled; 
+        If blcok_mode != 0, non-blocking mode is enabled.
+    */
+    u_long block_mode = 1;
+
     // create socket
     SOCKET client_skt[3], max_skt = -1;
     for( int i = 0; i < 3; i++ )
@@ -92,6 +99,13 @@ void udp_nonblockint_client()
         }
         if( client_skt[i] > max_skt )
             max_skt = client_skt[i];
+
+        res = ioctlsocket( client_skt[i], FIONBIO, &block_mode );
+        if( res != NO_ERROR )
+        {
+            printf("set non-block fail\n");
+            return;
+        }
     }
     
 
@@ -170,7 +184,8 @@ void udp_nonblockint_client()
     send_buf = NULL;
 
 #ifdef _WIN32
-    closesocket( client_skt );
+    for( int i = 0; i < 3; i++ )
+        closesocket( client_skt[i] );
     WSACleanup();
 #elif defined(UNIX) || defined(MACOS)
     for( int i = 0; i < 3; i++ )
@@ -199,6 +214,16 @@ void udp_nonblocking_server()
     sockaddr_in local_addr;
     SOCKET server_skt[10];
     SOCKET max_skt = -1;
+    int res;
+
+#ifdef _WIN32
+    /* 
+        If blcok_mode = 0, blocking is enabled; 
+        If blcok_mode != 0, non-blocking mode is enabled.
+    */
+    u_long blcok_mode = 1;
+#endif
+
     for( int i = 0; i < 10; i++ )
     {
         // create socket
@@ -207,7 +232,16 @@ void udp_nonblocking_server()
             max_skt = server_skt[i];
         
         // set non-blocking
+#ifdef _WIN32
+        res = ioctlsocket( server_skt[i], FIONBIO, &blcok_mode );
+        if( res != NO_ERROR )
+        {
+            printf("set non-block fail\n");
+            return;
+        }
+#else
         fcntl( server_skt[i], F_SETFL, O_NONBLOCK );
+#endif
         
         //
         bzero( &local_addr, sizeof local_addr );  // windows沒有bzero
@@ -291,7 +325,8 @@ void udp_nonblocking_server()
     recv_buf = NULL;
 
 #ifdef _WIN32
-    closesocket(server_skt);
+    for( int i = 0; i < 10; i++ )
+        closesocket(server_skt[i]);
     WSACleanup();
 #elif defined(UNIX) || defined(MACOS)
     for( int i = 0; i < 10; i++ )
