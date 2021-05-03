@@ -65,6 +65,124 @@ struct NonBkData
 
 
 
+
+void udp_nonblockint_client()
+{
+    srand( (unsigned int)time(NULL) );
+    
+#ifdef _WIN32
+    WORD socket_version = MAKEWORD(2,2);
+    WSADATA wsa_data; 
+    if( WSAStartup( socket_version, &wsa_data ) != 0 )
+    {
+        printf("init error\n");
+        return;
+    }
+#endif
+
+    // create socket
+    SOCKET client_skt[3], max_skt = -1;
+    for( int i = 0; i < 3; i++ )
+    {
+        client_skt[i] = socket( PF_INET, SOCK_DGRAM, IPPROTO_UDP );
+        if( client_skt[i] == INVALID_SOCKET )
+        {
+            printf("create socket error.\n");
+            return;
+        }
+        if( client_skt[i] > max_skt )
+            max_skt = client_skt[i];
+    }
+    
+
+    // set remote address, port
+    sockaddr_in remote_addr;
+    bzero( &remote_addr, sizeof remote_addr );
+    remote_addr.sin_family = AF_INET;
+    remote_addr.sin_addr.s_addr = inet_addr( "127.0.0.1" );
+    socklen_t remote_len = sizeof(remote_addr);
+
+    //
+    NonBkData nbk_data;
+    const int nbk_data_size = sizeof( NonBkData );
+    char *send_buf = new char[nbk_data_size];
+    if( send_buf == NULL )
+    {
+        printf("malloc fail.\n");
+        return;
+    }
+
+    ssize_t ret;
+    char recv_buf[500];
+
+    //
+    fd_set write_set;
+    int select_ret;
+    timeval timeout = { 2, 500000 };
+    int total_count = 0;
+    
+    //
+    while(1)
+    {
+        FD_ZERO( &write_set );
+        for( int i = 0; i < 3; i++ )
+        {
+            FD_SET( client_skt[i], &write_set );
+        }
+        
+        select_ret = select( max_skt+1, NULL, &write_set, NULL, &timeout );
+        if( select_ret == SOCKET_ERROR )
+        {
+            printf("select error\n");
+            break;
+        }
+        
+        for( int i = 0; i < 3; i++ )
+        {
+            if( FD_ISSET( client_skt[i], &write_set ) )
+            {
+                int port = 27271 + rand() % 10;
+                remote_addr.sin_port = htons(port);
+                
+                nbk_data.index = i;
+                nbk_data.port = port;
+                sprintf( nbk_data.message, 
+                         "This is client. port = %d, index = %d, total_count = %d", 
+                         nbk_data.port, nbk_data.index, total_count++ );
+                memcpy( send_buf, &nbk_data, nbk_data_size );
+                ret = sendto( client_skt[i], send_buf, nbk_data_size, 0, (sockaddr*)&remote_addr, remote_len );
+                printf("send %d, i = %d, port = %d\n", (int)ret, i, port );
+                
+                /*ret = recvfrom( client_skt[i], recv_buf, 500, 0, (sockaddr*)&remote_addr, &remote_len );
+                printf("recv %d, msg = %s\n", (int)ret, recv_buf );*/
+            }
+        }
+        printf("\n");
+        
+#ifdef _WIN32
+        Sleep(1000);
+#else
+        sleep(1);
+#endif
+    }
+
+    delete [] send_buf;
+    send_buf = NULL;
+
+#ifdef _WIN32
+    closesocket( client_skt );
+    WSACleanup();
+#elif defined(UNIX) || defined(MACOS)
+    for( int i = 0; i < 3; i++ )
+        close(client_skt[i]);
+#endif
+    
+}
+
+
+
+
+
 void udp_nonblocking_server()
 {
 #ifdef _WIN32
@@ -113,7 +231,7 @@ void udp_nonblocking_server()
     socklen_t remote_len = sizeof(remote_addr);
 
     const int nbk_data_size = sizeof(NonBkData);
-    char *recv_buf = (char*)malloc(nbk_data_size);
+    char *recv_buf = new char[nbk_data_size];
     if( recv_buf == NULL )
     {
         printf("malloc error\n");
@@ -124,17 +242,20 @@ void udp_nonblocking_server()
     
     //
     fd_set read_set;
-    FD_ZERO( &read_set );
-    
-    for( int i = 0; i < 10; i++ )
-        FD_SET( server_skt[i], &read_set );
-    
     timeval timeout = { 2, 500000 };
     int select_ret;
-
+    char send_buf[300];
+    int total_count = 0;
+    
     // start
     while(true)
     {
+        FD_ZERO( &read_set );
+        for( int i = 0; i < 10; i++ )
+        {
+            FD_SET( server_skt[i], &read_set );
+        }
+        
         select_ret = select( max_skt+1, &read_set, NULL, NULL, &timeout );
         if( select_ret == SOCKET_ERROR )
         {
@@ -155,12 +276,18 @@ void udp_nonblocking_server()
                     memcpy( &nbk_data, recv_buf, nbk_data_size );
                     printf("ret = %d, rec from %s %d\n", (int)ret, inet_ntoa(remote_addr.sin_addr), ntohs(remote_addr.sin_port) );
                     printf("index = %d, port = %d, msg = %s\n", nbk_data.index, nbk_data.port, nbk_data.message );
+                    
+                    /*sprintf( send_buf, "Hello this is server. count = %d", total_count++ );
+                    ret = sendto( server_skt[i], send_buf, 300, 0, (sockaddr*)&remote_addr, remote_len );
+                    printf("send back. ret = %d\n", (int)ret );*/
                 }
             }
         }
+        
+        printf("\n");
     }
 
-    free(recv_buf);
+    delete [] recv_buf;
     recv_buf = NULL;
 
 #ifdef _WIN32

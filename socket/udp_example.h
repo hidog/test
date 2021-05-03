@@ -15,8 +15,17 @@ void udp_package_order_client();
 void udp_RTT_server(); // RTT = Round Trip Time (RTT)
 void udp_RTT_client();
 
+/*
+    簡單的server/client
+ */
 void udp_nonblocking_server();
+void udp_nonblockint_client();
 
+
+/*
+    還需要做同時send/recv的non-blocking
+    想像一個thread,同時可以收音後發放,跟接收對面的語音.
+ */
 
 
 /*
