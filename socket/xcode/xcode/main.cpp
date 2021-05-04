@@ -33,7 +33,8 @@ int main(int argc, const char * argv[])
     
     //udp_nonblocking_2();
     
-    udp_broadcast_recver();
+    //udp_broadcast_recver();
+    udp_broadcast_sender();
     
     return 0;
 }
