@@ -162,6 +162,7 @@ void udp_nonblocking_2(void)
                              "192.168.1.108",  // ubuntu
                              "192.168.2.247",  // x250
                              "192.168.2.116",  // mbpr
+                             "192.168.1.102",  // slave
                            };
     
     //
@@ -182,7 +183,7 @@ void udp_nonblocking_2(void)
         FD_SET( send_skt, &write_set );
         FD_SET( recv_skt, &read_set );
         
-        flag = select( max_skt+1, &read_set, &write_set, 0, &timeout );
+        flag = select( (int)(max_skt+1), &read_set, &write_set, 0, &timeout );
         if( flag == SOCKET_ERROR )
         {
             printf("select error\n");
@@ -460,9 +461,14 @@ void udp_multi_server(void)
     為了方便, 用同一個function處理server, client
     ip == NULL 代表 server, 反之 client
 */
+#ifdef _WIN64
+unsigned __int64 get_udp_socket( const char* ip, const char* port )
+#else
 int get_udp_socket( const char* ip, const char* port )
+#endif
 {
-    int ret, skt = -1;
+    int ret;
+    SOCKET skt = 0;
     struct addrinfo hints, *servinfo, *ptr;
 
     memset(&hints, 0, sizeof hints);
@@ -503,9 +509,9 @@ int get_udp_socket( const char* ip, const char* port )
         }
 
         if( ip == NULL )
-            ret = bind( skt, ptr->ai_addr, ptr->ai_addrlen );
+            ret = bind( skt, ptr->ai_addr, (int)ptr->ai_addrlen );
         else
-            ret = connect( skt, ptr->ai_addr, ptr->ai_addrlen );
+            ret = connect( skt, ptr->ai_addr, (int)ptr->ai_addrlen );
             /*
                 ip 有資料, 給client端用的
                 因為client需要 ptr->ai_addr, ptr->ai_addrlen才能做 send_to的動作
@@ -524,7 +530,7 @@ int get_udp_socket( const char* ip, const char* port )
             continue;
         }
 
-        printf( "bind or connect success, skt = %d\n", skt );
+        printf( "bind or connect success, skt = %d\n", (int)skt );
         break;
     }
 
@@ -536,7 +542,7 @@ int get_udp_socket( const char* ip, const char* port )
 
     freeaddrinfo(servinfo);
 
-    return skt;
+    return skt;  // 使用int的話, 在windows 64出現warning
 }
 
 
@@ -559,7 +565,7 @@ void udp_hello_server_2( const char* port )
 
     struct sockaddr_storage remote_addr;
     socklen_t remote_len;
-    int skt = get_udp_socket( NULL, port );
+    SOCKET skt = get_udp_socket( NULL, port );
     ssize_t ret;
     char recv_buf[200] = {0};
 
@@ -587,7 +593,7 @@ void udp_hello_server_2( const char* port )
 
     // send back
     char send_buf[100] = {"This is server. response your message."};
-    ret = sendto( skt, send_buf, strlen(send_buf), 0, (struct sockaddr *)&remote_addr, remote_len );
+    ret = sendto( skt, send_buf, (int)strlen(send_buf), 0, (struct sockaddr *)&remote_addr, remote_len );
     if( ret < 0 )
     {
         printf("error. ret = %ld\n", ret );
@@ -621,12 +627,12 @@ void udp_hello_client_2( const char* ip, const char* port )
     }
 #endif
 
-    int skt = get_udp_socket( ip, port );
+    SOCKET skt = get_udp_socket( ip, port );
 
     // send
     char send_buf[100] = {"Hello, this is client\n"};
 #ifdef _WIN32
-    int ret = send( skt, send_buf, strlen(send_buf), 0 );
+    int ret = send( skt, send_buf, (int)strlen(send_buf), 0 );
 #else
     ssize_t ret = write( skt, send_buf, strlen(send_buf) );
 #endif

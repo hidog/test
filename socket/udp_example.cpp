@@ -92,7 +92,7 @@ void udp_nonblockint_client()
 #endif
 
     // create socket
-    SOCKET client_skt[3], max_skt = -1;
+    SOCKET client_skt[3], max_skt = 0;
     for( int i = 0; i < 3; i++ )
     {
         client_skt[i] = socket( PF_INET, SOCK_DGRAM, IPPROTO_UDP );
@@ -159,7 +159,7 @@ void udp_nonblockint_client()
             FD_SET( client_skt[i], &write_set );
         }
         
-        select_ret = select( max_skt+1, NULL, &write_set, NULL, &timeout );
+        select_ret = select( (int)(max_skt+1), NULL, &write_set, NULL, &timeout );
         if( select_ret == SOCKET_ERROR )
         {
             printf("select error\n");
@@ -315,7 +315,7 @@ void udp_nonblocking_server()
             FD_SET( server_skt[i], &read_set );
         }
         
-        select_ret = select( max_skt+1, &read_set, NULL, NULL, &timeout );
+        select_ret = select( (int)(max_skt+1), &read_set, NULL, NULL, &timeout );
         if( select_ret == SOCKET_ERROR )
         {
             printf("select error\n");
@@ -675,7 +675,7 @@ void udp_hello_client( std::string ip, int port )
     // send data
     char send_data[100] = "hello, server. this is client\n";
     ssize_t ret;
-    ret = sendto( client_skt, send_data, strlen(send_data), 0, (sockaddr *)&remote_addr, remote_len );
+    ret = sendto( client_skt, send_data, (int)strlen(send_data), 0, (sockaddr *)&remote_addr, remote_len );
     printf( "client send, ret = %ld\n", ret );
 
     // receive back
@@ -752,7 +752,7 @@ void udp_hello_client_c( std::string ip, int port )
 #if defined(UNIX) || defined(MACOS)
     ret = write( client_skt, send_data, strlen(send_data) );
 #elif defined(_WIN32)
-    ret = send( client_skt, send_data, strlen(send_data), 0 );
+    ret = send( client_skt, send_data, (int)strlen(send_data), 0 );
 #endif
     printf( "client send, ret = %ld\n", ret );
 
@@ -854,7 +854,7 @@ void udp_hello_server( int port )
 
     // send back
     char send_data[100] = "hello, this is server.\n";
-    ret = sendto( server_skt, send_data, strlen(send_data), 0, (sockaddr*)&remote_addr, remote_len );
+    ret = sendto( server_skt, send_data, (int)strlen(send_data), 0, (sockaddr*)&remote_addr, remote_len );
     printf( "send back. ret = %ld\n", ret );
 
 #ifdef _WIN32
