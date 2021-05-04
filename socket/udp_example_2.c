@@ -228,6 +228,7 @@ void udp_nonblocking_2(void)
                 printf("send to %s, ret = %d\n", ip_list[target], (int)ret );
             }
         }
+        printf("\n");
 #ifdef _WIN32
         Sleep(1000);
 #else
