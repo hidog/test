@@ -188,7 +188,7 @@ void udp_broadcast_sender()
 
     // recv.
     ssize_t ret;
-    char recv_buf[100];
+    char recv_buf[100] = {0};
     while(true)
     {
         bzero( &remote_addr, sizeof remote_addr );
