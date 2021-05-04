@@ -32,7 +32,8 @@ int main()
     
     //udp_nonblocking_2();
     
-    udp_broadcast_recver();
+    //udp_broadcast_recver();
+    udp_broadcast_sender();
 
     return 0;
 }
