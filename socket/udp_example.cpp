@@ -85,7 +85,11 @@ void udp_broadcast_recver()
     
     local_addr.sin_family = AF_INET;
     local_addr.sin_port = htons(4482);
+#ifdef _WIN32
     local_addr.sin_addr.S_un.S_addr = INADDR_ANY;
+#else
+    local_addr.sin_addr.s_addr = INADDR_ANY;
+#endif
     
     res = bind( skt, (sockaddr*)&local_addr, sizeof local_addr );
     if( res == SOCKET_ERROR )
@@ -96,31 +100,37 @@ void udp_broadcast_recver()
 
     ssize_t ret;
     sockaddr_in remote_addr;
-    int remote_addr_len = sizeof remote_addr;
+    socklen_t remote_addr_len = sizeof remote_addr;
     bzero( &remote_addr, sizeof remote_addr );
     int remote_port = 0;
 
     ret = recvfrom( skt, (char*)&remote_port, sizeof(int), 0, (sockaddr*)&remote_addr, &remote_addr_len );
     if( ret == SOCKET_ERROR )
     {
-        printf("recv fail. ret = %d\n", ret );
+        printf("recv fail. ret = %d\n", (int)ret );
         return;
     }
 
 #ifdef _WIN32
     const char *sendmsg = "Hi, this is windows.";
+#elif defined(UNIX)
+    const char *sendmsg = "Hi, this is ubuntu.";
 #else
-#error need maintain.
+    const char *sendmsg = "Hi, this is MACOS.";
 #endif
 
     printf("recv. server port = %d, server address = %s\n", remote_port, inet_ntoa(remote_addr.sin_addr) );
     remote_addr.sin_port = htons(remote_port);
     ret = sendto( skt, sendmsg, strlen(sendmsg), 0, (sockaddr*)&remote_addr, sizeof remote_addr );
-    printf("send back. ret = %d\n", ret);
+    printf("send back. ret = %d\n", (int)ret);
 
     //
+#ifdef _WIN32
     closesocket(skt);
     WSACleanup();
+#else
+    close(skt);
+#endif
 }
 
 
@@ -155,7 +165,7 @@ void udp_broadcast_sender()
 #ifdef _WIN32
     int timeout = 10000;
 #else
-#error need maintain.
+    timeval timeout = { 10, 0 };
 #endif
     res = setsockopt( skt, SOL_SOCKET, SO_RCVTIMEO, (char*)&timeout, sizeof(timeout) );
 
@@ -164,7 +174,11 @@ void udp_broadcast_sender()
     bzero( &local_addr, sizeof local_addr );
     local_addr.sin_family = AF_INET;
     local_addr.sin_port = htons(my_port);
+#ifdef _WIN32
     local_addr.sin_addr.S_un.S_addr = INADDR_ANY;
+#else
+    local_addr.sin_addr.s_addr = INADDR_ANY;
+#endif
     int local_addr_len = sizeof local_addr;
 
     // 也可以改成兩個socket,一個專門廣播,一個專門收
@@ -180,8 +194,12 @@ void udp_broadcast_sender()
     bzero( &remote_addr, sizeof remote_addr );
     remote_addr.sin_family = AF_INET;
     remote_addr.sin_port = htons(4482);
+#ifdef _WIN32
     remote_addr.sin_addr.S_un.S_addr = htonl( INADDR_BROADCAST );
-    int remote_addr_len = sizeof remote_addr;
+#else
+    remote_addr.sin_addr.s_addr = htonl( INADDR_BROADCAST );
+#endif
+    socklen_t remote_addr_len = sizeof remote_addr;
 
     // send broadcast 
     sendto( skt, (char*)&my_port, sizeof(int), 0, (sockaddr*)&remote_addr, remote_addr_len );
@@ -199,12 +217,16 @@ void udp_broadcast_sender()
             break;
         }
 
-        printf("ret = %d. recv from %s, port = %d\n", ret, inet_ntoa(remote_addr.sin_addr), ntohs(remote_addr.sin_port) );
+        printf("ret = %d. recv from %s, port = %d\n", (int)ret, inet_ntoa(remote_addr.sin_addr), ntohs(remote_addr.sin_port) );
         printf("recv msg = %s\n\n", recv_buf );
     }
 
+#ifdef _WIN32
     closesocket(skt);
     WSACleanup();
+#else
+    close(skt);
+#endif
 }
 
 
