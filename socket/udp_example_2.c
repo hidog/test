@@ -163,13 +163,14 @@ void udp_nonblocking_2(void)
                              "192.168.2.247",  // x250
                              "192.168.2.116",  // mbpr
                              "192.168.1.102",  // slave
+                             "192.168.1.101"   // master
                            };
     
     //
     fd_set read_set, write_set;
     struct timeval timeout = { 2, 500000 };
     char recv_buf[1400], send_buf[1400];
-    char *my_ip = "192.168.3.240";
+    char *my_ip = "192.168.1.101";
     ssize_t ret;
     int target;
     
