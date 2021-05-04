@@ -211,7 +211,7 @@ void udp_nonblocking_2(void)
 #elif defined(_WIN32)
                 sprintf( send_buf, "I am %s, my ip is %s", "WINDOWS", my_ip );
 #elif defined(UNIX)
-                sprintf( send_buf, "I am %s, my ip is %s", "WINDOWS", my_ip );
+                sprintf( send_buf, "I am %s, my ip is %s", "UBUNTU", my_ip );
 #endif
                 
                 bzero( &remote_addr, sizeof(remote_addr) );
