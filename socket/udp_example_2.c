@@ -158,6 +158,7 @@ void udp_nonblocking_2(void)
     char ip_list[9][100] = { "192.168.1.106",  // imac
                              "192.168.3.240",  // room
                              "192.168.3.191",  // 2F
+                             "192.168.1.110",  // ubuntu red
                            };
     
     //
@@ -203,6 +204,8 @@ void udp_nonblocking_2(void)
 #ifdef MACOS
                 sprintf( send_buf, "I am %s, my ip is %s", "MACOS", my_ip );
 #elif defined(_WIN32)
+                sprintf( send_buf, "I am %s, my ip is %s", "WINDOWS", my_ip );
+#elif defined(UNIX)
                 sprintf( send_buf, "I am %s, my ip is %s", "WINDOWS", my_ip );
 #endif
                 
