@@ -116,7 +116,7 @@ void udp_broadcast_recver()
 #elif defined(UNIX)
     const char *sendmsg = "Hi, this is ubuntu.";
 #else
-#error need maintain.
+    const char *sendmsg = "Hi, this is MACOS.";
 #endif
 
     printf("recv. server port = %d, server address = %s\n", remote_port, inet_ntoa(remote_addr.sin_addr) );

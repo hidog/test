@@ -38,6 +38,7 @@ int main()
 
     //udp_nonblocking_2();
     udp_broadcast_sender();
+    //udp_broadcast_recver();
 
     system("PAUSE");
     return 0;
