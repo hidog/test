@@ -66,6 +66,152 @@ struct NonBkData
 
 
 
+void udp_broadcast_recver()
+{
+#ifdef _WIN32
+    WORD socket_version = MAKEWORD( 2, 2 );
+    WSADATA wsa_data;
+    if( WSAStartup( socket_version, &wsa_data ) != 0 )
+    {
+        printf("init error\n");
+        return;
+    }
+#endif
+
+    int res;
+    SOCKET skt = socket( PF_INET, SOCK_DGRAM, IPPROTO_UDP );
+    sockaddr_in local_addr;   
+    bzero( &local_addr, sizeof local_addr );
+    
+    local_addr.sin_family = AF_INET;
+    local_addr.sin_port = htons(4482);
+    local_addr.sin_addr.S_un.S_addr = INADDR_ANY;
+    
+    res = bind( skt, (sockaddr*)&local_addr, sizeof local_addr );
+    if( res == SOCKET_ERROR )
+    {
+        printf( "bind fail. res = %d\n", res );
+        return;
+    }
+
+    ssize_t ret;
+    sockaddr_in remote_addr;
+    int remote_addr_len = sizeof remote_addr;
+    bzero( &remote_addr, sizeof remote_addr );
+    int remote_port = 0;
+
+    ret = recvfrom( skt, (char*)&remote_port, sizeof(int), 0, (sockaddr*)&remote_addr, &remote_addr_len );
+    if( ret == SOCKET_ERROR )
+    {
+        printf("recv fail. ret = %d\n", ret );
+        return;
+    }
+
+#ifdef _WIN32
+    const char *sendmsg = "Hi, this is windows.";
+#else
+#error need maintain.
+#endif
+
+    printf("recv. server port = %d, server address = %s\n", remote_port, inet_ntoa(remote_addr.sin_addr) );
+    remote_addr.sin_port = htons(remote_port);
+    ret = sendto( skt, sendmsg, strlen(sendmsg), 0, (sockaddr*)&remote_addr, sizeof remote_addr );
+    printf("send back. ret = %d\n", ret);
+
+    //
+    closesocket(skt);
+    WSACleanup();
+}
+
+
+
+
+
+
+void udp_broadcast_sender()
+{
+#ifdef _WIN32
+    WORD socket_version = MAKEWORD( 2, 2 );
+    WSADATA wsa_data;
+    if( WSAStartup( socket_version, &wsa_data ) != 0 )
+    {
+        printf("init error\n");
+        return;
+    }
+#endif
+
+    const int my_port = 5521;
+
+    int enable_broadcast = 1;
+    int res;  // 某些環境下似乎要用char,某些環境下要用int. 尚未查到資料
+
+    SOCKET skt = socket( PF_INET, SOCK_DGRAM, IPPROTO_UDP );
+    res = setsockopt( skt, SOL_SOCKET, SO_BROADCAST, (char*)&enable_broadcast, sizeof enable_broadcast );
+    if( res == SOCKET_ERROR )
+    {
+        printf("set broadcast fail. res = %d\n", res);
+        return;
+    }
+#ifdef _WIN32
+    int timeout = 10000;
+#else
+#error need maintain.
+#endif
+    res = setsockopt( skt, SOL_SOCKET, SO_RCVTIMEO, (char*)&timeout, sizeof(timeout) );
+
+
+    sockaddr_in local_addr;
+    bzero( &local_addr, sizeof local_addr );
+    local_addr.sin_family = AF_INET;
+    local_addr.sin_port = htons(my_port);
+    local_addr.sin_addr.S_un.S_addr = INADDR_ANY;
+    int local_addr_len = sizeof local_addr;
+
+    // 也可以改成兩個socket,一個專門廣播,一個專門收
+    res = bind( skt, (sockaddr*)&local_addr, local_addr_len );
+    if( res == SOCKET_ERROR )
+    {
+        printf("bind fail.\n");
+        return;
+    }
+
+    //
+    sockaddr_in remote_addr;
+    bzero( &remote_addr, sizeof remote_addr );
+    remote_addr.sin_family = AF_INET;
+    remote_addr.sin_port = htons(4482);
+    remote_addr.sin_addr.S_un.S_addr = htonl( INADDR_BROADCAST );
+    int remote_addr_len = sizeof remote_addr;
+
+    // send broadcast 
+    sendto( skt, (char*)&my_port, sizeof(int), 0, (sockaddr*)&remote_addr, remote_addr_len );
+
+    // recv.
+    ssize_t ret;
+    char recv_buf[100];
+    while(true)
+    {
+        bzero( &remote_addr, sizeof remote_addr );
+        ret = recvfrom( skt, recv_buf, 100, 0, (sockaddr*)&remote_addr, &remote_addr_len );
+        if( ret == SOCKET_ERROR )
+        {
+            printf("timeout. end.\n");
+            break;
+        }
+
+        printf("ret = %d. recv from %s, port = %d\n", ret, inet_ntoa(remote_addr.sin_addr), ntohs(remote_addr.sin_port) );
+        printf("recv msg = %s\n\n", recv_buf );
+    }
+
+    closesocket(skt);
+    WSACleanup();
+}
+
+
+
+
+
+
 void udp_nonblockint_client()
 {
     srand( (unsigned int)time(NULL) );

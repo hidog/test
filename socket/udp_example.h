@@ -18,6 +18,8 @@ void udp_RTT_client();
 void udp_nonblocking_server();
 void udp_nonblockint_client();
 
+void udp_broadcast_sender();
+void udp_broadcast_recver();
 
 /*
     還需要做同時send/recv的non-blocking
@@ -31,7 +33,7 @@ void udp_nonblockint_client();
     * 3. 測試封包順序問題   
     * 4. 測試一個server多個client
     * 5. 設置timeout
-    6. 設置non-blocking
+    * 6. 設置non-blocking
     7. 廣播
  */
 
