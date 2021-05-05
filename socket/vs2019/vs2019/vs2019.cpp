@@ -14,7 +14,7 @@ int main()
     //transform_test();
     //test_getaddrinfo();
         
-   //udp_hello_server( 12349 );
+    udp_hello_server( 12349 );
     //udp_hello_client( std::string("127.0.0.1"), 12349 );
     // 122.116.84.59
     //udp_hello_server_2( "12349" );
@@ -37,7 +37,7 @@ int main()
     //udp_nonblockint_client();
 
     //udp_nonblocking_2();
-    udp_broadcast_sender();
+    //udp_broadcast_sender();
     //udp_broadcast_recver();
 
     system("PAUSE");

@@ -841,7 +841,7 @@ void udp_hello_client( std::string ip, int port )
     socklen_t remote_len = sizeof(remote_addr);
 
     // send data
-    char send_data[100] = "hello, server. this is client\n";
+    char send_data[30] = "hello, server. this is client";
     ssize_t ret;
     ret = sendto( client_skt, send_data, (int)strlen(send_data), 0, (sockaddr *)&remote_addr, remote_len );
     printf( "client send, ret = %ld\n", ret );
@@ -999,9 +999,16 @@ void udp_hello_server( int port )
     bzero( &remote_addr, sizeof remote_addr );
     socklen_t remote_len = sizeof(remote_addr);
 
-    char recv_data[100] = {0};
+    // 
+    char recv_data[30] = {0};
     ssize_t ret;
     ret = recvfrom( server_skt, recv_data, sizeof recv_data, 0, (sockaddr*)&remote_addr, &remote_len );
+    /*
+        對面資料是長度為30的字串. (29個英文字母). 
+        此時收到的ret = 29.
+        client端使用strlen取得字串長度. 
+    */
+    recv_data[ret] = '\0'; 
 
     if( ret > 0 )   
     {

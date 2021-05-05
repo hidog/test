@@ -1,6 +1,100 @@
 // ref : https://www.cnblogs.com/churi/archive/2013/02/27/2935427.html
 
 
+#include <WinSock2.h>
+#include <stdio.h>
+
+
+
+
+
+void tcp_hello_server()
+{
+#ifdef _WIN32
+    WORD winsock_version = MAKEWORD(2,2);
+    WSADATA wsa_data;
+    if(WSAStartup(winsock_version, &wsa_data)!=0)
+    {
+        printf("init error\n");
+        return;
+    }
+#endif
+
+    SOCKET listen_skt = socket( PF_INET, SOCK_STREAM, IPPROTO_TCP );
+    if( listen_skt == INVALID_SOCKET )
+    {
+        printf( "socket error ! listen_skt = %d\n", listen_skt );
+        return;
+    }
+
+    //
+    sockaddr_in local_addr;
+    local_addr.sin_family = AF_INET;
+    local_addr.sin_port = htons(8888);
+    local_addr.sin_addr.S_un.S_addr = INADDR_ANY; 
+
+    int res = bind( listen_skt, (LPSOCKADDR)&local_addr, sizeof(local_addr) );  // LPSOCKADDR 可以置換成sockaddr*
+    if( res == SOCKET_ERROR)   
+    {
+        printf( "bind error! res = %d\n", res );
+        return;
+    }
+    
+    res = listen( listen_skt, SOMAXCONN );   // listen 第二個傳入變數表示排隊的數量上限. max conn是預設最大
+    if( res  == SOCKET_ERROR )
+    {
+        printf( "listen error ! res = %d\n", res );
+        return;
+    }
+
+    //
+    SOCKET client_skt;
+    sockaddr_in remote_addr;
+    int remote_addr_len = sizeof(remote_addr);
+    char recv_buf[255]; 
+    char send_buf[255];
+
+    while (true)
+    {
+        printf("wait...\n");
+        client_skt = accept( listen_skt, (sockaddr*)&remote_addr, &remote_addr_len );
+
+        if( client_skt == INVALID_SOCKET )
+        {
+            printf( "accept error ! client_skt = %d\n", client_skt );
+            continue;
+        }
+        printf("accept from : %s, port = %d", inet_ntoa(remote_addr.sin_addr), ntohs(remote_addr.sin_port) );
+
+        // recv
+        int ret = recv( client_skt, recv_buf, 255, 0 );        
+        if( ret > 0 )
+        {
+            printf( "recv. ret = %d\n", ret );
+            printf( "msg = %s\n", recv_buf );
+        }
+
+        // send
+        sprintf( send_buf, "hello, this is server." );
+        send( client_skt, send_buf, strlen(send_buf), 0 );
+        closesocket(client_skt);
+    }
+
+    closesocket(listen_skt);
+    WSACleanup();
+
+    return;
+}
+
+
+
+
+
+
+
+
+
+
 #if 0
 #include <stdio.h>
 #include <winsock2.h>

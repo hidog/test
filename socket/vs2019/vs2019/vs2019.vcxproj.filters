@@ -33,6 +33,9 @@
     <ClCompile Include="..\..\udp_example_2.c">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\tcp_example.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\udp_example.h">
@@ -45,6 +48,9 @@
       <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="..\..\udp_example_2.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\tcp_example.h">
       <Filter>src</Filter>
     </ClInclude>
   </ItemGroup>
