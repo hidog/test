@@ -299,9 +299,12 @@ void tcp_hello_client_2( const char *ip, int  port )
         
 #ifdef _WIN32
         closesocket(skt);
+        Sleep(1000);
 #else
         close(skt);
-#endif
+        sleep(1);
+#endif   
+
     }
 
 #ifdef _WIN32

@@ -16,6 +16,8 @@ void tcp_hello_client( const char *ip, int  port );
 	3. 上述行為在測一次
     4. connect timeout, recv timeout等等
     5. 故意設計會報錯的範例,測試error code. 
+
+    6. 測試client先呼叫connect, server才listen.
 */
 
 #endif
