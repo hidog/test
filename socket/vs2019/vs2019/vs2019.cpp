@@ -42,7 +42,7 @@ int main()
     //udp_broadcast_recver();
 
     //tcp_hello_server( 8888 );
-    tcp_hello_client( "127.0.0.1", 8888 );
+    tcp_hello_client( "192.168.1.108", 8888 );
 
     system("PAUSE");
     return 0;
