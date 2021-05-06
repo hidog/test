@@ -1,4 +1,4 @@
-// ref : https://www.cnblogs.com/churi/archive/2013/02/27/2935427.html
+ï»¿// ref : https://www.cnblogs.com/churi/archive/2013/02/27/2935427.html
 
 
 #include <WinSock2.h>
@@ -34,7 +34,7 @@ void tcp_hello_server( int port )
     local_addr.sin_port = htons(port);
     local_addr.sin_addr.S_un.S_addr = INADDR_ANY; 
 
-    int res = bind( listen_skt, (LPSOCKADDR)&local_addr, sizeof(local_addr) );  // LPSOCKADDR ¥i¥H¸m´«¦¨sockaddr*
+    int res = bind( listen_skt, (LPSOCKADDR)&local_addr, sizeof(local_addr) );  // LPSOCKADDR å¯ä»¥ç½®æ›æˆsockaddr*
     if( res == SOCKET_ERROR)   
     {
         int err = WSAGetLastError();
@@ -44,7 +44,7 @@ void tcp_hello_server( int port )
         return;
     }
     
-    res = listen( listen_skt, SOMAXCONN );   // listen ²Ä¤G­Ó¶Ç¤JÅÜ¼Æªí¥Ü±Æ¶¤ªº¼Æ¶q¤W­­. max conn¬O¹w³]³Ì¤j
+    res = listen( listen_skt, SOMAXCONN );   // listen ç¬¬äºŒå€‹å‚³å…¥è®Šæ•¸è¡¨ç¤ºæ’éšŠçš„æ•¸é‡ä¸Šé™. max connæ˜¯é è¨­æœ€å¤§
     if( res  == SOCKET_ERROR )
     {
         int err = WSAGetLastError();
