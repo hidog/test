@@ -6,13 +6,14 @@
 extern "C" {
 #include "../../tool_2.h"
 #include "../../udp_example_2.h"
+#include "../../tcp_example_2.h"
 }
 
 
 
 int main()
 {
-    udp_error_test();
+    //udp_error_test();
 
     //transform_test();
     //test_getaddrinfo();
@@ -45,6 +46,8 @@ int main()
 
     //tcp_hello_server( 8888 );
     //tcp_hello_client( "192.168.1.112", 8888 );
+
+    tcp_hello_server_2( 7777 );
 
     system("PAUSE");
     return 0;
