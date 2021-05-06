@@ -12,6 +12,8 @@ extern "C" {
 
 int main(int argc, const char * argv[])
 {
+    udp_error_test();
+    
     //transform_test();
     //test_getaddrinfo();
     
@@ -37,7 +39,7 @@ int main(int argc, const char * argv[])
     //udp_broadcast_recver();
     //udp_broadcast_sender();
     
-    tcp_hello_server(8888);
+    //tcp_hello_server(8888);
     //tcp_hello_client( "192.168.1.101", 8888 );
     
     return 0;
