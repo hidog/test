@@ -2,6 +2,7 @@
 
 #include "../../tool.h"
 #include "../../udp_example.h"
+#include "../../tcp_example.h"
 
 extern "C" {
 #include "../../tool_2.h"
@@ -34,7 +35,9 @@ int main(int argc, const char * argv[])
     //udp_nonblocking_2();
     
     //udp_broadcast_recver();
-    udp_broadcast_sender();
+    //udp_broadcast_sender();
+    
+    tcp_hello_server(8888);
     
     return 0;
 }

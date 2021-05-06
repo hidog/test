@@ -15,7 +15,7 @@
 #include <string.h>
 
 
-#if defined(UNIX)
+#if defined(UNIX) || defined(MACOS)
 #define SOCKET_ERROR -1
 #define INVALID_SOCKET -1
 typedef int SOCKET;
@@ -124,10 +124,10 @@ void tcp_hello_server( int port )
 
     // recv
     memset( recv_buf, 0, 255 );
-    int ret = recv( client_skt, recv_buf, 255, 0 );        
+    ssize_t ret = recv( client_skt, recv_buf, 255, 0 );        
     if( ret > 0 )
     {
-        printf( "recv. ret = %d\n", ret );
+        printf( "recv. ret = %d\n", (int)ret );
         printf( "msg = %s\n", recv_buf );
     }
     else if( ret <= 0 )
@@ -137,7 +137,7 @@ void tcp_hello_server( int port )
 #else
         int err_code = errno;
 #endif
-        printf("recv ret = %d, err = %d, end.\n", ret, err_code );
+        printf("recv ret = %d, err = %d, end.\n", (int)ret, err_code );
 #ifdef _WIN32
         closesocket(listen_skt);
         closesocket(client_skt);
@@ -154,7 +154,7 @@ void tcp_hello_server( int port )
     sprintf( send_buf, "hello, this is server." );
     ret = send( client_skt, send_buf, (int)strlen(send_buf), 0 );    
     if( ret > 0 )
-        printf("send. ret = %d\n", ret );
+        printf("send. ret = %d\n", (int)ret );
     else
     {
 #ifdef _WIN32
@@ -162,7 +162,7 @@ void tcp_hello_server( int port )
 #else
         int err = errno;
 #endif        
-        printf("send fail. ret = %d, err = %d\n", ret, err );
+        printf("send fail. ret = %d, err = %d\n", (int)ret, err );
 #ifdef _WIN32
         closesocket(listen_skt);
         closesocket(client_skt);
@@ -248,9 +248,9 @@ void tcp_hello_client( const char *ip, int  port )
 
     //
     const char *send_buf = "hello, server. this is client.";
-    int ret = send( skt, send_buf, (int)strlen(send_buf), 0 );
+    ssize_t ret = send( skt, send_buf, (int)strlen(send_buf), 0 );
     if( ret > 0 )    
-        printf( "send. ret = %d\n", ret );        
+        printf( "send. ret = %d\n", (int)ret );        
     else
     {
 #ifdef _WIN32
@@ -258,7 +258,7 @@ void tcp_hello_client( const char *ip, int  port )
 #else
         int err = errno;
 #endif
-        printf( "send fail. ret = %d, err = %d\n", ret, err );
+        printf( "send fail. ret = %d, err = %d\n", (int)ret, err );
 #ifdef _WIN32
         closesocket(skt);
         WSACleanup();
@@ -272,7 +272,7 @@ void tcp_hello_client( const char *ip, int  port )
     char recv_buf[255] = {0};
     ret = recv( skt, recv_buf, 255, 0 );
     if( ret > 0 )    
-        printf( "recv. ret = %d, msg = %s\n", ret, recv_buf );
+        printf( "recv. ret = %d, msg = %s\n", (int)ret, recv_buf );
     else
     {
 #ifdef _WIN32
@@ -280,7 +280,7 @@ void tcp_hello_client( const char *ip, int  port )
 #else
         int err = errno;
 #endif
-        printf( "recv fail. ret = %d, err = %d\n", ret, err );
+        printf( "recv fail. ret = %d, err = %d\n", (int)ret, err );
 #ifdef _WIN32
         closesocket(skt);
         WSACleanup();

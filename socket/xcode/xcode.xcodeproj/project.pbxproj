@@ -12,6 +12,7 @@
 		6D6973842632B608000359E6 /* tool_2.c in Sources */ = {isa = PBXBuildFile; fileRef = 6D6973812632B608000359E6 /* tool_2.c */; };
 		6D6973852632B608000359E6 /* udp_example_2.c in Sources */ = {isa = PBXBuildFile; fileRef = 6D6973822632B608000359E6 /* udp_example_2.c */; };
 		6D72F0C6263053A4007DC83F /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6D72F0C5263053A4007DC83F /* main.cpp */; };
+		6D9B18442643C76100045DE2 /* tcp_example.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6D9B18432643C76100045DE2 /* tcp_example.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -37,6 +38,8 @@
 		6D6973832632B608000359E6 /* udp_example_2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = udp_example_2.h; path = ../udp_example_2.h; sourceTree = "<group>"; };
 		6D72F0C2263053A4007DC83F /* xcode */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = xcode; sourceTree = BUILT_PRODUCTS_DIR; };
 		6D72F0C5263053A4007DC83F /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
+		6D9B18422643C76100045DE2 /* tcp_example.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = tcp_example.h; path = ../tcp_example.h; sourceTree = "<group>"; };
+		6D9B18432643C76100045DE2 /* tcp_example.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = tcp_example.cpp; path = ../tcp_example.cpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -53,6 +56,8 @@
 		6D2DDB352630DB020097A4D5 /* src */ = {
 			isa = PBXGroup;
 			children = (
+				6D9B18432643C76100045DE2 /* tcp_example.cpp */,
+				6D9B18422643C76100045DE2 /* tcp_example.h */,
 				6D6973812632B608000359E6 /* tool_2.c */,
 				6D6973802632B608000359E6 /* tool_2.h */,
 				6D6973822632B608000359E6 /* udp_example_2.c */,
@@ -146,6 +151,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6D9B18442643C76100045DE2 /* tcp_example.cpp in Sources */,
 				6D6973842632B608000359E6 /* tool_2.c in Sources */,
 				6D6973852632B608000359E6 /* udp_example_2.c in Sources */,
 				6D72F0C6263053A4007DC83F /* main.cpp in Sources */,
