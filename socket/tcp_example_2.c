@@ -132,6 +132,11 @@ void tcp_hello_server_2( int port )
                 printf( "ret = %d. break. err = %d\n", ret, err );
                 break;
             }
+            else if( ret == 0 )
+            {
+                printf("recv. remote close socket. ret = %d\n", ret);
+                break;
+            }
             else
                 printf("ret = %d. recv msg = %s\n", ret, recv_buf );
 
@@ -153,6 +158,13 @@ void tcp_hello_server_2( int port )
                 printf("ret = %d, break. err = %d\n", ret, err );
                 break;
             }
+            else if( ret == 0 )
+            {
+                printf( "send. remote close socket, ret = %d\n", ret );
+                break;
+            }
+            else
+                printf("send. ret = %d\n", ret);
         }
 
         // need close skt. release source.
@@ -249,6 +261,13 @@ void tcp_hello_client_2( const char *ip, int  port )
                 printf("send error. ret = %d, err = %d\n", ret, err );
                 break;
             }
+            else if( ret == 0 )
+            {
+                printf("send. remote close. ret = %d\n", ret );
+                break;
+            }
+            else
+                printf("send. ret = %d\n", ret );
 
             // 希望有機會send或recv時中斷,所以這邊需要j++
             j++;
@@ -267,6 +286,14 @@ void tcp_hello_client_2( const char *ip, int  port )
                 printf("recv error. ret = %d, err = %d\n", ret, err );
                 break;
             }
+            else if( ret == 0 )
+            {
+                printf("recv remote close. ret = %d\n", ret );
+                break;
+            }
+            else
+                printf("recv. ret = %d, msg = %s\n", ret, recv_buf );
+
             printf("recv message. ret = %d, msg = %s\n", ret, recv_buf );
         }
         
