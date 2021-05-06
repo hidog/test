@@ -11,6 +11,8 @@ extern "C"
 
 int main()
 {
+    udp_error_test();
+
     // transform_test();
     //test_getaddrinfo();
 
@@ -36,7 +38,7 @@ int main()
     //udp_broadcast_recver();
     //udp_broadcast_sender();
     
-    tcp_hello_server(8888);
+    //tcp_hello_server(8888);
     //tcp_hello_client( "192.168.1.112", 8888 );
     
 

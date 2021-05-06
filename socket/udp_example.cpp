@@ -105,7 +105,11 @@ void udp_error_test()
     flag = bind( skt_3, (sockaddr*)&local_addr, local_addr_len );
     if( flag == SOCKET_ERROR )
     {
+#ifdef _WIN32
         int err = WSAGetLastError();
+#else
+        int err = errno;
+#endif
         printf("bind fail. flag = %d, err = %d\n", flag, err );
     }
 
@@ -120,7 +124,11 @@ void udp_error_test()
     flag = connect( skt_4, (sockaddr*)&remote_addr, remote_addr_len );
     if( flag == SOCKET_ERROR )
     {
+#ifdef _WIN32
         int err = WSAGetLastError();
+#else
+        int err = errno;
+#endif
         printf("connect fail. flag = %d, err = %d\n", flag, err );
     }
 
