@@ -144,6 +144,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\..\tcp_example.cpp" />
+    <ClCompile Include="..\..\tcp_example_2.c" />
     <ClCompile Include="..\..\tool.cpp" />
     <ClCompile Include="..\..\tool_2.c">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
@@ -156,6 +157,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\tcp_example.h" />
+    <ClInclude Include="..\..\tcp_example_2.h" />
     <ClInclude Include="..\..\tool.h" />
     <ClInclude Include="..\..\tool_2.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>

@@ -73,7 +73,7 @@ void udp_error_test()
     if( skt_1 == INVALID_SOCKET )
     {
         int err = WSAGetLastError();
-        printf("get skt error. skt = %d, err = %d\n", skt_1, err );
+        printf("get skt error. skt = %d, err = %d\n", (int)skt_1, err );
     }
 #endif
 
