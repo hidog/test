@@ -42,7 +42,7 @@ int main()
     //tcp_hello_server(8888);
     //tcp_hello_client( "192.168.1.112", 8888 );
     
-    tcp_hello_client( "192.168.1.101", 7777 );
+    tcp_hello_client_2( "192.168.1.101", 7777 );
 
 
     return 0;

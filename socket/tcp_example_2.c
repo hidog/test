@@ -203,13 +203,6 @@ void tcp_hello_client_2( const char *ip, int  port )
     }
 #endif
 
-    SOCKET skt = socket( PF_INET, SOCK_STREAM, IPPROTO_TCP );
-    if( skt == INVALID_SOCKET )
-    {
-        printf( "invalid socket! skt = %d\n", (int)skt );
-        return;
-    }
-
     struct sockaddr_in remote_addr;
     remote_addr.sin_family = AF_INET;
     remote_addr.sin_port = htons(port);
@@ -224,11 +217,21 @@ void tcp_hello_client_2( const char *ip, int  port )
     int ret;
     char recv_buf[255];
     char send_buf[255];
+    SOCKET skt;
 
     printf( "round size = %d\n", round_size );
 
+
     for( int i = 0; i < round_size; i++ )
     {
+        skt = socket( PF_INET, SOCK_STREAM, IPPROTO_TCP );
+        if( skt == INVALID_SOCKET )
+        {
+            printf( "invalid socket! skt = %d\n", (int)skt );
+            return;
+        }
+    
+        printf("wait connect...\n");
         ret = connect( skt, (struct sockaddr *)&remote_addr, sizeof(remote_addr) );
         if( ret == SOCKET_ERROR )
         {
@@ -295,6 +298,9 @@ void tcp_hello_client_2( const char *ip, int  port )
                 printf("recv. ret = %d, msg = %s\n", ret, recv_buf );
 
             printf("recv message. ret = %d, msg = %s\n", ret, recv_buf );
+            
+            //
+            j++;
         }
         
 #ifdef _WIN32
