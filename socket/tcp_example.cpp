@@ -41,7 +41,7 @@ void tcp_hello_server( int port )
     SOCKET listen_skt = socket( PF_INET, SOCK_STREAM, IPPROTO_TCP );
     if( listen_skt == INVALID_SOCKET )
     {
-        printf( "socket error ! listen_skt = %d\n", listen_skt );
+        printf( "socket error ! listen_skt = %d\n", (int)listen_skt );
 #ifdef _WIN32
         WSACleanup(); 
 #endif
@@ -111,7 +111,7 @@ void tcp_hello_server( int port )
 #else
         int err = errno;
 #endif
-        printf( "accept error ! client_skt = %d, err = %d\n", client_skt, err );
+        printf( "accept error ! client_skt = %d, err = %d\n", (int)client_skt, err );
 #ifdef _WIN32
         closesocket(listen_skt);
         WSACleanup();
@@ -152,7 +152,7 @@ void tcp_hello_server( int port )
     // send
     memset( send_buf, 0, 255 );
     sprintf( send_buf, "hello, this is server." );
-    ret = send( client_skt, send_buf, strlen(send_buf), 0 );    
+    ret = send( client_skt, send_buf, (int)strlen(send_buf), 0 );    
     if( ret > 0 )
         printf("send. ret = %d\n", ret );
     else
@@ -211,7 +211,7 @@ void tcp_hello_client( const char *ip, int  port )
     SOCKET skt = socket( PF_INET, SOCK_STREAM, IPPROTO_TCP );
     if( skt == INVALID_SOCKET )
     {
-        printf( "invalid socket! skt = %d\n", skt );
+        printf( "invalid socket! skt = %d\n", (int)skt );
 #ifdef _WIN32
         WSACleanup();
 #endif
@@ -248,7 +248,7 @@ void tcp_hello_client( const char *ip, int  port )
 
     //
     const char *send_buf = "hello, server. this is client.";
-    int ret = send( skt, send_buf, strlen(send_buf), 0 );
+    int ret = send( skt, send_buf, (int)strlen(send_buf), 0 );
     if( ret > 0 )    
         printf( "send. ret = %d\n", ret );        
     else

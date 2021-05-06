@@ -121,7 +121,7 @@ void udp_broadcast_recver()
 
     printf("recv. server port = %d, server address = %s\n", remote_port, inet_ntoa(remote_addr.sin_addr) );
     remote_addr.sin_port = htons(remote_port);
-    ret = sendto( skt, sendmsg, strlen(sendmsg), 0, (sockaddr*)&remote_addr, sizeof remote_addr );
+    ret = sendto( skt, sendmsg, (int)strlen(sendmsg), 0, (sockaddr*)&remote_addr, sizeof remote_addr );
     printf("send back. ret = %d\n", (int)ret);
 
     //
