@@ -25,5 +25,6 @@ void udp_nonblockint_client();
 void udp_broadcast_sender();
 void udp_broadcast_recver();
 
+void udp_error_test();
 
 #endif

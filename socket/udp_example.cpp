@@ -65,6 +65,76 @@ struct NonBkData
 
 
 
+void udp_error_test()
+{
+    // test windows create socket without init.
+#ifdef _WIN32
+    SOCKET skt_1 = socket( PF_INET, SOCK_DGRAM, IPPROTO_UDP );
+    if( skt_1 == INVALID_SOCKET )
+    {
+        int err = WSAGetLastError();
+        printf("get skt error. skt = %d, err = %d\n", skt_1, err );
+    }
+#endif
+
+#ifdef _WIN32
+    WORD skt_ver = MAKEWORD( 2, 2 );
+    WSADATA wsad;
+    if( WSAStartup( skt_ver, &wsad ) != 0 )
+    {
+        printf("init error\n");
+        return;    
+    }
+#endif
+
+    // test bind error
+    SOCKET skt_2 = socket( PF_INET, SOCK_DGRAM, IPPROTO_UDP );
+    SOCKET skt_3 = socket( PF_INET, SOCK_DGRAM, IPPROTO_UDP );
+
+    sockaddr_in local_addr;
+    local_addr.sin_family = AF_INET;
+    local_addr.sin_port = htons(1234);
+    local_addr.sin_addr.s_addr = INADDR_ANY;
+    int local_addr_len = sizeof(local_addr);
+
+    int flag;
+    flag = bind( skt_2, (sockaddr*)&local_addr, local_addr_len );
+    if( flag == SOCKET_ERROR )
+        printf( "bind fail. flag = %d\n", flag );
+
+    flag = bind( skt_3, (sockaddr*)&local_addr, local_addr_len );
+    if( flag == SOCKET_ERROR )
+    {
+        int err = WSAGetLastError();
+        printf("bind fail. flag = %d, err = %d\n", flag, err );
+    }
+
+    // test connect error
+    SOCKET skt_4 = socket( PF_INET, SOCK_DGRAM, IPPROTO_UDP );
+    sockaddr_in remote_addr;
+    remote_addr.sin_family = AF_INET;
+    remote_addr.sin_port = htons(9911);
+    remote_addr.sin_addr.s_addr = inet_addr("2.3.4.5");
+    int remote_addr_len = sizeof(remote_addr);
+    // 實際上UDP connect會成功.
+    flag = connect( skt_4, (sockaddr*)&remote_addr, remote_addr_len );
+    if( flag == SOCKET_ERROR )
+    {
+        int err = WSAGetLastError();
+        printf("connect fail. flag = %d, err = %d\n", flag, err );
+    }
+
+#ifdef _WIN32
+    closesocket(skt_1);
+    closesocket(skt_2);
+    closesocket(skt_3);
+    WSACleanup();
+#endif
+
+}
+
+
+
 
 void udp_broadcast_recver()
 {
