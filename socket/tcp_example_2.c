@@ -245,6 +245,7 @@ void tcp_hello_client_2( const char *ip, int  port )
             printf("connect error! res = %d, err = %d\n", ret, err );
             break;
         }
+        printf("connect success.\n");
 
         int rs_size = rand() % 10 + 3;
         printf( "recv send size = %d\n", rs_size );
@@ -305,8 +306,10 @@ void tcp_hello_client_2( const char *ip, int  port )
         
 #ifdef _WIN32
         closesocket(skt);
+        Sleep(1000);
 #else
         close(skt);
+        sleep(1);
 #endif
     }
 
