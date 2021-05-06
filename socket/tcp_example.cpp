@@ -1,10 +1,28 @@
-﻿// ref : https://www.cnblogs.com/churi/archive/2013/02/27/2935427.html
+ï»¿// ref : https://www.cnblogs.com/churi/archive/2013/02/27/2935427.html
 
 
+#ifdef _WIN32
 #include <WinSock2.h>
+#else
+#include <unistd.h>
+#include <errno.h>
+#include <sys/socket.h>
+#include <arpa/inet.h>
+#endif
+
+
 #include <stdio.h>
+#include <string.h>
 
 
+#if defined(UNIX)
+#define SOCKET_ERROR -1
+#define INVALID_SOCKET -1
+typedef int SOCKET;
+typedef sockaddr* LPSOCKADDR;
+#else
+typedef int socklen_t;
+#endif
 
 
 
@@ -24,7 +42,9 @@ void tcp_hello_server( int port )
     if( listen_skt == INVALID_SOCKET )
     {
         printf( "socket error ! listen_skt = %d\n", listen_skt );
-        WSACleanup();
+#ifdef _WIN32
+        WSACleanup(); 
+#endif
         return;
     }
 
@@ -32,32 +52,53 @@ void tcp_hello_server( int port )
     sockaddr_in local_addr;
     local_addr.sin_family = AF_INET;
     local_addr.sin_port = htons(port);
+#ifdef _WIN32
     local_addr.sin_addr.S_un.S_addr = INADDR_ANY; 
+#else
+    local_addr.sin_addr.s_addr = INADDR_ANY;
+#endif
 
-    int res = bind( listen_skt, (LPSOCKADDR)&local_addr, sizeof(local_addr) );  // LPSOCKADDR 可以置換成sockaddr*
+    // note: linux not support LPSOCKADDR, need defined it.
+    int res = bind( listen_skt, (LPSOCKADDR)&local_addr, sizeof(local_addr) );  // LPSOCKADDR ¥i¥HžmŽ«Ššsockaddr*
     if( res == SOCKET_ERROR)   
     {
+#ifdef _WIN32
         int err = WSAGetLastError();
+#else
+        int err = errno;
+#endif
         printf( "bind error! res = %d, err = %d\n", res, err );
+#ifdef _WIN32
         closesocket(listen_skt);
         WSACleanup();
+#else
+        close(listen_skt);
+#endif
         return;
     }
     
-    res = listen( listen_skt, SOMAXCONN );   // listen 第二個傳入變數表示排隊的數量上限. max conn是預設最大
+    res = listen( listen_skt, SOMAXCONN );   // listen ç¬¬äºåå³å¥è®æžè¡šç€ºæéçæžéäžé. max connæ¯é èš­æå€§
     if( res  == SOCKET_ERROR )
     {
+#ifdef _WIN32
         int err = WSAGetLastError();
+#else
+        int err = errno;
+#endif
         printf( "listen error ! res = %d, err = %d\n", res, err );
+#ifdef _WIN32
         closesocket(listen_skt);
         WSACleanup();
+#else
+        close(listen_skt);
+#endif
         return;
     }
 
     //
     SOCKET client_skt;
     sockaddr_in remote_addr;
-    int remote_addr_len = sizeof(remote_addr);
+    socklen_t remote_addr_len = sizeof(remote_addr);
     char recv_buf[255]; 
     char send_buf[255];
 
@@ -65,10 +106,18 @@ void tcp_hello_server( int port )
     client_skt = accept( listen_skt, (sockaddr*)&remote_addr, &remote_addr_len );
     if( client_skt == INVALID_SOCKET )
     {
+#ifdef _WIN32
         int err = WSAGetLastError();
+#else
+        int err = errno;
+#endif
         printf( "accept error ! client_skt = %d, err = %d\n", client_skt, err );
+#ifdef _WIN32
         closesocket(listen_skt);
         WSACleanup();
+#else
+        close(listen_skt);
+#endif
         return;
     }   
     printf("accept from : %s, port = %d", inet_ntoa(remote_addr.sin_addr), ntohs(remote_addr.sin_port) );
@@ -83,11 +132,20 @@ void tcp_hello_server( int port )
     }
     else if( ret <= 0 )
     {
+#ifdef _WIN32
         int err_code = WSAGetLastError();  
+#else
+        int err_code = errno;
+#endif
         printf("recv ret = %d, err = %d, end.\n", ret, err_code );
+#ifdef _WIN32
         closesocket(listen_skt);
         closesocket(client_skt);
         WSACleanup();
+#else
+        close(listen_skt);
+        close(client_skt);
+#endif
         return;
     }
 
@@ -99,19 +157,36 @@ void tcp_hello_server( int port )
         printf("send. ret = %d\n", ret );
     else
     {
+#ifdef _WIN32
         int err = WSAGetLastError();
+#else
+        int err = errno;
+#endif        
         printf("send fail. ret = %d, err = %d\n", ret, err );
+#ifdef _WIN32
         closesocket(listen_skt);
         closesocket(client_skt);
         WSACleanup();
+#else
+        close(listen_skt);
+        close(client_skt);
+#endif
         return;
     }   
 
+#ifdef _WIN32
     closesocket(client_skt);
+#else
+    close(client_skt);
+#endif
     
     // 
+#ifdef _WIN32
     closesocket(listen_skt);
     WSACleanup();
+#else
+    close(listen_skt);
+#endif
 
     return;
 }
@@ -137,23 +212,37 @@ void tcp_hello_client( const char *ip, int  port )
     if( skt == INVALID_SOCKET )
     {
         printf( "invalid socket! skt = %d\n", skt );
+#ifdef _WIN32
         WSACleanup();
+#endif
         return;
     }
 
     sockaddr_in remote_addr;
     remote_addr.sin_family = AF_INET;
     remote_addr.sin_port = htons(port);
+#ifdef _WIN32
     remote_addr.sin_addr.S_un.S_addr = inet_addr(ip); 
+#else
+    remote_addr.sin_addr.s_addr = inet_addr(ip);
+#endif
 
     //
     int res = connect( skt, (sockaddr *)&remote_addr, sizeof(remote_addr) );
     if( res == SOCKET_ERROR )
     {
+#ifdef _WIN32
         int err = WSAGetLastError();
+#else
+        int err = errno;
+#endif
         printf("connect error! res = %d, err = %d\n", res, err );
+#ifdef _WIN32
         closesocket(skt);
         WSACleanup();
+#else
+        close(skt);
+#endif
         return;
     }
 
@@ -164,10 +253,18 @@ void tcp_hello_client( const char *ip, int  port )
         printf( "send. ret = %d\n", ret );        
     else
     {
+#ifdef _WIN32
         int err = WSAGetLastError();
+#else
+        int err = errno;
+#endif
         printf( "send fail. ret = %d, err = %d\n", ret, err );
+#ifdef _WIN32
         closesocket(skt);
         WSACleanup();
+#else
+        close(skt);
+#endif
         return;
     }
 
@@ -178,15 +275,27 @@ void tcp_hello_client( const char *ip, int  port )
         printf( "recv. ret = %d, msg = %s\n", ret, recv_buf );
     else
     {
+#ifdef _WIN32
         int err = WSAGetLastError();
+#else
+        int err = errno;
+#endif
         printf( "recv fail. ret = %d, err = %d\n", ret, err );
+#ifdef _WIN32
         closesocket(skt);
         WSACleanup();
+#else
+        close(skt);
+#endif
         return;
     }
     
+#ifdef _WIN32
     closesocket(skt);
     WSACleanup();
+#else
+    close(skt);
+#endif
 
     return ;
 }

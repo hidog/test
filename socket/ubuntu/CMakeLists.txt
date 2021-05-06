@@ -30,6 +30,7 @@ add_definitions( ${DEFINE} )
 # head
 set( HEAD ${CMAKE_SOURCE_DIR}/../udp_example.h
           ${CMAKE_SOURCE_DIR}/../udp_example_2.h
+          ${CMAKE_SOURCE_DIR}/../tcp_example.h
           ${CMAKE_SOURCE_DIR}/../tool.h 
           ${CMAKE_SOURCE_DIR}/../tool_2.h )
 
@@ -37,6 +38,7 @@ set( HEAD ${CMAKE_SOURCE_DIR}/../udp_example.h
 set( SOURCE main.cpp 
             ${CMAKE_SOURCE_DIR}/../udp_example.cpp 
             ${CMAKE_SOURCE_DIR}/../udp_example_2.c
+            ${CMAKE_SOURCE_DIR}/../tcp_example.cpp
             ${CMAKE_SOURCE_DIR}/../tool.cpp 
             ${CMAKE_SOURCE_DIR}/../tool_2.c )
 
