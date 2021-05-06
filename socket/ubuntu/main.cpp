@@ -37,6 +37,8 @@ int main()
     //udp_broadcast_sender();
     
     tcp_hello_server(8888);
+    //tcp_hello_client( "192.168.1.112", 8888 );
+    
 
     return 0;
 }
