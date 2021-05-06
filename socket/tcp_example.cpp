@@ -22,6 +22,7 @@ typedef int SOCKET;
 typedef sockaddr* LPSOCKADDR;
 #else
 typedef int socklen_t;
+typedef int ssize_t;
 #endif
 
 
