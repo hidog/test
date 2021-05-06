@@ -1,13 +1,31 @@
 ﻿#include "tcp_example_2.h"
 
+
+#ifdef _WIN32
 #include <WinSock2.h>
+#else
+#include <errno.h>
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <arpa/inet.h>
+#include <unistd.h>
+#endif
+
+
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
+#include <time.h>
+
 
 
 #ifdef _WIN32
 typedef int socklen_t;
 typedef int ssize_t;
+#else
+typedef int SOCKET;
+#define SOCKET_ERROR -1
+#define INVALID_SOCKET -1
 #endif
 
 
@@ -44,7 +62,7 @@ void tcp_hello_server_2( int port )
 #endif
 
     // note: linux not support LPSOCKADDR, need defined it.
-    int res = bind( listen_skt, (LPSOCKADDR)&local_addr, sizeof(local_addr) );  // LPSOCKADDR 在window下可以取代 sockaddr*
+    int res = bind( listen_skt, (struct sockaddr*)&local_addr, sizeof(local_addr) );  // LPSOCKADDR 在window下可以取代 sockaddr*
     if( res == SOCKET_ERROR)   
     {
 #ifdef _WIN32
@@ -87,11 +105,12 @@ void tcp_hello_server_2( int port )
         {
 #ifdef _WIN32
             int err = WSAGetLastError();
+            closesocket(client_skt);
 #else
             int err = errno;
+            close(client_skt);
 #endif
             printf( "accept error ! client_skt = %d, err = %d\n", (int)client_skt, err );
-            closesocket(client_skt);
             break;
         }   
         printf("accept from : %s, port = %d", inet_ntoa(remote_addr.sin_addr), ntohs(remote_addr.sin_port) );
@@ -105,7 +124,11 @@ void tcp_hello_server_2( int port )
             ret = recv( client_skt, recv_buf, 255, 0 );
             if( ret == SOCKET_ERROR )
             {
+#ifdef _WIN32
                 int err = WSAGetLastError();
+#else
+                int err = errno;
+#endif
                 printf( "ret = %d. break. err = %d\n", ret, err );
                 break;
             }
@@ -122,14 +145,22 @@ void tcp_hello_server_2( int port )
             ret = send( client_skt, send_buf, strlen(send_buf), 0 );
             if( ret == SOCKET_ERROR )
             {
+#ifdef _WIN32
                 int err = WSAGetLastError();
+#else
+                int err = errno;
+#endif
                 printf("ret = %d, break. err = %d\n", ret, err );
                 break;
             }
         }
 
         // need close skt. release source.
+#ifdef _WIN32
         closesocket( client_skt );
+#else
+        close(client_skt);
+#endif
     }
 
     // 
@@ -191,10 +222,11 @@ void tcp_hello_client_2( const char *ip, int  port )
         {
 #ifdef _WIN32
             int err = WSAGetLastError();
+            closesocket(skt);
 #else
             int err = errno;
+            close(skt);
 #endif
-            closesocket(skt);
             printf("connect error! res = %d, err = %d\n", ret, err );
             break;
         }
@@ -206,10 +238,14 @@ void tcp_hello_client_2( const char *ip, int  port )
         {
             memset( send_buf, 0, 255 );
             sprintf( send_buf, "Hello, this is client. round = %d, recv send = %d\n", i, j );
-            ret = send( skt, send_buf, strlen(send_buf), 0 );
+            ret = send( skt, send_buf, (int)strlen(send_buf), 0 );
             if( ret == SOCKET_ERROR )
             {
+#ifdef _WIN32
                 int err = WSAGetLastError();
+#else
+                int err = errno;
+#endif
                 printf("send error. ret = %d, err = %d\n", ret, err );
                 break;
             }
@@ -223,14 +259,22 @@ void tcp_hello_client_2( const char *ip, int  port )
             ret = recv( skt, recv_buf, 255, 0 );
             if( ret == SOCKET_ERROR )
             {
+#ifdef _WIN32
                 int err = WSAGetLastError();
+#else
+                int err = errno;
+#endif
                 printf("recv error. ret = %d, err = %d\n", ret, err );
                 break;
             }
             printf("recv message. ret = %d, msg = %s\n", ret, recv_buf );
         }
-
+        
+#ifdef _WIN32
         closesocket(skt);
+#else
+        close(skt);
+#endif
     }
 
 #ifdef _WIN32
