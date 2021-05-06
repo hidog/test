@@ -1,4 +1,4 @@
-ï»¿// ref : https://www.cnblogs.com/churi/archive/2013/02/27/2935427.html
+// ref : https://www.cnblogs.com/churi/archive/2013/02/27/2935427.html
 
 
 #ifdef _WIN32
@@ -59,7 +59,7 @@ void tcp_hello_server( int port )
 #endif
 
     // note: linux not support LPSOCKADDR, need defined it.
-    int res = bind( listen_skt, (LPSOCKADDR)&local_addr, sizeof(local_addr) );  // LPSOCKADDR ¥i¥HžmŽ«Ššsockaddr*
+    int res = bind( listen_skt, (LPSOCKADDR)&local_addr, sizeof(local_addr) );  // LPSOCKADDR 在window下可以取代 sockaddr*
     if( res == SOCKET_ERROR)   
     {
 #ifdef _WIN32
@@ -77,7 +77,7 @@ void tcp_hello_server( int port )
         return;
     }
     
-    res = listen( listen_skt, SOMAXCONN );   // listen ç¬¬äºåå³å¥è®æžè¡šç€ºæéçæžéäžé. max connæ¯é èš­æå€§
+    res = listen( listen_skt, SOMAXCONN );   // listen 的第二個傳入變數代表的是最高連線數.   so max conn 代表預設最大連線數
     if( res  == SOCKET_ERROR )
     {
 #ifdef _WIN32
