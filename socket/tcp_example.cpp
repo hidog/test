@@ -8,7 +8,7 @@
 
 
 
-void tcp_hello_server()
+void tcp_hello_server( int port )
 {
 #ifdef _WIN32
     WORD winsock_version = MAKEWORD(2,2);
@@ -24,26 +24,33 @@ void tcp_hello_server()
     if( listen_skt == INVALID_SOCKET )
     {
         printf( "socket error ! listen_skt = %d\n", listen_skt );
+        WSACleanup();
         return;
     }
 
     //
     sockaddr_in local_addr;
     local_addr.sin_family = AF_INET;
-    local_addr.sin_port = htons(8888);
+    local_addr.sin_port = htons(port);
     local_addr.sin_addr.S_un.S_addr = INADDR_ANY; 
 
     int res = bind( listen_skt, (LPSOCKADDR)&local_addr, sizeof(local_addr) );  // LPSOCKADDR 可以置換成sockaddr*
     if( res == SOCKET_ERROR)   
     {
-        printf( "bind error! res = %d\n", res );
+        int err = WSAGetLastError();
+        printf( "bind error! res = %d, err = %d\n", res, err );
+        closesocket(listen_skt);
+        WSACleanup();
         return;
     }
     
     res = listen( listen_skt, SOMAXCONN );   // listen 第二個傳入變數表示排隊的數量上限. max conn是預設最大
     if( res  == SOCKET_ERROR )
     {
-        printf( "listen error ! res = %d\n", res );
+        int err = WSAGetLastError();
+        printf( "listen error ! res = %d, err = %d\n", res, err );
+        closesocket(listen_skt);
+        WSACleanup();
         return;
     }
 
@@ -54,32 +61,55 @@ void tcp_hello_server()
     char recv_buf[255]; 
     char send_buf[255];
 
-    while (true)
+    //
+    client_skt = accept( listen_skt, (sockaddr*)&remote_addr, &remote_addr_len );
+    if( client_skt == INVALID_SOCKET )
     {
-        printf("wait...\n");
-        client_skt = accept( listen_skt, (sockaddr*)&remote_addr, &remote_addr_len );
+        int err = WSAGetLastError();
+        printf( "accept error ! client_skt = %d, err = %d\n", client_skt, err );
+        closesocket(listen_skt);
+        WSACleanup();
+        return;
+    }   
+    printf("accept from : %s, port = %d", inet_ntoa(remote_addr.sin_addr), ntohs(remote_addr.sin_port) );
 
-        if( client_skt == INVALID_SOCKET )
-        {
-            printf( "accept error ! client_skt = %d\n", client_skt );
-            continue;
-        }
-        printf("accept from : %s, port = %d", inet_ntoa(remote_addr.sin_addr), ntohs(remote_addr.sin_port) );
-
-        // recv
-        int ret = recv( client_skt, recv_buf, 255, 0 );        
-        if( ret > 0 )
-        {
-            printf( "recv. ret = %d\n", ret );
-            printf( "msg = %s\n", recv_buf );
-        }
-
-        // send
-        sprintf( send_buf, "hello, this is server." );
-        send( client_skt, send_buf, strlen(send_buf), 0 );
+    // recv
+    memset( recv_buf, 0, 255 );
+    int ret = recv( client_skt, recv_buf, 255, 0 );        
+    if( ret > 0 )
+    {
+        printf( "recv. ret = %d\n", ret );
+        printf( "msg = %s\n", recv_buf );
+    }
+    else if( ret <= 0 )
+    {
+        int err_code = WSAGetLastError();  
+        printf("recv ret = %d, err = %d, end.\n", ret, err_code );
+        closesocket(listen_skt);
         closesocket(client_skt);
+        WSACleanup();
+        return;
     }
 
+    // send
+    memset( send_buf, 0, 255 );
+    sprintf( send_buf, "hello, this is server." );
+    ret = send( client_skt, send_buf, strlen(send_buf), 0 );    
+    if( ret > 0 )
+        printf("send. ret = %d\n", ret );
+    else
+    {
+        int err = WSAGetLastError();
+        printf("send fail. ret = %d, err = %d\n", ret, err );
+        closesocket(listen_skt);
+        closesocket(client_skt);
+        WSACleanup();
+        return;
+    }   
+
+    closesocket(client_skt);
+    
+    // 
     closesocket(listen_skt);
     WSACleanup();
 
@@ -88,6 +118,78 @@ void tcp_hello_server()
 
 
 
+
+
+
+void tcp_hello_client( const char *ip, int  port )
+{
+#ifdef _WIN32
+    WORD sock_version = MAKEWORD(2,2);
+    WSADATA wsa_data; 
+    if( 0 != WSAStartup(sock_version, &wsa_data) )
+    {
+        printf("init error\n");
+        return;
+    }
+#endif
+
+    SOCKET skt = socket( PF_INET, SOCK_STREAM, IPPROTO_TCP );
+    if( skt == INVALID_SOCKET )
+    {
+        printf( "invalid socket! skt = %d\n", skt );
+        WSACleanup();
+        return;
+    }
+
+    sockaddr_in remote_addr;
+    remote_addr.sin_family = AF_INET;
+    remote_addr.sin_port = htons(port);
+    remote_addr.sin_addr.S_un.S_addr = inet_addr(ip); 
+
+    //
+    int res = connect( skt, (sockaddr *)&remote_addr, sizeof(remote_addr) );
+    if( res == SOCKET_ERROR )
+    {
+        int err = WSAGetLastError();
+        printf("connect error! res = %d, err = %d\n", res, err );
+        closesocket(skt);
+        WSACleanup();
+        return;
+    }
+
+    //
+    const char *send_buf = "hello, server. this is client.";
+    int ret = send( skt, send_buf, strlen(send_buf), 0 );
+    if( ret > 0 )    
+        printf( "send. ret = %d\n", ret );        
+    else
+    {
+        int err = WSAGetLastError();
+        printf( "send fail. ret = %d, err = %d\n", ret, err );
+        closesocket(skt);
+        WSACleanup();
+        return;
+    }
+
+    //
+    char recv_buf[255] = {0};
+    ret = recv( skt, recv_buf, 255, 0 );
+    if( ret > 0 )    
+        printf( "recv. ret = %d, msg = %s\n", ret, recv_buf );
+    else
+    {
+        int err = WSAGetLastError();
+        printf( "recv fail. ret = %d, err = %d\n", ret, err );
+        closesocket(skt);
+        WSACleanup();
+        return;
+    }
+    
+    closesocket(skt);
+    WSACleanup();
+
+    return ;
+}
 
 
 

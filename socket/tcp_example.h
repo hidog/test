@@ -3,7 +3,8 @@
 
 
 
-void tcp_hello_server();
+void tcp_hello_server( int port );
+void tcp_hello_client( const char *ip, int  port );
 
 
 /*
@@ -13,6 +14,7 @@ void tcp_hello_server();
 	   b. 一次傳送的封包上限
 	   c. 斷線測試
 	3. 上述行為在測一次
+    4. connect timeout, recv timeout等等
 */
 
 #endif

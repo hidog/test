@@ -1,6 +1,7 @@
 #include <iostream>
 #include "../../udp_example.h"
 #include "../../tool.h"
+#include "../../tcp_example.h"
 
 extern "C" {
 #include "../../tool_2.h"
@@ -14,7 +15,7 @@ int main()
     //transform_test();
     //test_getaddrinfo();
         
-    udp_hello_server( 12349 );
+    //udp_hello_server( 12349 );
     //udp_hello_client( std::string("127.0.0.1"), 12349 );
     // 122.116.84.59
     //udp_hello_server_2( "12349" );
@@ -39,6 +40,9 @@ int main()
     //udp_nonblocking_2();
     //udp_broadcast_sender();
     //udp_broadcast_recver();
+
+    //tcp_hello_server( 8888 );
+    tcp_hello_client( "127.0.0.1", 8888 );
 
     system("PAUSE");
     return 0;
