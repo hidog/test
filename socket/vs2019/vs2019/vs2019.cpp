@@ -57,7 +57,9 @@ int main()
 
     //tcp_hello_server_2( 7777 );
 
-    tcp_server_timeout_test();
+    //tcp_server_timeout_test();
+    tcp_client_timeout_test();
+
 
     system("PAUSE");
     return 0;

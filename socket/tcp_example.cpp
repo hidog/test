@@ -330,22 +330,32 @@ void tcp_client_timeout_test()
     sockaddr_in remote_addr;
     remote_addr.sin_family = AF_INET;
     remote_addr.sin_port = htons(3425);
-    remote_addr.sin_addr.s_addr = inet_addr("192.168.1.102");
+    remote_addr.sin_addr.s_addr = inet_addr("192.168.1.142");
 
     // 有網頁說無法設置connect timeout,但實際測試有成功
+    // note: windows底下測試, connect timeout沒效果.
 #if defined(UNIX) || defined(MACOS)
     timeval timeout;
     socklen_t timeout_len = sizeof(timeout);
 #else
-#error need maintain.
+    int timeout;
+    int timeout_len = sizeof(timeout);
 #endif
-    getsockopt( skt, SOL_SOCKET, SO_SNDTIMEO, &timeout, &timeout_len );
+    getsockopt( skt, SOL_SOCKET, SO_SNDTIMEO, (char*)&timeout, &timeout_len );
 
+#ifdef _WIN32
+    printf("timeout = %d\n", timeout );
+#else
     printf("timeout = %ld, %ld\n", timeout.tv_sec, timeout.tv_usec );
+#endif
 
+#ifdef _WIN32
+    timeout = 1;
+#else
     timeout.tv_sec = 1;
     timeout.tv_usec = 0;
-    setsockopt( skt, SOL_SOCKET, SO_SNDTIMEO, &timeout, sizeof(timeout) );
+#endif
+    setsockopt( skt, SOL_SOCKET, SO_SNDTIMEO, (char*)&timeout, sizeof(timeout) );
 
     //
     printf("start connect...\n");
