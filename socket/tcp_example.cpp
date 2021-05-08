@@ -375,11 +375,12 @@ void tcp_client_timeout_test()
     // 本來懷疑沒設回來會造成timeout過短,但實測並沒有
     // 就算直接close skt也沒有觸發timeout,需要研究原因
     // 試了很多方式, send都成功, 沒有觸發timeout.
-    //timeout.tv_sec = 0;
-    //timeout.tv_usec = 0;
-    //setsockopt( skt, SOL_SOCKET, SO_SNDTIMEO, &timeout, sizeof(timeout) );
+    // 實務上blocking的寫法不太需要設timeout,就先不追究了.
+    // timeout.tv_sec = 0;
+    // timeout.tv_usec = 0;
+    // setsockopt( skt, SOL_SOCKET, SO_SNDTIMEO, &timeout, sizeof(timeout) );
 
-    sleep(10);
+    sleep(1);
 
     //
     const char *send_buf = "hello, server. this is client.";
@@ -472,6 +473,14 @@ void tcp_server_timeout_test()
 
     printf("listened. wait for accept...\n");
 
+    // ubuntu下設定timeout有作用
+#ifdef _WIN32
+    int timeout = 1;
+#else
+    timeval timeout = { 1, 0 };
+#endif
+    setsockopt( listen_skt, SOL_SOCKET, SO_RCVTIMEO, (char*)&timeout, sizeof(timeout) );
+
     //
     client_skt = accept( listen_skt, (sockaddr*)&remote_addr, &remote_addr_len );
     if( client_skt == INVALID_SOCKET )
@@ -485,8 +494,11 @@ void tcp_server_timeout_test()
         return;
     }   
     printf("accept from : %s, port = %d\n", inet_ntoa(remote_addr.sin_addr), ntohs(remote_addr.sin_port) );
+#ifdef _WIN32
     closesocket(client_skt);
-    
+#else
+    close(client_skt);
+#endif
 
     // recv
     memset( recv_buf, 0, 255 );
