@@ -55,9 +55,10 @@ int main()
     //tcp_hello_server( 8888 );
     //tcp_hello_client( "192.168.1.112", 8888 );
 
-    //tcp_hello_server_2( 7777 );
+    tcp_hello_server_2( 1234 );
+    //tcp_hello_client_2( "192.168.1.112", 1234 );
 
-    tcp_server_timeout_test();
+    //tcp_server_timeout_test();
     //tcp_client_timeout_test();
 
 
