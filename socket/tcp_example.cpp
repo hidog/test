@@ -179,18 +179,14 @@ void tcp_hello_server( int port )
 #endif
         return;
     }   
-
-#ifdef _WIN32
-    closesocket(client_skt);
-#else
-    close(client_skt);
-#endif
     
     // 
 #ifdef _WIN32
+    closesocket(client_skt);
     closesocket(listen_skt);
     WSACleanup();
 #else
+    close(client_skt);
     close(listen_skt);
 #endif
 
@@ -393,6 +389,118 @@ void tcp_client_timeout_test()
 
     return;
 }
+
+
+
+
+
+
+void tcp_server_timeout_test()
+{
+#ifdef _WIN32
+    WORD winsock_version = MAKEWORD(2,2);
+    WSADATA wsa_data;
+    if(WSAStartup(winsock_version, &wsa_data)!=0)
+    {
+        printf("init error\n");
+        return;
+    }
+#endif
+
+    SOCKET listen_skt = socket( PF_INET, SOCK_STREAM, IPPROTO_TCP );
+    if( listen_skt == INVALID_SOCKET )
+    {
+        printf( "socket error ! listen_skt = %d\n", (int)listen_skt );
+        return;
+    }
+
+    //
+    sockaddr_in local_addr;
+    local_addr.sin_family = AF_INET;
+    local_addr.sin_port = htons(3425);
+    local_addr.sin_addr.s_addr = INADDR_ANY;
+
+    // note: linux not support LPSOCKADDR, need defined it.
+    int res = bind( listen_skt, (LPSOCKADDR)&local_addr, sizeof(local_addr) );  // LPSOCKADDR 在window下可以取代 sockaddr*
+    if( res == SOCKET_ERROR)   
+    {
+#ifdef _WIN32
+        int err = WSAGetLastError();
+#else
+        int err = errno;
+#endif
+        printf( "bind error! res = %d, err = %d\n", res, err );
+        return;
+    }
+
+    res = listen( listen_skt, SOMAXCONN );   // listen 的第二個傳入變數代表的是最高連線數.   so max conn 代表預設最大連線數
+    if( res  == SOCKET_ERROR )
+    {
+#ifdef _WIN32
+        int err = WSAGetLastError();
+#else
+        int err = errno;
+#endif
+        printf( "listen error ! res = %d, err = %d\n", res, err );
+        return;
+    }
+
+    //
+    SOCKET client_skt;
+    sockaddr_in remote_addr;
+    socklen_t remote_addr_len = sizeof(remote_addr);
+    char recv_buf[255]; 
+
+    printf("listened. wait for accept...\n");
+
+    //
+    client_skt = accept( listen_skt, (sockaddr*)&remote_addr, &remote_addr_len );
+    if( client_skt == INVALID_SOCKET )
+    {
+#ifdef _WIN32
+        int err = WSAGetLastError();
+#else
+        int err = errno;
+#endif
+        printf( "accept error ! client_skt = %d, err = %d\n", (int)client_skt, err );
+        return;
+    }   
+    printf("accept from : %s, port = %d\n", inet_ntoa(remote_addr.sin_addr), ntohs(remote_addr.sin_port) );
+    closesocket(client_skt);
+    
+
+    // recv
+    memset( recv_buf, 0, 255 );
+    ssize_t ret = recv( client_skt, recv_buf, 255, 0 );        
+    if( ret > 0 )
+    {
+        printf( "recv. ret = %d\n", (int)ret );
+        printf( "msg = %s\n", recv_buf );
+    }
+    else if( ret <= 0 )
+    {
+#ifdef _WIN32
+        int err_code = WSAGetLastError();  
+#else
+        int err_code = errno;
+#endif
+        printf("recv ret = %d, err = %d, end.\n", (int)ret, err_code );
+        return;
+    }
+
+    // 
+#ifdef _WIN32
+    closesocket(client_skt);
+    closesocket(listen_skt);
+    WSACleanup();
+#else
+    close(client_skt);
+    close(listen_skt);
+#endif
+
+    return;
+}
+
 
 
 
