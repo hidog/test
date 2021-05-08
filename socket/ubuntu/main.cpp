@@ -12,7 +12,7 @@ extern "C"
 
 
 
-int udp_test_funcs()
+void udp_test_funcs()
 {
     //udp_error_test();
 
