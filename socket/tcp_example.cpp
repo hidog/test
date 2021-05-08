@@ -474,6 +474,7 @@ void tcp_server_timeout_test()
     printf("listened. wait for accept...\n");
 
     // ubuntu下設定timeout有作用
+    // 沒設定的話accept似乎沒有timeout.
 #ifdef _WIN32
     int timeout = 1;
 #else

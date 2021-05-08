@@ -53,8 +53,11 @@ int main()
     //tcp_hello_server(8888);
     //tcp_hello_client( "192.168.1.112", 8888 );
     
+    //tcp_hello_server_2( 1234 );
+    tcp_hello_client_2( "192.168.1.102", 1234 );
+
     //tcp_client_timeout_test();
-    tcp_server_timeout_test();
+    //tcp_server_timeout_test();
 
     return 0;
 }
