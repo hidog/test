@@ -380,8 +380,6 @@ void tcp_client_timeout_test()
     // timeout.tv_usec = 0;
     // setsockopt( skt, SOL_SOCKET, SO_SNDTIMEO, &timeout, sizeof(timeout) );
 
-    sleep(1);
-
     //
     const char *send_buf = "hello, server. this is client.";
     ssize_t ret = send( skt, send_buf, (int)strlen(send_buf), 0 );
@@ -475,6 +473,7 @@ void tcp_server_timeout_test()
 
     // ubuntu下設定timeout有作用
     // 沒設定的話accept似乎沒有timeout.
+    // windows測試沒成功
 #ifdef _WIN32
     int timeout = 1;
 #else
