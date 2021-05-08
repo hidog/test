@@ -330,11 +330,22 @@ void tcp_client_timeout_test()
     sockaddr_in remote_addr;
     remote_addr.sin_family = AF_INET;
     remote_addr.sin_port = htons(3425);
-    remote_addr.sin_addr.s_addr = inet_addr("192.168.5.34");
+    remote_addr.sin_addr.s_addr = inet_addr("192.168.1.102");
 
     // 有網頁說無法設置connect timeout,但實際測試有成功
-    //struct timeval timeout = { 1, 0 };
-    //setsockopt( skt, SOL_SOCKET, SO_SNDTIMEO, &timeout, sizeof(timeout) );
+#if defined(UNIX) || defined(MACOS)
+    timeval timeout;
+    socklen_t timeout_len = sizeof(timeout);
+#else
+#error need maintain.
+#endif
+    getsockopt( skt, SOL_SOCKET, SO_SNDTIMEO, &timeout, &timeout_len );
+
+    printf("timeout = %ld, %ld\n", timeout.tv_sec, timeout.tv_usec );
+
+    timeout.tv_sec = 1;
+    timeout.tv_usec = 0;
+    setsockopt( skt, SOL_SOCKET, SO_SNDTIMEO, &timeout, sizeof(timeout) );
 
     //
     printf("start connect...\n");
@@ -357,7 +368,6 @@ void tcp_client_timeout_test()
     //timeout.tv_usec = 0;
     //setsockopt( skt, SOL_SOCKET, SO_SNDTIMEO, &timeout, sizeof(timeout) );
 
-
     //
     const char *send_buf = "hello, server. this is client.";
     ssize_t ret = send( skt, send_buf, (int)strlen(send_buf), 0 );
@@ -371,12 +381,6 @@ void tcp_client_timeout_test()
         int err = errno;
 #endif
         printf( "send fail. ret = %d, err = %d\n", (int)ret, err );
-#ifdef _WIN32
-        closesocket(skt);
-        WSACleanup();
-#else
-        close(skt);
-#endif
         return;
     }
     
