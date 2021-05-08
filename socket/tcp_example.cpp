@@ -345,8 +345,10 @@ void tcp_client_timeout_test()
 
 #ifdef _WIN32
     printf("timeout = %d\n", timeout );
-#else
+#elif defined(UNIX)
     printf("timeout = %ld, %ld\n", timeout.tv_sec, timeout.tv_usec );
+#elif defined(MACOS)
+    printf("timeout = %ld, %d\n", timeout.tv_sec, timeout.tv_usec );
 #endif
 
 #ifdef _WIN32
@@ -355,6 +357,7 @@ void tcp_client_timeout_test()
     timeout.tv_sec = 1;
     timeout.tv_usec = 0;
 #endif
+    // mac環境測試結果, timeout沒成功
     setsockopt( skt, SOL_SOCKET, SO_SNDTIMEO, (char*)&timeout, sizeof(timeout) );
 
     //
@@ -472,6 +475,7 @@ void tcp_server_timeout_test()
     printf("listened. wait for accept...\n");
 
     // ubuntu下設定timeout有作用
+    // 沒設定的話accept似乎沒有timeout.
     // windows測試沒成功
 #ifdef _WIN32
     int timeout = 1;

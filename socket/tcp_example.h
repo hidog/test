@@ -9,6 +9,18 @@ void tcp_hello_client( const char *ip, int  port );
 void tcp_client_timeout_test();
 void tcp_server_timeout_test();
 
+/*
+    先呼叫client的connect, server端才listen,也有機會連線成功
+*/
+
+
+
+/*
+    下禮拜優先事項
+    1. 研究tcp傳輸上限 (是否有上限?或者跟buffer有關?)
+    2. 測試tcp資料傳送一半. (send/recv端都要測試)
+*/
+
 
 /*
 	1. hello
