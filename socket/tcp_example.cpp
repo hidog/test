@@ -368,15 +368,20 @@ void tcp_client_timeout_test()
 
     // 本來懷疑沒設回來會造成timeout過短,但實測並沒有
     // 就算直接close skt也沒有觸發timeout,需要研究原因
+    // 試了很多方式, send都成功, 沒有觸發timeout.
     //timeout.tv_sec = 0;
     //timeout.tv_usec = 0;
     //setsockopt( skt, SOL_SOCKET, SO_SNDTIMEO, &timeout, sizeof(timeout) );
+
+    sleep(10);
 
     //
     const char *send_buf = "hello, server. this is client.";
     ssize_t ret = send( skt, send_buf, (int)strlen(send_buf), 0 );
     if( ret > 0 )    
         printf( "send. ret = %d\n", (int)ret );        
+    else if( ret == 0 )
+        printf("remote disconnect\n");
     else
     {
 #ifdef _WIN32
