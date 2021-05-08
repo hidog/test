@@ -6,6 +6,8 @@
 void tcp_hello_server( int port );
 void tcp_hello_client( const char *ip, int  port );
 
+void tcp_client_timeout_test();
+
 
 /*
 	1. hello

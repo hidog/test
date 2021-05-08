@@ -30,6 +30,8 @@ typedef int SOCKET;
 
 
 
+
+
 void tcp_hello_server_2( int port )
 {
     srand( (unsigned char)time(0) );
@@ -235,11 +237,6 @@ void tcp_hello_client_2( const char *ip, int  port )
             printf( "invalid socket! skt = %d\n", (int)skt );
             return;
         }
-        
-        
-        // 有網頁說無法設置connect,但實際測試有成功
-        //struct timeval timeout = { 1, 0 };
-        //setsockopt( skt, SOL_SOCKET, SO_SNDTIMEO, &timeout, sizeof(timeout) );
     
         printf("wait connect...\n");
         ret = connect( skt, (struct sockaddr *)&remote_addr, sizeof(remote_addr) );
@@ -255,14 +252,7 @@ void tcp_hello_client_2( const char *ip, int  port )
             printf("connect error! res = %d, err = %d\n", ret, err );
             break;
         }
-        printf("connect success.\n");
-        
-        // 本來懷疑沒設回來會造成timeout過短,但實測並沒有
-        // 就算直接close skt也沒有觸發timeout,需要研究原因
-        //timeout.tv_sec = 0;
-        //timeout.tv_usec = 0;
-        //setsockopt( skt, SOL_SOCKET, SO_SNDTIMEO, &timeout, sizeof(timeout) );
-
+        printf("connect success.\n");       
 
         int rs_size = rand() % 10 + 3;
         printf( "recv send size = %d\n", rs_size );
