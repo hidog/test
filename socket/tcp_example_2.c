@@ -175,6 +175,9 @@ void tcp_hello_server_2( int port )
 #endif
     }
 
+    printf("round size = %d\n", round_size);
+
+
     // 
 #ifdef _WIN32
     closesocket(listen_skt);
