@@ -7,6 +7,7 @@
 extern "C" {
 #include "../../tool_2.h"
 #include "../../udp_example_2.h"
+#include "../../tcp_example_2.h"
 }
 
 
@@ -52,6 +53,11 @@ int main(int argc, const char * argv[])
     
     //tcp_hello_server(8888);
     //tcp_hello_client( "192.168.1.101", 8888 );
+    
+    //tcp_hello_server_2(1234);
+    //tcp_hello_client_2( "192.168.1.108", 1234 );
+    
+    tcp_client_timeout_test();
     
     return 0;
 }
