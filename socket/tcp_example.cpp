@@ -312,6 +312,94 @@ void tcp_hello_client( const char *ip, int  port )
 
 
 
+void tcp_client_timeout_test()
+{
+#ifdef _WIN32
+    WORD sock_version = MAKEWORD(2,2);
+    WSADATA wsa_data; 
+    if( 0 != WSAStartup(sock_version, &wsa_data) )
+    {
+        printf("init error\n");
+        return;
+    }
+#endif
+
+    SOCKET skt = socket( PF_INET, SOCK_STREAM, IPPROTO_TCP );
+    if( skt == INVALID_SOCKET )
+    {
+        printf( "invalid socket! skt = %d\n", (int)skt );
+        return;
+    }
+
+    sockaddr_in remote_addr;
+    remote_addr.sin_family = AF_INET;
+    remote_addr.sin_port = htons(3425);
+    remote_addr.sin_addr.s_addr = inet_addr("192.168.5.34");
+
+    // 有網頁說無法設置connect timeout,但實際測試有成功
+    //struct timeval timeout = { 1, 0 };
+    //setsockopt( skt, SOL_SOCKET, SO_SNDTIMEO, &timeout, sizeof(timeout) );
+
+    //
+    printf("start connect...\n");
+    int res = connect( skt, (sockaddr *)&remote_addr, sizeof(remote_addr) );
+    if( res == SOCKET_ERROR )
+    {
+#ifdef _WIN32
+        int err = WSAGetLastError();
+#else
+        int err = errno;
+#endif
+        printf("connect error! res = %d, err = %d\n", res, err );
+        return;
+    }
+    printf("connected.\n");
+
+    // 本來懷疑沒設回來會造成timeout過短,但實測並沒有
+    // 就算直接close skt也沒有觸發timeout,需要研究原因
+    //timeout.tv_sec = 0;
+    //timeout.tv_usec = 0;
+    //setsockopt( skt, SOL_SOCKET, SO_SNDTIMEO, &timeout, sizeof(timeout) );
+
+
+    //
+    const char *send_buf = "hello, server. this is client.";
+    ssize_t ret = send( skt, send_buf, (int)strlen(send_buf), 0 );
+    if( ret > 0 )    
+        printf( "send. ret = %d\n", (int)ret );        
+    else
+    {
+#ifdef _WIN32
+        int err = WSAGetLastError();
+#else
+        int err = errno;
+#endif
+        printf( "send fail. ret = %d, err = %d\n", (int)ret, err );
+#ifdef _WIN32
+        closesocket(skt);
+        WSACleanup();
+#else
+        close(skt);
+#endif
+        return;
+    }
+    
+#ifdef _WIN32
+    closesocket(skt);
+    WSACleanup();
+#else
+    close(skt);
+#endif
+
+    return;
+}
+
+
+
+
+
+
+
 #if 0
 
 int tcp_server_non_blocking()
