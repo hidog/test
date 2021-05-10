@@ -9,6 +9,14 @@ void tcp_hello_client( const char *ip, int  port );
 void tcp_client_timeout_test();
 void tcp_server_timeout_test();
 
+void tcp_size_server( int port );
+void tcp_size_client( const char* const ip, int port );  
+// const char*     ip[0] = 3 會錯, ip = "abc" 沒問題
+// const char const*     效果一樣
+// const char* const   ip = "Abc", ip[0] = 3 都會錯.
+// char* const    ip[0] = 3 可以,   ip = "abc"會錯
+
+
 /*
     先呼叫client的connect, server端才listen,也有機會連線成功
 */

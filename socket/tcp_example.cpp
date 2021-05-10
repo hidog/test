@@ -32,6 +32,103 @@ typedef int ssize_t;
 
 
 
+
+
+
+
+void tcp_size_server( int port )
+{
+#ifdef _WIN32
+    WORD ws_version = MAKEWORD(2,2);
+    WSADATA wsa_data;
+    if( WSAStartup(ws_version, &wsa_data) != 0 )
+    {
+        printf("init error\n");
+        return;
+    }
+#endif
+
+    SOCKET listen_skt = socket( PF_INET, SOCK_STREAM, IPPROTO_TCP );
+    int ret;
+
+    sockaddr_in local_addr;
+    socklen_t local_addr_len = sizeof(local_addr);
+    memset( &local_addr, 0, local_addr_len );
+
+    local_addr.sin_port = htons(port);
+    local_addr.sin_family = AF_INET;
+    local_addr.sin_addr.s_addr = INADDR_ANY;
+
+    ret = bind( listen_skt, (sockaddr*)&local_addr, local_addr_len );
+    if( ret == SOCKET_ERROR )
+    {
+        printf("bind fail. ret = %d\n", ret );
+        return;
+    }
+
+    ret = listen( listen_skt, 1 );
+    if( ret == SOCKET_ERROR )
+    {
+        printf("listen fail. ret = %d\n", ret );
+        return;
+    }
+
+    printf("listen success.\n");
+
+    //
+    sockaddr_in remote_addr;
+    socklen_t remote_addr_len = sizeof(remote_addr);
+    memset( &remote_addr, 0, remote_addr_len );
+
+    SOCKET skt = accept( listen_skt, (sockaddr*)&remote_addr, &remote_addr_len );
+    if( skt == INVALID_SOCKET )
+    {
+        printf("accept fail.\n");
+        return;
+    }
+
+    printf("accept. remote = %s, %d\n", inet_ntoa(remote_addr.sin_addr), ntohs(remote_addr.sin_port) );
+
+    /*
+        實驗tcp socket, 傳輸的時候資料不會一次全部傳完
+    */
+    const int buffer_size = 300;
+    char *buf = new char[buffer_size];
+    while(true)
+    {
+        for( int i = 0; i < buffer_size; i++ )
+            buf[i] = (i%26) + 'a';
+
+        ret = send( skt, buf, buffer_size, 0 );
+        if( ret != buffer_size )
+        {
+            printf("\nsend ret = %d, not %d. break.\n", ret, buffer_size );
+            break;
+        }
+        printf(".");        
+    }
+
+    delete [] buf;
+    buf = nullptr;
+
+#ifdef _WIN32
+    closesocket(skt);
+    closesocket(listen_skt);
+    WSACleanup();
+#else
+    close(skt);
+    close(listen_skt);
+#endif
+}
+
+
+
+
+
+
+
+
+
 void tcp_hello_server( int port )
 {
 #ifdef _WIN32
@@ -192,6 +289,74 @@ void tcp_hello_server( int port )
 
     return;
 }
+
+
+
+
+
+void tcp_size_client( const char* const ip, int port )
+{
+#ifdef _WIN32
+    WORD ws_version = MAKEWORD(2,2);
+    WSADATA wsa_data;
+    if( WSAStartup( ws_version, &wsa_data) != 0 )
+    {
+        printf("init error\n");
+        return;
+    }
+#endif
+
+    SOCKET skt = socket( PF_INET, SOCK_STREAM, IPPROTO_TCP );
+    if( skt == INVALID_SOCKET )
+    {
+        printf("get skt fail.\n");
+        return;
+    }
+
+    //
+    sockaddr_in remote_addr;
+    socklen_t remote_addr_len = sizeof(remote_addr);
+
+    memset( &remote_addr, 0, remote_addr_len );
+    remote_addr.sin_family = AF_INET;
+    remote_addr.sin_port = htons(port);
+    remote_addr.sin_addr.s_addr = inet_addr(ip);
+
+    int ret;
+    ret = connect( skt, (sockaddr*)&remote_addr, remote_addr_len );
+    if( ret == SOCKET_ERROR )
+    {
+        printf("connect fail. ret = %d\n", ret );
+        return;
+    }
+
+    const int buffer_size = 300;
+    char *buf = new char[buffer_size];
+    int count = 0;
+
+    while(true)
+    {
+        memset( buf, 0, buffer_size );
+
+        ret = recv( skt, buf, buffer_size, 0 );
+        if( ret != buffer_size )
+        {
+            printf( "\nret = %d, size = %d, break\n", ret, buffer_size );
+            break;
+        }
+        
+        printf( "%c", buf[count] );
+        count = (count+1) % buffer_size;
+    }
+
+#ifdef _WIN32
+    closesocket(skt);
+    WSACleanup();
+#else
+    close(skt);
+#endif
+}
+
 
 
 

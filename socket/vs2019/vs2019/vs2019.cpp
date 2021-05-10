@@ -43,24 +43,37 @@ void udp_test_funcs()
 
 
 
-
-int main()
+void tool_test_funcs()
 {
     //transform_test();
     //test_getaddrinfo();
     //error_handle_test();
 
     //sockopt_test();
+}
 
+
+
+void tcp_test_funcs()
+{
     //tcp_hello_server( 8888 );
     //tcp_hello_client( "192.168.1.112", 8888 );
 
-    tcp_hello_server_2( 1234 );
+    //tcp_hello_server_2( 1234 );
     //tcp_hello_client_2( "192.168.1.112", 1234 );
 
     //tcp_server_timeout_test();
     //tcp_client_timeout_test();
 
+    tcp_size_server( 2318 );
+    //tcp_size_client( "122.116.84.59", 2318 );
+}
+
+
+
+int main()
+{
+    tcp_test_funcs();
 
     system("PAUSE");
     return 0;
