@@ -107,8 +107,12 @@ void tcp_size_server( int port )
             break;
         }
         printf(".");        
-        //if( count % 1 == 0 )
-        Sleep(10);
+        if( count % 5 == 0 )
+#ifdef _WIN32
+            Sleep(10);
+#else
+            usleep(10000);
+#endif
         count++;
     }
 
