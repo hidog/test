@@ -65,8 +65,8 @@ void tcp_test_funcs()
     //tcp_server_timeout_test();
     //tcp_client_timeout_test();
 
-    tcp_size_server( 2318 );
-    //tcp_size_client( "122.116.84.59", 2318 );
+    //tcp_size_server( 2318 );
+    tcp_size_client( "122.116.84.59", 2318 );
 }
 
 
