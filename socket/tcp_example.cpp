@@ -74,6 +74,9 @@ void tcp_size_server( int port )
     }
 
     printf("listen success.\n");
+#ifdef MACOS
+    fflush(stdout);
+#endif
 
     //
     sockaddr_in remote_addr;
@@ -92,7 +95,7 @@ void tcp_size_server( int port )
     /*
         實驗tcp socket, 傳輸的時候資料不會一次全部傳完
     */
-    const int buffer_size = 4096;
+    const int buffer_size = 300;
     char *buf = new char[buffer_size];
     int count = 0;
     while(true)
@@ -100,13 +103,17 @@ void tcp_size_server( int port )
         for( int i = 0; i < buffer_size; i++ )
             buf[i] = (i%26) + 'a';
 
-        ret = send( skt, buf, buffer_size, 0 );
+        ret = (int)send( skt, buf, buffer_size, 0 );
         if( ret != buffer_size )
         {
             printf("\nsend ret = %d, not %d. break.\n", ret, buffer_size );
             break;
         }
-        printf(".");        
+        printf(".");    
+#ifdef MACOS
+        fflush(stdout);
+#endif
+        
         if( count % 5 == 0 )
 #ifdef _WIN32
             Sleep(10);
@@ -346,7 +353,7 @@ void tcp_size_client( const char* const ip, int port )
     {
         memset( buf, 0, buffer_size );
 
-        ret = recv( skt, buf, buffer_size, 0 );
+        ret = (int)recv( skt, buf, buffer_size, 0 );
         if( ret != buffer_size )
         {
             printf( "\nret = %d, size = %d, break\n", ret, buffer_size );
