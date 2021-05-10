@@ -334,7 +334,7 @@ void tcp_size_client( const char* const ip, int port )
         return;
     }
 
-    const int buffer_size = 300;
+    const int buffer_size = 4096;
     char *buf = new char[buffer_size];
     int count = 0;
 
