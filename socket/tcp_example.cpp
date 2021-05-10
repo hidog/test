@@ -92,8 +92,9 @@ void tcp_size_server( int port )
     /*
         實驗tcp socket, 傳輸的時候資料不會一次全部傳完
     */
-    const int buffer_size = 300;
+    const int buffer_size = 4096;
     char *buf = new char[buffer_size];
+    int count = 0;
     while(true)
     {
         for( int i = 0; i < buffer_size; i++ )
@@ -106,6 +107,9 @@ void tcp_size_server( int port )
             break;
         }
         printf(".");        
+        //if( count % 1 == 0 )
+        Sleep(10);
+        count++;
     }
 
     delete [] buf;
