@@ -7,6 +7,7 @@ extern "C" {
 #include "../../tool_2.h"
 #include "../../udp_example_2.h"
 #include "../../tcp_example_2.h"
+#include "../../tcp_nonblock.h"
 }
 
 
@@ -66,7 +67,10 @@ void tcp_test_funcs()
     //tcp_client_timeout_test();
 
     //tcp_size_server( 2318 );
-    tcp_size_client( "122.116.84.59", 2318 );
+    //tcp_size_client( "122.116.84.59", 2318 );
+
+    tcp_server_non_blocking( 1234 );
+    tcp_client_non_blocking( "192.168.1.1", 1234 );
 }
 
 
