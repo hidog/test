@@ -81,6 +81,41 @@ SOCKET tcp_get_max_socket( fd_set set )
 }
 
 
+SOCKADDR_IN tcp_setup_addr_server( int port )
+{
+    struct sockaddr_in sin;
+    sin.sin_family = AF_INET;
+    sin.sin_port = htons(port);
+    sin.sin_addr.s_addr = INADDR_ANY; 
+    return sin;
+}
+
+
+
+
+int tcp_setup_listen_skt( SOCKET skt, int port )
+{
+    SOCKADDR_IN addr = tcp_setup_addr_server(port);
+
+    socklen_t len = sizeof(addr);
+    int res = bind( skt, (struct sockaddr*)&addr, len );
+    if( res == SOCKET_ERROR )
+    {
+        printf( "socket bind error!" );
+        return -1;
+    }
+
+    //
+    res = listen( skt, SOMAXCONN );  // SOMAXCONN 預設最大佇列排隊數
+    if( res == SOCKET_ERROR )
+    {
+        printf("listen fai...\n");
+        return -1;
+    }
+}
+
+
+
 
 void tcp_server_non_blocking( int port )
 {
@@ -101,26 +136,9 @@ void tcp_server_non_blocking( int port )
         return;
 
     //
-    struct sockaddr_in sin;
-    socklen_t sin_len = sizeof(sin);
-    sin.sin_family = AF_INET;
-    sin.sin_port = htons(port);
-    sin.sin_addr.s_addr = INADDR_ANY; 
-
-    res = bind( listen_skt, (struct sockaddr*)&sin, sin_len );
-    if( res == SOCKET_ERROR )
-    {
-        printf( "socket bind error!" );
+    res = tcp_setup_listen_skt( listen_skt, port );
+    if( res < 0 )
         return;
-    }
-
-    //
-    res = listen( listen_skt, SOMAXCONN );
-    if( res == SOCKET_ERROR )
-    {
-        printf("listen fai...\n");
-        return;
-    }
 
     fd_set fd_socket;
     FD_ZERO( &fd_socket );
@@ -128,10 +146,15 @@ void tcp_server_non_blocking( int port )
 
     // 測試用,這邊先不加入write set.
     fd_set fd_read; //, fd_write;
-    char buffer[1024];
+    char recv_buf[1024], send_buf[1024];
     SOCKET max_skt = tcp_get_max_socket(fd_socket);
 
+    struct sockaddr_in remote;
+    socklen_t remote_len = sizeof(remote);
+
     int ret;
+    int ret_1, ret_2;
+    int count = 0;
     while(1)
     {
         FD_ZERO( &fd_read );
@@ -153,7 +176,7 @@ void tcp_server_non_blocking( int port )
             break;
         }
         else if( ret == 0 )        
-            printf("time out. ret = %d\n" );        
+            printf("time out. ret = %d\n", ret );        
 
         for( int i = 0; i < (int)fd_socket.fd_count; ++i )
         {
@@ -161,8 +184,6 @@ void tcp_server_non_blocking( int port )
             {
                 if( fd_socket.fd_array[i] == listen_skt )
                 {
-                    struct sockaddr_in remote;
-                    socklen_t remote_len = sizeof(remote);
                     SOCKET skt = accept( listen_skt, (struct sockaddr*)&remote, &remote_len);
                     res = tcp_set_nonblocking(skt);
                     if( res < 0 )
@@ -175,26 +196,26 @@ void tcp_server_non_blocking( int port )
                 }
                 else
                 {
-                    memset( buffer, 0, 1024 );
-                    ret = recv( fd_socket.fd_array[i], buffer, 1024, 0 );
+                    memset( recv_buf, 0, 1024 );
+                    ret_1 = recv( fd_socket.fd_array[i], recv_buf, 1024, 0 );
+                    sprintf( send_buf , "Hi. This is server's response. Nice to meet you. count = %d", count++ );                        
+                    ret_2 = send( fd_socket.fd_array[i], send_buf , strlen(send_buf), 0 );
 
-                    if( ret > 0 )
+                    if( ret_1 == 0 || ret_2 == 0 )
                     {
-                        printf("recv. ret = %d. from client %d, msg = %s\n", ret, fd_socket.fd_array[i], buffer );
-                        sprintf( buffer, "Hi. This is server's response. Nice to meet you.\n" );                        
-                        ret = send( fd_socket.fd_array[i], buffer , strlen(buffer), 0 );
-                        printf( "send. ret = %d\n", ret );
-                        if( ret <= 0 )
-                        {
-                            closesocket( fd_socket.fd_array[i] );
-                            FD_CLR( fd_socket.fd_array[i], &fd_socket );
-                        }
+                        printf("remote disconnected. ret 1 = %d, ret 2 = %d\n", ret_1, ret_2 );
+                        closesocket(fd_socket.fd_array[i]);
+                        FD_CLR(fd_socket.fd_array[i], &fd_socket);
+                    }
+                    else if( ret_1 < 0 || ret_2 < 0 )
+                    {
+                        printf("connect error. ret 1 = %d, ret 2 = %d\n", ret_1, ret_2 );
+                        break;
                     }
                     else
                     {
-                        printf("ret = %d\n", ret );
-                        closesocket( fd_socket.fd_array[i] );
-                        FD_CLR( fd_socket.fd_array[i], &fd_socket );
+                        printf("recv, ret = %d, msg = %s\n", ret_1, recv_buf );
+                        printf("send. ret = %d\n", ret_2 );
                     }
                 }
             }
