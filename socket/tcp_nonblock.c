@@ -13,20 +13,93 @@ typedef int socklen_t;
 
 /*
 這邊的client採用blocking socket設計.
+僅測試
 */
 void tcp_client_non_blocking( const char* const ip, int port )
 {
-    WORD ws_ver = MAKEWORD(2,2);
-    WSADATA wsa_data;
-    if( WSAStartup( ws_ver, &wsa_data ) != 0 )
+    tcp_init_socket();
+
+    int res;
+    SOCKET skt = socket( PF_INET, SOCK_STREAM, IPPROTO_TCP );
+    // connect 之前設置會出錯
+    // 如果設置nonblocking,需要使用select
+    //res = tcp_set_nonblocking(skt);
+    //if( res < 0 )
+      //  return;
+
+    struct sockaddr_in addr = tcp_setup_addr_client( ip, port );
+
+    res = connect( skt, (PSOCKADDR)&addr, sizeof(addr) );
+    if( res == SOCKET_ERROR )
     {
-        printf("init fail.\n");
+        printf("connect fail. res = %d\n", res );
         return;
     }
 
-    SOCKET skt = socket( PF_INET, SOCK_STREAM, IPPROTO_TCP );
+    res = tcp_set_nonblocking(skt);
+    if( res < 0 )
+      return;
+
+    char buffer[1024];
+    int count = 0;
+    int ret;
+
+    while(1)
+    {
+        sprintf( buffer, "Hi, this is client. non-blocking tcp test. count = %d.", count++ );
+        ret = send( skt, buffer, strlen(buffer), 0 );
+        if( ret == 0 )
+        {
+            printf("Remote closed. break. ret = %d\n", ret);
+            break;
+        }
+        else if( ret < 0 )
+        {
+            printf("send fail. ret = %d\n", ret );
+            break;
+        }
+        else
+            printf("send success. ret = %d\n", ret );
+        
+        //
+        ret = recv( skt, buffer, 1024, 0 );
+        if( ret == 0 )
+        {
+            printf("remote closed. ret = %d\n", ret);
+            break;
+        }
+        else if( ret < 0 )
+        {
+            printf("recv fail. ret = %d\n", ret );
+            break;
+        }
+        else
+        {
+            if( ret < 1024 )
+                buffer[ret] = 0;
+            printf("recv ret = %d. msg = %s\n", ret, buffer );
+        }
+        
+        Sleep(1000);
+    }
+
+    closesocket(skt);
+    WSACleanup();
 }
 
+
+
+
+SOCKADDR_IN tcp_setup_addr_client( char *ip, int port )
+{
+    struct sockaddr_in sin;
+
+    sin.sin_family = AF_INET;
+    sin.sin_port = htons(port);
+    sin.sin_addr.s_addr = inet_addr(ip);
+
+    return sin;
+}
 
 
 
@@ -184,6 +257,7 @@ void tcp_server_non_blocking( int port )
             {
                 if( fd_socket.fd_array[i] == listen_skt )
                 {
+                    memset( &remote, 0, remote_len );
                     SOCKET skt = accept( listen_skt, (struct sockaddr*)&remote, &remote_len);
                     res = tcp_set_nonblocking(skt);
                     if( res < 0 )
@@ -210,7 +284,8 @@ void tcp_server_non_blocking( int port )
                     else if( ret_1 < 0 || ret_2 < 0 )
                     {
                         printf("connect error. ret 1 = %d, ret 2 = %d\n", ret_1, ret_2 );
-                        break;
+                        closesocket(fd_socket.fd_array[i]);
+                        FD_CLR(fd_socket.fd_array[i], &fd_socket);
                     }
                     else
                     {

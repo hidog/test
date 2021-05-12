@@ -69,8 +69,8 @@ void tcp_test_funcs()
     //tcp_size_server( 2318 );
     //tcp_size_client( "122.116.84.59", 2318 );
 
-    tcp_server_non_blocking( 1234 );
-    tcp_client_non_blocking( "192.168.1.1", 1234 );
+    //tcp_server_non_blocking( 1234 );
+    tcp_client_non_blocking( "127.0.0.1", 1234 );
 }
 
 
