@@ -69,7 +69,8 @@ void tcp_funcs()
     //tcp_size_server( 2591 );
     //tcp_size_client( "36.231.96.77", 2912 );
     
-    tcp_client_blocking( "122.116.84.59", 1234 );
+    //tcp_client_blocking( "122.116.84.59", 1234 );
+    tcp_client_non_blocking( "122.116.84.59", 1234 );
 }
 
 
