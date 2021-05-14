@@ -1,4 +1,4 @@
-#ifndef TCP_NONBLOCK_H
+﻿#ifndef TCP_NONBLOCK_H
 #define TCP_NONBLOCK_H
 
 #include <WinSock2.h>
