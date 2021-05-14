@@ -1,17 +1,91 @@
 #include "tcp_nonblock.h"
 
 #include <stdio.h>
-#include <WinSock2.h>
-
+#include <string.h>
 
 #ifdef _WIN32
-typedef int socklen_t;
+#include <WinSock2.h>
+#else
+#include <netinet/ip.h>
+#include <arpa/inet.h>
+#include <errno.h>
+#include <unistd.h>
+#include <fcntl.h>
+#include <sys/select.h>
 #endif
 
 
 
+#ifdef _WIN32
+typedef int socklen_t;
+#else
+typedef struct sockaddr* PSOCKADDR;
+#define SOCKET_ERROR -1
+#define INVALID_SOCKET -1
+#endif
+
+
+
+
+// æ¸¬è©¦ç”¨,ç›´æ¥å¯«æ­»ç”¨array. ç”¨ä¾†ç®¡ç†socket. ä¸æ˜¯å¥½å¯«æ³•,æ–¹ä¾¿ç®¡ç†è€Œå·²
+#define MAX_SOCKET_SIZE 10
+SOCKET socket_array[MAX_SOCKET_SIZE] = { -1, -1, -1, -1, -1, -1, -1, -1, -1, -1 }; 
+int socket_size = 0;
+
+
+
+
+
+void insert_socket( SOCKET skt )
+{
+    if( socket_size == MAX_SOCKET_SIZE )
+    {
+        printf("socket_array full. error!!\n");
+        return;
+    }
+    
+    int i = 0;
+    for( ; i < socket_size; i++ )
+    {
+        if( socket_array[i] == -1 )
+            break;
+    }
+    socket_array[i] = skt;
+}
+
+
+
+
+
+void remove_socket( SOCKET skt )
+{
+    int i;
+    for( i = 0; i < socket_size; i++ )
+    {
+        if( socket_array[i] == skt )
+            break;
+    }
+        
+    int j;
+    for( j = MAX_SOCKET_SIZE-1; j >= 0; j-- )
+    {
+        if( socket_array[j] != -1 )
+            break;
+    }
+    
+    if( j >= 0 )
+    {
+        socket_array[i] = socket_array[j];
+        socket_array[j] = -1;
+    }
+}
+
+
+
+
+
 /*
-    ³oÃäªºclient±Ä¥Înon-blocking socket³]­p.    
+    é€™é‚Šçš„clientæ¡ç”¨non-blocking socketè¨­è¨ˆ.    
 */
 void tcp_client_non_blocking( const char* const ip, int port )
 {
@@ -29,11 +103,11 @@ void tcp_client_non_blocking( const char* const ip, int port )
     struct timeval timeout = { 1, 0 };
 
     /*
-        non-blockªºª¬ºA¤U, ©I¥sconnect°ª¾÷²vªğ¦^ error, 
-        »İ­n¥Îselect§PÂ_¤°»ò®É­Ô³s¤W½u
+        non-blockçš„ç‹€æ…‹ä¸‹, å‘¼å«connecté«˜æ©Ÿç‡è¿”å› error, 
+        éœ€è¦ç”¨selectåˆ¤æ–·ä»€éº¼æ™‚å€™é€£ä¸Šç·š
     */
 #if 0
-    // ©³¤U³o¬qcode´ú¸Õ¥¢±Ñ,¤£¯à³o¼Ë³s½u
+    // åº•ä¸‹é€™æ®µcodeæ¸¬è©¦å¤±æ•—,ä¸èƒ½é€™æ¨£é€£ç·š
     res = connect( skt, (PSOCKADDR)&addr, sizeof(addr) );
 
     if( res == 0 )
@@ -56,7 +130,7 @@ void tcp_client_non_blocking( const char* const ip, int port )
     }
 
 #elif 0
-    // ³o¬qcode±o¨ì WSAEWOULDBLOCK ªºerror code
+    // é€™æ®µcodeå¾—åˆ° WSAEWOULDBLOCK çš„error code
     while(1)
     {
         res = connect( skt, (PSOCKADDR)&addr, sizeof(addr) );
@@ -83,13 +157,27 @@ void tcp_client_non_blocking( const char* const ip, int port )
         }        
     }
 #elif 0
-    // ³o¬qcode¥i¥H¹B§@
+    // é€™æ®µcodeå¯ä»¥é‹ä½œ
     res = connect( skt, (PSOCKADDR)&addr, sizeof(addr) );
     if( res == 0 )    
         printf("connect success. res = %d\n", res );    
     else
     {
-        int timeout_count;
+        int timeout_count;    SOCKET max = INVALID_SOCKET;
+#ifdef _WIN32
+    for( int i = 0; i < set.fd_count; i++ )
+    {
+        if( max < set.fd_array[i] )
+            max = set.fd_array[i];
+    }
+#else
+    // æœå°‹äº†ä¸€ä¸‹,ä¼¼ä¹åªèƒ½æ•´å€‹setå»æœå°‹,æ‰¾ä¸åˆ°æ¯”è¼ƒå¥½çš„ä½œæ³•.
+    for( int i = 0; i < FD_SETSIZE; i++ )
+    {
+        if( max < set.__fds_bits[i] )
+            max = set.__fds_bits[i];
+    }
+#endif
         for( timeout_count = 0; timeout_count < 10; timeout_count++ )
         { 
             FD_ZERO( &r_set );
@@ -108,7 +196,7 @@ void tcp_client_non_blocking( const char* const ip, int port )
                 printf("time out. timeout_count = %d\n", timeout_count);
             else
             {         
-                // ¥Îr_set·|fail.
+                // ç”¨r_setæœƒfail.
                 if( FD_ISSET( skt, &w_set ) )
                 {
                     printf("connected!!\n");
@@ -124,7 +212,7 @@ void tcp_client_non_blocking( const char* const ip, int port )
         }
     }
 #else
-    // ©³¤U³o¬qcode¥i¥H¹B§@
+    // åº•ä¸‹é€™æ®µcodeå¯ä»¥é‹ä½œ
     res = connect( skt, (PSOCKADDR)&addr, sizeof(addr) );
     if( res == 0 )    
         printf("connect success. res = %d\n", res );    
@@ -146,7 +234,7 @@ void tcp_client_non_blocking( const char* const ip, int port )
             }
             else if( res == 0 )
                 printf("time out. timeout_count = %d\n", timeout_count);
-            else
+            else if( FD_ISSET( skt, &r_set ) || FD_ISSET( skt, &w_set ) )
             {               
                 res = connect( skt, (PSOCKADDR)&addr, sizeof(addr) );
                 if( res == 0 )
@@ -156,9 +244,10 @@ void tcp_client_non_blocking( const char* const ip, int port )
                 }
                 else if( res == SOCKET_ERROR )
                 {
-                    int err = WSAGetLastError();  
+#ifdef _WIN32
+                    int err = WSAGetLastError();
                     if( err == WSAEINPROGRESS )
-                        printf("in progress...\n");
+                        printf("in progress...\n");            
                     else if( err == WSAEISCONN )
                     {
                         printf("connected!\n");
@@ -169,6 +258,21 @@ void tcp_client_non_blocking( const char* const ip, int port )
                         printf("err = %d. connect fail.\n", err );
                         return;
                     }
+#else
+                    int err = errno;
+                    if( err == EINPROGRESS )
+                        printf("in progress...\n");                        
+                    else if( err == EISCONN )
+                    {
+                        printf("connected!\n");
+                        break;
+                    }
+                    else
+                    {
+                        printf("err = %d. connect fail.\n", err );
+                        return;
+                    }
+#endif
                 }
             }
         } 
@@ -179,6 +283,11 @@ void tcp_client_non_blocking( const char* const ip, int port )
     int count = 0;
     int ret;
 
+    /*
+        ç†è«–ä¸Šæ‡‰è©²ç”¨ w_setåˆ¤æ–·æ˜¯å¦èƒ½å¯«å…¥
+        é€™é‚Šæ¸¬è©¦ç”¨,çœç•¥é€™å€‹æ­¥é©Ÿ.
+        æœƒé€ æˆé€£é€å…©æ¬¡å¾Œæ‰æ”¶åˆ°å°åŒ….
+    */
     while(1)
     {
         FD_ZERO( &r_set );
@@ -213,39 +322,47 @@ void tcp_client_non_blocking( const char* const ip, int port )
                 break;
             default:
                 //
-                ret = recv( skt, buffer, 1024, 0 );
-                if( ret == 0 )
+                if( FD_ISSET( skt, &r_set ) )
                 {
-                    printf("remote closed. ret = %d\n", ret);
-                    return;
-                }
-                else if( ret < 0 )
-                {
-                    printf("recv fail. ret = %d\n", ret );
-                    return;
-                }
-                else
-                {
-                    if( ret < 1024 )
-                        buffer[ret] = 0;
-                    printf("recv ret = %d. msg = %s\n", ret, buffer );
+                    ret = recv( skt, buffer, 1024, 0 );
+                    if( ret == 0 )
+                    {
+                        printf("remote closed. ret = %d\n", ret);
+                        return;
+                    }
+                    else if( ret < 0 )
+                    {
+                        printf("recv fail. ret = %d\n", ret );
+                        return;
+                    }
+                    else
+                    {
+                        if( ret < 1024 )
+                            buffer[ret] = 0;
+                        printf("recv ret = %d. msg = %s\n", ret, buffer );
+                    }
                 }
         }
 
-
-
+#ifdef _WIN32
         Sleep(1000);
+#else
+        sleep(1);
+#endif
     }
 
-    closesocket(skt);
+
+    tcp_close_socket(skt);
+#ifdef _WIN32
     WSACleanup();
+#endif
 }
 
 
 
 
 /*
-    ³oÃäªºclient±Ä¥Îblocking socket³]­p.
+    é€™é‚Šçš„clientæ¡ç”¨blocking socketè¨­è¨ˆ.
 */
 void tcp_client_blocking( const char* const ip, int port )
 {
@@ -301,18 +418,23 @@ void tcp_client_blocking( const char* const ip, int port )
                 buffer[ret] = 0;
             printf("recv ret = %d. msg = %s\n", ret, buffer );
         }
-        
+#ifdef _WIN32
         Sleep(1000);
+#else
+        sleep(1);
+#endif
     }
 
-    closesocket(skt);
+    tcp_close_socket(skt);
+#ifdef _WIN32
     WSACleanup();
+#endif
 }
 
 
 
 
-SOCKADDR_IN tcp_setup_addr_client( char *ip, int port )
+SOCKADDR_IN tcp_setup_addr_client( const char* const ip, int port )
 {
     struct sockaddr_in sin;
 
@@ -346,6 +468,7 @@ int tcp_set_nonblocking( SOCKET skt )
 {
     int res;
 
+#ifdef _WIN32
     /* 
     If blcok_mode = 0, blocking is enabled; 
     If blcok_mode != 0, non-blocking mode is enabled.
@@ -358,22 +481,61 @@ int tcp_set_nonblocking( SOCKET skt )
         printf("set non-blocking fail. res = %d, err = %d\n", res, err );
         return -1;
     }
-
+#else
+    int skt_flags = fcntl( skt, F_GETFL, 0 );
+    skt_flags |= O_NONBLOCK;
+    res = fcntl( skt, F_SETFL, skt_flags );
+    if( res == -1 )
+    {
+        printf("set non-block fail.\n");
+        return -1;
+    }
+#endif
+    
     return 1;
 }
 
 
 
-SOCKET tcp_get_max_socket( fd_set set )
+
+
+
+
+void tcp_close_socket( SOCKET skt )
+{
+#ifdef _WIN32
+    closesocket(skt);
+#else
+    close(skt);
+#endif
+}
+
+
+
+
+
+
+
+
+/* 
+    çœ‹èµ·ä¾†windowså¯ä»¥ç›´æ¥å­˜å–fd_set,ä½†ubuntuä¸è¡Œ
+    æœ€å¾Œç”¨arrayç°¡å–®è™•ç†
+*/
+SOCKET tcp_get_max_socket( void )
 {
     SOCKET max = INVALID_SOCKET;
-    for( int i = 0; i < set.fd_count; i++ )
+    for( int i = 0; i < socket_size; i++ )
     {
-        if( max < set.fd_array[i] )
-            max = set.fd_array[i];
+        //if( max < FDSET_ARRAY(set,i) )
+          //  max = FDSET_ARRAY(set,i);
+        if( max < socket_array[i] )
+            max = socket_array[i];
     }
     return max;
 }
+
+
+
 
 
 SOCKADDR_IN tcp_setup_addr_server( int port )
@@ -401,7 +563,7 @@ int tcp_setup_listen_skt( SOCKET skt, int port )
     }
 
     //
-    res = listen( skt, SOMAXCONN );  // SOMAXCONN ¹w³]³Ì¤j¦î¦C±Æ¶¤¼Æ
+    res = listen( skt, SOMAXCONN );  // SOMAXCONN é è¨­æœ€å¤§ä½‡åˆ—æ’éšŠæ•¸
     if( res == SOCKET_ERROR )
     {
         printf("listen fai...\n");
@@ -439,10 +601,10 @@ void tcp_server_non_blocking( int port )
     FD_ZERO( &fd_socket );
     FD_SET( listen_skt, &fd_socket );
 
-    // ´ú¸Õ¥Î,³oÃä¥ı¤£¥[¤Jwrite set.
+    // æ¸¬è©¦ç”¨,é€™é‚Šå…ˆä¸åŠ å…¥write set.
     fd_set fd_read; //, fd_write;
     char recv_buf[1024], send_buf[1024];
-    SOCKET max_skt = tcp_get_max_socket(fd_socket);
+    SOCKET max_skt = tcp_get_max_socket();
 
     struct sockaddr_in remote;
     socklen_t remote_len = sizeof(remote);
@@ -451,11 +613,13 @@ void tcp_server_non_blocking( int port )
     int ret_1, ret_2;
     int count = 0;
     /*
-        ²z½×¤Wnon-block¥Îwrite¨Ó§PÂ_
-        ³oÃä¬°¤F¤è«K,ª½±µsend¦^¥h
+        ç†è«–ä¸Šnon-blockç”¨writeä¾†åˆ¤æ–·
+        é€™é‚Šç‚ºäº†æ–¹ä¾¿,ç›´æ¥sendå›å»
     */
     while(1)
     {
+        max_skt = tcp_get_max_socket();
+        
         FD_ZERO( &fd_read );
         fd_read = fd_socket;
 
@@ -477,11 +641,14 @@ void tcp_server_non_blocking( int port )
         else if( ret == 0 )        
             printf("time out. ret = %d\n", ret );        
 
-        for( int i = 0; i < (int)fd_socket.fd_count; ++i )
+
+        for( int i = 0; i < socket_size; i++ )
         {
-            if ( FD_ISSET( fd_socket.fd_array[i], &fd_read) )
+        
+            if ( FD_ISSET( socket_array[i], &fd_read) )
             {
-                if( fd_socket.fd_array[i] == listen_skt )
+            
+                if( socket_array[i] == listen_skt )
                 {
                     memset( &remote, 0, remote_len );
                     SOCKET skt = accept( listen_skt, (struct sockaddr*)&remote, &remote_len);
@@ -492,26 +659,29 @@ void tcp_server_non_blocking( int port )
                         return;
                     }
                     FD_SET( skt, &fd_socket );
+                    insert_socket(skt);
                     printf("a new client connected! from ip = %s, port = %d...\n", inet_ntoa(remote.sin_addr), ntohs(remote.sin_port) );
                 }
                 else
                 {
                     memset( recv_buf, 0, 1024 );
-                    ret_1 = recv( fd_socket.fd_array[i], recv_buf, 1024, 0 );
+                    ret_1 = recv( socket_array[i], recv_buf, 1024, 0 );
                     sprintf( send_buf , "Hi. This is server's response. Nice to meet you. count = %d", count++ );                        
-                    ret_2 = send( fd_socket.fd_array[i], send_buf , strlen(send_buf), 0 );
+                    ret_2 = send( socket_array[i], send_buf , strlen(send_buf), 0 );
 
                     if( ret_1 == 0 || ret_2 == 0 )
                     {
                         printf("remote disconnected. ret 1 = %d, ret 2 = %d\n", ret_1, ret_2 );
-                        closesocket(fd_socket.fd_array[i]);
-                        FD_CLR(fd_socket.fd_array[i], &fd_socket);
+                        tcp_close_socket( socket_array[i] );
+                        FD_CLR( socket_array[i], &fd_socket);
+                        remove_socket( socket_array[i] );
                     }
                     else if( ret_1 < 0 || ret_2 < 0 )
                     {
                         printf("connect error. ret 1 = %d, ret 2 = %d\n", ret_1, ret_2 );
-                        closesocket(fd_socket.fd_array[i]);
-                        FD_CLR(fd_socket.fd_array[i], &fd_socket);
+                        tcp_close_socket( socket_array[i] );
+                        FD_CLR( socket_array[i], &fd_socket);
+                        remove_socket( socket_array[i] );
                     }
                     else
                     {
@@ -523,8 +693,10 @@ void tcp_server_non_blocking( int port )
         }
     }
 
-    closesocket(listen_skt);
+    tcp_close_socket(listen_skt);
+#ifdef _WIN32
     WSACleanup();
+#endif
 }
 
 
