@@ -51,6 +51,7 @@ void insert_socket( SOCKET skt )
             break;
     }
     socket_array[i] = skt;
+    socket_size++;
 }
 
 
@@ -523,7 +524,7 @@ void tcp_close_socket( SOCKET skt )
 */
 SOCKET tcp_get_max_socket( void )
 {
-    SOCKET max = INVALID_SOCKET;
+    SOCKET max = 0;
     for( int i = 0; i < socket_size; i++ )
     {
         //if( max < FDSET_ARRAY(set,i) )
@@ -587,6 +588,7 @@ void tcp_server_non_blocking( int port )
         printf("socket error !");
         return;
     }
+    insert_socket(listen_skt);
 
     res = tcp_set_nonblocking(listen_skt);
     if( res < 0 )

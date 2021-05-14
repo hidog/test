@@ -71,7 +71,7 @@ void tcp_test_funcs()
 
     tcp_server_non_blocking( 1234 );
     //tcp_client_blocking( "122.116.84.59", 1234 );
-    tcp_client_non_blocking( "122.116.84.59", 1234 );
+    //tcp_client_non_blocking( "122.116.84.59", 1234 );
 
 }
 
