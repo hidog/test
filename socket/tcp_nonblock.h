@@ -12,6 +12,8 @@ SOCKADDR_IN tcp_setup_addr_client( char *ip, int port );
 
 
 void tcp_server_non_blocking( int port );
+void tcp_client_blocking( const char* const ip, int port );
 void tcp_client_non_blocking( const char* const ip, int port );
+
 
 #endif

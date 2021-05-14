@@ -10,10 +10,8 @@ typedef int socklen_t;
 
 
 
-
 /*
-這邊的client採用blocking socket設計.
-僅測試
+    這邊的client採用non-blocking socket設計.    
 */
 void tcp_client_non_blocking( const char* const ip, int port )
 {
@@ -21,12 +19,240 @@ void tcp_client_non_blocking( const char* const ip, int port )
 
     int res;
     SOCKET skt = socket( PF_INET, SOCK_STREAM, IPPROTO_TCP );
-    // connect 之前設置會出錯
-    // 如果設置nonblocking,需要使用select
-    //res = tcp_set_nonblocking(skt);
-    //if( res < 0 )
-      //  return;
+    res = tcp_set_nonblocking(skt);
+    if( res < 0 )
+        return;
 
+    struct sockaddr_in addr = tcp_setup_addr_client( ip, port );
+
+    fd_set r_set, w_set;
+    struct timeval timeout = { 1, 0 };
+
+    /*
+        non-block的狀態下, 呼叫connect高機率返回 error, 
+        需要用select判斷什麼時候連上線
+    */
+#if 0
+    // 底下這段code測試失敗,不能這樣連線
+    res = connect( skt, (PSOCKADDR)&addr, sizeof(addr) );
+
+    if( res == 0 )
+        printf("connect !!\n");
+    else
+    {
+        while(1)
+        {
+            int error = 0;
+            socklen_t len = sizeof (error);
+            int retval = getsockopt (skt, SOL_SOCKET, SO_ERROR, &error, &len);
+            printf("error = %d\n", error);
+            if( error == WSAEISCONN )
+            {
+                printf("conencted\n");
+                break;
+            }
+            Sleep(1);
+        }
+    }
+
+#elif 0
+    // 這段code得到 WSAEWOULDBLOCK 的error code
+    while(1)
+    {
+        res = connect( skt, (PSOCKADDR)&addr, sizeof(addr) );
+        if( res == 0 )
+        {
+            printf("connect success. res = %d\n", res );
+            break;
+        }
+        else if( res == SOCKET_ERROR )
+        {
+            int err = WSAGetLastError();
+            if( err == WSAEINPROGRESS )
+                printf("connecting...\n");
+            else if( err == WSAEISCONN )
+            {
+                printf("connected!!\n");
+                break;
+            }
+            else
+            {
+                printf("connect fail. err = %d\n", err);
+                return;
+            }
+        }        
+    }
+#elif 0
+    // 這段code可以運作
+    res = connect( skt, (PSOCKADDR)&addr, sizeof(addr) );
+    if( res == 0 )    
+        printf("connect success. res = %d\n", res );    
+    else
+    {
+        int timeout_count;
+        for( timeout_count = 0; timeout_count < 10; timeout_count++ )
+        { 
+            FD_ZERO( &r_set );
+            FD_ZERO( &w_set );
+
+            FD_SET( skt, &r_set );
+            FD_SET( skt, &w_set );
+
+            res = select( skt+1, &r_set, &w_set, NULL, &timeout );
+            if( res == SOCKET_ERROR )
+            {
+                printf("select fail. res = %d\n", res );
+                return;
+            }
+            else if( res == 0 )
+                printf("time out. timeout_count = %d\n", timeout_count);
+            else
+            {         
+                // 用r_set會fail.
+                if( FD_ISSET( skt, &w_set ) )
+                {
+                    printf("connected!!\n");
+                    break;
+                }
+            }
+        } 
+
+        if( timeout_count == 10 )
+        {
+            printf("connected fail.\n");
+            return;
+        }
+    }
+#else
+    // 底下這段code可以運作
+    res = connect( skt, (PSOCKADDR)&addr, sizeof(addr) );
+    if( res == 0 )    
+        printf("connect success. res = %d\n", res );    
+    else
+    {
+        for( int timeout_count = 0; timeout_count < 10; timeout_count++ )
+        {
+            FD_ZERO( &r_set );
+            FD_ZERO( &w_set );
+
+            FD_SET( skt, &r_set );
+            FD_SET( skt, &w_set );
+
+            res = select( skt+1, &r_set, &w_set, NULL, &timeout );
+            if( res == SOCKET_ERROR )
+            {
+                printf("select fail. res = %d\n", res );
+                return;
+            }
+            else if( res == 0 )
+                printf("time out. timeout_count = %d\n", timeout_count);
+            else
+            {               
+                res = connect( skt, (PSOCKADDR)&addr, sizeof(addr) );
+                if( res == 0 )
+                {
+                    printf("connected ! res = %d\n", res );
+                    break;
+                }
+                else if( res == SOCKET_ERROR )
+                {
+                    int err = WSAGetLastError();  
+                    if( err == WSAEINPROGRESS )
+                        printf("in progress...\n");
+                    else if( err == WSAEISCONN )
+                    {
+                        printf("connected!\n");
+                        break;
+                    }
+                    else
+                    {
+                        printf("err = %d. connect fail.\n", err );
+                        return;
+                    }
+                }
+            }
+        } 
+    }
+#endif
+
+    char buffer[1024];
+    int count = 0;
+    int ret;
+
+    while(1)
+    {
+        FD_ZERO( &r_set );
+        FD_ZERO( &w_set );
+
+        FD_SET( skt, &r_set );
+        FD_SET( skt, &w_set );
+
+        sprintf( buffer, "Hi, this is client. non-blocking tcp test. count = %d.", count++ );
+        ret = send( skt, buffer, strlen(buffer), 0 );
+        if( ret == 0 )
+        {
+            printf("Remote closed. break. ret = %d\n", ret);
+            break;
+        }
+        else if( ret < 0 )
+        {
+            printf("send fail. ret = %d\n", ret );
+            break;
+        }
+        else
+            printf("send success. ret = %d\n", ret );
+
+        ret = select( skt+1, &r_set, &w_set, NULL, &timeout );
+        switch(ret)
+        {
+            case SOCKET_ERROR:
+                printf("select fail.\n");
+                return;
+            case 0:
+                printf("select timeout.\n");
+                break;
+            default:
+                //
+                ret = recv( skt, buffer, 1024, 0 );
+                if( ret == 0 )
+                {
+                    printf("remote closed. ret = %d\n", ret);
+                    return;
+                }
+                else if( ret < 0 )
+                {
+                    printf("recv fail. ret = %d\n", ret );
+                    return;
+                }
+                else
+                {
+                    if( ret < 1024 )
+                        buffer[ret] = 0;
+                    printf("recv ret = %d. msg = %s\n", ret, buffer );
+                }
+        }
+
+
+
+        Sleep(1000);
+    }
+
+    closesocket(skt);
+    WSACleanup();
+}
+
+
+
+
+/*
+    這邊的client採用blocking socket設計.
+*/
+void tcp_client_blocking( const char* const ip, int port )
+{
+    tcp_init_socket();
+
+    int res;
+    SOCKET skt = socket( PF_INET, SOCK_STREAM, IPPROTO_TCP );
     struct sockaddr_in addr = tcp_setup_addr_client( ip, port );
 
     res = connect( skt, (PSOCKADDR)&addr, sizeof(addr) );
@@ -35,10 +261,6 @@ void tcp_client_non_blocking( const char* const ip, int port )
         printf("connect fail. res = %d\n", res );
         return;
     }
-
-    res = tcp_set_nonblocking(skt);
-    if( res < 0 )
-      return;
 
     char buffer[1024];
     int count = 0;
@@ -228,6 +450,10 @@ void tcp_server_non_blocking( int port )
     int ret;
     int ret_1, ret_2;
     int count = 0;
+    /*
+        理論上non-block用write來判斷
+        這邊為了方便,直接send回去
+    */
     while(1)
     {
         FD_ZERO( &fd_read );
@@ -239,7 +465,7 @@ void tcp_server_non_blocking( int port )
         // can set timeout by parameter 5
         struct timeval timeout;
         timeout.tv_sec = 1;
-        timeout.tv_usec = 500000;
+        timeout.tv_usec = 0;
         //ret = select( 0, &fd_read, &fd_write, NULL, NULL ); 
         ret = select( max_skt+1, &fd_read, NULL, NULL, &timeout ); 
 
