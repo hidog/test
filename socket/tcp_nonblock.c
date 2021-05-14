@@ -182,6 +182,7 @@ void tcp_client_non_blocking( const char* const ip, int port )
     /*
         理論上應該用 w_set判斷是否能寫入
         這邊測試用,省略這個步驟.
+        會造成連送兩次後才收到封包.
     */
     while(1)
     {
