@@ -1,7 +1,13 @@
 #include "tcp_nonblock.h"
 
 #include <stdio.h>
+
+#ifdef _WIN32
 #include <WinSock2.h>
+#else
+#include <netinet/ip.h>
+#endif
+
 
 
 #ifdef _WIN32
