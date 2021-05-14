@@ -146,7 +146,7 @@ void tcp_client_non_blocking( const char* const ip, int port )
             }
             else if( res == 0 )
                 printf("time out. timeout_count = %d\n", timeout_count);
-            else
+            else if( FD_ISSET( skt, &r_set ) || FD_ISSET( skt, &w_set ) )
             {               
                 res = connect( skt, (PSOCKADDR)&addr, sizeof(addr) );
                 if( res == 0 )
@@ -179,6 +179,10 @@ void tcp_client_non_blocking( const char* const ip, int port )
     int count = 0;
     int ret;
 
+    /*
+        理論上應該用 w_set判斷是否能寫入
+        這邊測試用,省略這個步驟.
+    */
     while(1)
     {
         FD_ZERO( &r_set );
@@ -213,22 +217,25 @@ void tcp_client_non_blocking( const char* const ip, int port )
                 break;
             default:
                 //
-                ret = recv( skt, buffer, 1024, 0 );
-                if( ret == 0 )
+                if( FD_ISSET( skt, &r_set ) )
                 {
-                    printf("remote closed. ret = %d\n", ret);
-                    return;
-                }
-                else if( ret < 0 )
-                {
-                    printf("recv fail. ret = %d\n", ret );
-                    return;
-                }
-                else
-                {
-                    if( ret < 1024 )
-                        buffer[ret] = 0;
-                    printf("recv ret = %d. msg = %s\n", ret, buffer );
+                    ret = recv( skt, buffer, 1024, 0 );
+                    if( ret == 0 )
+                    {
+                        printf("remote closed. ret = %d\n", ret);
+                        return;
+                    }
+                    else if( ret < 0 )
+                    {
+                        printf("recv fail. ret = %d\n", ret );
+                        return;
+                    }
+                    else
+                    {
+                        if( ret < 1024 )
+                            buffer[ret] = 0;
+                        printf("recv ret = %d. msg = %s\n", ret, buffer );
+                    }
                 }
         }
 
