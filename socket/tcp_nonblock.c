@@ -384,7 +384,8 @@ void tcp_client_blocking( const char* const ip, int port )
     int count = 0;
     int ret;
 
-    while(1)
+    //while(1)
+    for( int i = 0; i < 10; i++ )
     {
         sprintf( buffer, "Hi, this is client. non-blocking tcp test. count = %d.", count++ );
         ret = send( skt, buffer, strlen(buffer), 0 );
@@ -402,7 +403,7 @@ void tcp_client_blocking( const char* const ip, int port )
             printf("send success. ret = %d\n", ret );
         
         //
-        ret = recv( skt, buffer, 1024, 0 );
+        /*ret = recv( skt, buffer, 1024, 0 );
         if( ret == 0 )
         {
             printf("remote closed. ret = %d\n", ret);
@@ -418,7 +419,7 @@ void tcp_client_blocking( const char* const ip, int port )
             if( ret < 1024 )
                 buffer[ret] = 0;
             printf("recv ret = %d. msg = %s\n", ret, buffer );
-        }
+        }*/
 #ifdef _WIN32
         Sleep(1000);
 #else
@@ -605,6 +606,7 @@ void tcp_server_non_blocking( int port )
 
     // 測試用,這邊先不加入write set.
     fd_set fd_read; //, fd_write;
+    fd_set fd_excep;
     char recv_buf[1024], send_buf[1024];
     SOCKET max_skt = tcp_get_max_socket();
 
@@ -623,7 +625,9 @@ void tcp_server_non_blocking( int port )
         max_skt = tcp_get_max_socket();
         
         FD_ZERO( &fd_read );
+        FD_ZERO( &fd_excep );
         fd_read = fd_socket;
+        fd_excep = fd_socket;
 
         //FD_ZERO( &fd_write );
         //fd_write = fd_socket;
@@ -633,7 +637,7 @@ void tcp_server_non_blocking( int port )
         timeout.tv_sec = 1;
         timeout.tv_usec = 0;
         //ret = select( 0, &fd_read, &fd_write, NULL, NULL ); 
-        ret = select( max_skt+1, &fd_read, NULL, NULL, &timeout ); 
+        ret = select( max_skt+1, &fd_read, NULL, &fd_excep, &timeout ); 
 
         if( ret < 0 )
         {
@@ -647,7 +651,11 @@ void tcp_server_non_blocking( int port )
         for( int i = 0; i < socket_size; i++ )
         {
         
-            if ( FD_ISSET( socket_array[i], &fd_read) )
+            if ( FD_ISSET( socket_array[i], &fd_excep ) ) // 測試結果,最後是底下抓到斷線訊息.
+            {
+                printf("get fd except\n");
+            }
+            else if ( FD_ISSET( socket_array[i], &fd_read) )
             {
             
                 if( socket_array[i] == listen_skt )
@@ -669,7 +677,7 @@ void tcp_server_non_blocking( int port )
                     memset( recv_buf, 0, 1024 );
                     ret_1 = recv( socket_array[i], recv_buf, 1024, 0 );
                     sprintf( send_buf , "Hi. This is server's response. Nice to meet you. count = %d", count++ );                        
-                    ret_2 = send( socket_array[i], send_buf , strlen(send_buf), 0 );
+                    ret_2 = 1; //ssend( socket_array[i], send_buf , strlen(send_buf), 0 );
 
                     if( ret_1 == 0 || ret_2 == 0 )
                     {
