@@ -99,7 +99,7 @@ void tcp_client_non_blocking( const char* const ip, int port )
 
     struct sockaddr_in addr = tcp_setup_addr_client( ip, port );
 
-    fd_set r_set, w_set;
+    fd_set r_set, w_set, e_set;
     struct timeval timeout = { 1, 0 };
 
     /*
@@ -156,35 +156,23 @@ void tcp_client_non_blocking( const char* const ip, int port )
             }
         }        
     }
-#elif 0
+#elif 1
     // 這段code可以運作
     res = connect( skt, (PSOCKADDR)&addr, sizeof(addr) );
     if( res == 0 )    
         printf("connect success. res = %d\n", res );    
     else
     {
-        int timeout_count;    SOCKET max = INVALID_SOCKET;
-#ifdef _WIN32
-    for( int i = 0; i < set.fd_count; i++ )
-    {
-        if( max < set.fd_array[i] )
-            max = set.fd_array[i];
-    }
-#else
-    // 搜尋了一下,似乎只能整個set去搜尋,找不到比較好的作法.
-    for( int i = 0; i < FD_SETSIZE; i++ )
-    {
-        if( max < set.__fds_bits[i] )
-            max = set.__fds_bits[i];
-    }
-#endif
-        for( timeout_count = 0; timeout_count < 10; timeout_count++ )
+        int timeout_count;
+        for( timeout_count = 0; timeout_count < 1000000; timeout_count++ )
         { 
             FD_ZERO( &r_set );
             FD_ZERO( &w_set );
+            FD_ZERO( &e_set );
 
             FD_SET( skt, &r_set );
             FD_SET( skt, &w_set );
+            FD_SET( skt, &e_set );
 
             res = select( skt+1, &r_set, &w_set, NULL, &timeout );
             if( res == SOCKET_ERROR )
@@ -201,6 +189,18 @@ void tcp_client_non_blocking( const char* const ip, int port )
                 {
                     printf("connected!!\n");
                     break;
+                }
+                if( FD_ISSET( skt, &e_set ) ) // 實際上沒抓到timeout訊息
+                {
+                    int error = 0;
+                    socklen_t len = sizeof (error);
+                    int retval = getsockopt (skt, SOL_SOCKET, SO_ERROR, &error, &len);
+                    printf("error = %d\n", error);
+                    if( error == WSAEISCONN )
+                    {
+                        printf("conencted\n");
+                        break;
+                    }
                 }
             }
         } 
