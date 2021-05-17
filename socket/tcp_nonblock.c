@@ -100,7 +100,7 @@ void tcp_client_connect_test_1( SOCKET skt, SOCKADDR_IN addr )
         {
             int error = 0;
             socklen_t len = sizeof (error);
-            int retval = getsockopt (skt, SOL_SOCKET, SO_ERROR, &error, &len);
+            int retval = getsockopt (skt, SOL_SOCKET, SO_ERROR, (char*)&error, &len);
             printf("error = %d, retval = %d\n", error, retval );
 #ifdef _WIN32
             if( error == WSAEISCONN )
@@ -219,7 +219,7 @@ void tcp_client_connect_test_3( SOCKET skt, SOCKADDR_IN addr )
                 {
                     int error = 0;
                     socklen_t len = sizeof (error);
-                    int retval = getsockopt (skt, SOL_SOCKET, SO_ERROR, &error, &len);
+                    int retval = getsockopt (skt, SOL_SOCKET, SO_ERROR, (char*)&error, &len);
                     printf("error = %d. retval = %d\n", error, retval );
 #ifdef _WIN32
                     if( error == WSAEISCONN )
