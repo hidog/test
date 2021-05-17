@@ -5,6 +5,7 @@
 #include <WinSock2.h>
 #elif defined(UNIX) || defined(MACOS)
 #include <sys/socket.h>
+#include <netinet/in.h>  // use for macos. otherwise, sockaddr_in will cause compile error
 #endif
 
 
@@ -18,10 +19,13 @@ typedef struct sockaddr_in SOCKADDR_IN;
 int tcp_init_socket( void );
 int tcp_set_nonblocking( SOCKET skt );
 SOCKET tcp_get_max_socket( void );
-SOCKADDR_IN tcp_setup_addr_server( int port );
 int tcp_setup_listen_skt( SOCKET skt, int port );
-SOCKADDR_IN tcp_setup_addr_client( const char* const ip, int port );
 void tcp_close_socket( SOCKET skt );
+
+SOCKADDR_IN tcp_setup_addr_server( int port );
+SOCKADDR_IN tcp_setup_addr_client( const char* const ip, int port );
+
+
 
 void insert_socket( SOCKET skt );
 void remove_socket( SOCKET skt );

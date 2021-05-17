@@ -101,13 +101,21 @@ void tcp_client_connect_test_1( SOCKET skt, SOCKADDR_IN addr )
             int error = 0;
             socklen_t len = sizeof (error);
             int retval = getsockopt (skt, SOL_SOCKET, SO_ERROR, &error, &len);
-            printf("error = %d\n", error);
+            printf("error = %d, retval = %d\n", error, retval );
+#ifdef _WIN32
             if( error == WSAEISCONN )
+#elif defined(UNIX) || defined(MACOS)
+            if( error == EISCONN )
+#endif
             {
                 printf("conencted\n");
                 break;
             }
-            Sleep(1);
+#ifdef _WIN32
+            Sleep(1000);
+#else
+            sleep(1);
+#endif
         }
     }
 }
@@ -129,6 +137,7 @@ void tcp_client_connect_test_2( SOCKET skt, SOCKADDR_IN addr )
         }
         else if( res == SOCKET_ERROR )
         {
+#ifdef _WIN32
             int err = WSAGetLastError();
             if( err == WSAEINPROGRESS )
                 printf("connecting...\n");
@@ -142,6 +151,21 @@ void tcp_client_connect_test_2( SOCKET skt, SOCKADDR_IN addr )
                 printf("connect fail. err = %d\n", err);
                 return;
             }
+#elif defined(UNIX) || defined(MACOS)
+            int err = errno;
+            if( err == EINPROGRESS )
+                printf("connecting...\n");
+            else if( err == EISCONN )
+            {
+                printf("connected!!\n");
+                break;
+            }
+            else
+            {
+                printf("connect fail. err = %d\n", err);
+                return;
+            }
+#endif
         }        
     }
 }
@@ -196,8 +220,12 @@ void tcp_client_connect_test_3( SOCKET skt, SOCKADDR_IN addr )
                     int error = 0;
                     socklen_t len = sizeof (error);
                     int retval = getsockopt (skt, SOL_SOCKET, SO_ERROR, &error, &len);
-                    printf("error = %d\n", error);
+                    printf("error = %d. retval = %d\n", error, retval );
+#ifdef _WIN32
                     if( error == WSAEISCONN )
+#elif defined(UNIX) || defined(MACOS)
+                    if( error == EISCONN )
+#endif
                     {
                         printf("conencted\n");
                         break;
@@ -364,7 +392,7 @@ void tcp_client_non_blocking( const char* const ip, int port )
         FD_SET( skt, &w_set );
 
         sprintf( buffer, "Hi, this is client. non-blocking tcp test. count = %d.", count++ );
-        ret = send( skt, buffer, strlen(buffer), 0 );
+        ret = (int)send( skt, buffer, strlen(buffer), 0 );
         if( ret == 0 )
         {
             printf("Remote closed. break. ret = %d\n", ret);
@@ -391,7 +419,7 @@ void tcp_client_non_blocking( const char* const ip, int port )
                 //
                 if( FD_ISSET( skt, &r_set ) )
                 {
-                    ret = recv( skt, buffer, 1024, 0 );
+                    ret = (int)recv( skt, buffer, 1024, 0 );
                     if( ret == 0 )
                     {
                         printf("remote closed. ret = %d\n", ret);
@@ -454,7 +482,7 @@ void tcp_client_blocking( const char* const ip, int port )
     for( int i = 0; i < 10; i++ )
     {
         sprintf( buffer, "Hi, this is client. non-blocking tcp test. count = %d.", count++ );
-        ret = send( skt, buffer, strlen(buffer), 0 );
+        ret = (int)send( skt, buffer, strlen(buffer), 0 );
         if( ret == 0 )
         {
             printf("Remote closed. break. ret = %d\n", ret);
@@ -469,7 +497,7 @@ void tcp_client_blocking( const char* const ip, int port )
             printf("send success. ret = %d\n", ret );
         
         //
-        ret = recv( skt, buffer, 1024, 0 );
+        ret = (int)recv( skt, buffer, 1024, 0 );
         if( ret == 0 )
         {
             printf("remote closed. ret = %d\n", ret);
@@ -528,6 +556,7 @@ int tcp_init_socket()
         return -1;
     }
 #endif
+    return 1;
 }
 
 
@@ -637,6 +666,8 @@ int tcp_setup_listen_skt( SOCKET skt, int port )
         printf("listen fai...\n");
         return -1;
     }
+    
+    return 1;
 }
 
 
@@ -655,7 +686,7 @@ SOCKET tcp_server_accept( SOCKET listen_skt )
     if( res < 0 )
     {
         printf("set non-blocking fail. skt = %d.\n", res );
-        return;
+        return INVALID_SOCKET;
     }
     FD_SET( skt, &server_set );
     insert_socket(skt);
@@ -676,9 +707,9 @@ void tcp_server_rs( SOCKET skt )
     int ret_1, ret_2;
 
     memset( recv_buf, 0, 1024 );
-    ret_1 = recv( skt, recv_buf, 1024, 0 );
+    ret_1 = (int)recv( skt, recv_buf, 1024, 0 );
     sprintf( send_buf , "Hi. This is server's response. Nice to meet you. count = %d", count++ );                        
-    ret_2 = send( skt, send_buf , strlen(send_buf), 0 );
+    ret_2 = (int)send( skt, send_buf , strlen(send_buf), 0 );
 
     if( ret_1 == 0 || ret_2 == 0 )
     {
