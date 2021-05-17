@@ -31,7 +31,7 @@ typedef struct sockaddr* PSOCKADDR;
 #define MAX_SOCKET_SIZE 10
 SOCKET socket_array[MAX_SOCKET_SIZE] = { -1, -1, -1, -1, -1, -1, -1, -1, -1, -1 }; 
 int socket_size = 0;
-
+fd_set server_set;
 
 
 
@@ -85,30 +85,11 @@ void remove_socket( SOCKET skt )
 
 
 
-/*
-    這邊的client採用non-blocking socket設計.    
-*/
-void tcp_client_non_blocking( const char* const ip, int port )
+
+
+void tcp_client_connect_test_1( SOCKET skt, SOCKADDR_IN addr )
 {
-    tcp_init_socket();
-
     int res;
-    SOCKET skt = socket( PF_INET, SOCK_STREAM, IPPROTO_TCP );
-    res = tcp_set_nonblocking(skt);
-    if( res < 0 )
-        return;
-
-    struct sockaddr_in addr = tcp_setup_addr_client( ip, port );
-
-    fd_set r_set, w_set, e_set;
-    struct timeval timeout = { 1, 0 };
-
-    /*
-        non-block的狀態下, 呼叫connect高機率返回 error, 
-        需要用select判斷什麼時候連上線
-    */
-#if 0
-    // 底下這段code測試失敗,不能這樣連線
     res = connect( skt, (PSOCKADDR)&addr, sizeof(addr) );
 
     if( res == 0 )
@@ -129,9 +110,15 @@ void tcp_client_non_blocking( const char* const ip, int port )
             Sleep(1);
         }
     }
+}
 
-#elif 0
-    // 這段code得到 WSAEWOULDBLOCK 的error code
+
+
+
+void tcp_client_connect_test_2( SOCKET skt, SOCKADDR_IN addr )
+{
+    int res;
+
     while(1)
     {
         res = connect( skt, (PSOCKADDR)&addr, sizeof(addr) );
@@ -157,15 +144,28 @@ void tcp_client_non_blocking( const char* const ip, int port )
             }
         }        
     }
-#elif 1
-    // 這段code可以運作
+}
+
+
+
+
+
+
+void tcp_client_connect_test_3( SOCKET skt, SOCKADDR_IN addr )
+{
+    int res;
+    fd_set r_set, w_set, e_set;
+    struct timeval timeout = { 1, 0 };
+
     res = connect( skt, (PSOCKADDR)&addr, sizeof(addr) );
     if( res == 0 )    
         printf("connect success. res = %d\n", res );    
     else
     {
         int timeout_count;
-        for( timeout_count = 0; timeout_count < 1000000; timeout_count++ )
+        // 測試結果只能用timeout, 如果一直跑迴圈, 並沒有得到錯誤訊息.
+        // 只有測試windows
+        for( timeout_count = 0; timeout_count < 10; timeout_count++ ) 
         { 
             FD_ZERO( &r_set );
             FD_ZERO( &w_set );
@@ -212,14 +212,26 @@ void tcp_client_non_blocking( const char* const ip, int port )
             return;
         }
     }
-#else
+}
+
+
+
+
+
+void tcp_client_connect_test_4( SOCKET skt, SOCKADDR_IN addr )
+{
+    int res;
+    fd_set r_set, w_set;
+    struct timeval timeout = { 1, 0 };
+
     // 底下這段code可以運作
     res = connect( skt, (PSOCKADDR)&addr, sizeof(addr) );
     if( res == 0 )    
         printf("connect success. res = %d\n", res );    
     else
     {
-        for( int timeout_count = 0; timeout_count < 10; timeout_count++ )
+        int timeout_count;
+        for( timeout_count = 0; timeout_count < 10; timeout_count++ )
         {
             FD_ZERO( &r_set );
             FD_ZERO( &w_set );
@@ -277,12 +289,66 @@ void tcp_client_non_blocking( const char* const ip, int port )
                 }
             }
         } 
+
+        if( timeout_count == 10 )
+            printf("timeout. connect fail\n");
     }
+}
+
+
+
+
+
+
+
+/*
+    這邊的client採用non-blocking socket設計.    
+*/
+void tcp_client_non_blocking( const char* const ip, int port )
+{
+    tcp_init_socket();
+
+    int res;
+    SOCKET skt = socket( PF_INET, SOCK_STREAM, IPPROTO_TCP );
+    res = tcp_set_nonblocking(skt);
+    if( res < 0 )
+        return;
+
+    struct sockaddr_in addr = tcp_setup_addr_client( ip, port );
+
+
+    /*
+        non-block的狀態下, 呼叫connect高機率返回 error, 
+        需要用select判斷什麼時候連上線
+    */
+#if 0
+    // 底下這段code測試失敗,不能這樣連線
+    // 用 getsockopt 抓 error code,沒成功.
+    tcp_client_connect_test_1( skt, addr );
+
+#elif 0
+    // 這段code得到 WSAEWOULDBLOCK 的error code
+    // 因為non-block模式下connect會立刻回傳.
+    tcp_client_connect_test_2( skt, addr );
+
+#elif 1
+    // 這段code可以運作
+    // 用 getsockopt 判斷連線成功
+    tcp_client_connect_test_3( skt, addr );
+
+#else
+    //  這段code也有成功    
+    // 會不停 connect
+    tcp_client_connect_test_4( skt, addr );
+
 #endif
 
     char buffer[1024];
     int count = 0;
     int ret;
+
+    fd_set r_set, w_set;
+    struct timeval timeout;
 
     /*
         理論上應該用 w_set判斷是否能寫入
@@ -403,7 +469,7 @@ void tcp_client_blocking( const char* const ip, int port )
             printf("send success. ret = %d\n", ret );
         
         //
-        /*ret = recv( skt, buffer, 1024, 0 );
+        ret = recv( skt, buffer, 1024, 0 );
         if( ret == 0 )
         {
             printf("remote closed. ret = %d\n", ret);
@@ -419,7 +485,7 @@ void tcp_client_blocking( const char* const ip, int port )
             if( ret < 1024 )
                 buffer[ret] = 0;
             printf("recv ret = %d. msg = %s\n", ret, buffer );
-        }*/
+        }
 #ifdef _WIN32
         Sleep(1000);
 #else
@@ -576,6 +642,71 @@ int tcp_setup_listen_skt( SOCKET skt, int port )
 
 
 
+
+SOCKET tcp_server_accept( SOCKET listen_skt )
+{
+    int res;
+    struct sockaddr_in remote;
+    socklen_t remote_len = sizeof(remote);
+
+    memset( &remote, 0, remote_len );
+    SOCKET skt = accept( listen_skt, (struct sockaddr*)&remote, &remote_len );
+    res = tcp_set_nonblocking(skt);
+    if( res < 0 )
+    {
+        printf("set non-blocking fail. skt = %d.\n", res );
+        return;
+    }
+    FD_SET( skt, &server_set );
+    insert_socket(skt);
+    printf("a new client connected! from ip = %s, port = %d...\n", inet_ntoa(remote.sin_addr), ntohs(remote.sin_port) );
+
+    return skt;
+}
+
+
+
+
+
+
+void tcp_server_rs( SOCKET skt )
+{
+    static int count = 0;
+    char recv_buf[1024], send_buf[1024];
+    int ret_1, ret_2;
+
+    memset( recv_buf, 0, 1024 );
+    ret_1 = recv( skt, recv_buf, 1024, 0 );
+    sprintf( send_buf , "Hi. This is server's response. Nice to meet you. count = %d", count++ );                        
+    ret_2 = send( skt, send_buf , strlen(send_buf), 0 );
+
+    if( ret_1 == 0 || ret_2 == 0 )
+    {
+        printf("remote disconnected. ret 1 = %d, ret 2 = %d\n", ret_1, ret_2 );
+        tcp_close_socket( skt );
+        FD_CLR( skt, &server_set );
+        remove_socket( skt );
+    }
+    else if( ret_1 < 0 || ret_2 < 0 )
+    {
+        printf("connect error. ret 1 = %d, ret 2 = %d\n", ret_1, ret_2 );
+        tcp_close_socket( skt );
+        FD_CLR( skt, &server_set );
+        remove_socket( skt );
+    }
+    else
+    {
+        printf("recv, ret = %d, msg = %s\n", ret_1, recv_buf );
+        printf("send. ret = %d\n", ret_2 );
+    }
+}
+
+
+
+
+
+
+
 void tcp_server_non_blocking( int port )
 {
     int res;
@@ -600,22 +731,15 @@ void tcp_server_non_blocking( int port )
     if( res < 0 )
         return;
 
-    fd_set fd_socket;
-    FD_ZERO( &fd_socket );
-    FD_SET( listen_skt, &fd_socket );
+    FD_ZERO( &server_set );
+    FD_SET( listen_skt, &server_set );
 
     // 測試用,這邊先不加入write set.
     fd_set fd_read; //, fd_write;
     fd_set fd_excep;
-    char recv_buf[1024], send_buf[1024];
     SOCKET max_skt = tcp_get_max_socket();
 
-    struct sockaddr_in remote;
-    socklen_t remote_len = sizeof(remote);
-
     int ret;
-    int ret_1, ret_2;
-    int count = 0;
     /*
         理論上non-block用write來判斷
         這邊為了方便,直接send回去
@@ -626,8 +750,8 @@ void tcp_server_non_blocking( int port )
         
         FD_ZERO( &fd_read );
         FD_ZERO( &fd_excep );
-        fd_read = fd_socket;
-        fd_excep = fd_socket;
+        fd_read = server_set;
+        fd_excep = server_set;
 
         //FD_ZERO( &fd_write );
         //fd_write = fd_socket;
@@ -645,60 +769,19 @@ void tcp_server_non_blocking( int port )
             break;
         }
         else if( ret == 0 )        
-            printf("time out. ret = %d\n", ret );        
-
+            printf("time out. ret = %d\n", ret );
 
         for( int i = 0; i < socket_size; i++ )
         {
-        
-            if ( FD_ISSET( socket_array[i], &fd_excep ) ) // 測試結果,最後是底下抓到斷線訊息.
-            {
-                printf("get fd except\n");
-            }
+            // 測試結果,最後是底下抓到斷線訊息. 斷線跟exception set無關.
+            if ( FD_ISSET( socket_array[i], &fd_excep ) )             
+                printf("get fd except\n");            
             else if ( FD_ISSET( socket_array[i], &fd_read) )
-            {
-            
-                if( socket_array[i] == listen_skt )
-                {
-                    memset( &remote, 0, remote_len );
-                    SOCKET skt = accept( listen_skt, (struct sockaddr*)&remote, &remote_len);
-                    res = tcp_set_nonblocking(skt);
-                    if( res < 0 )
-                    {
-                        printf("set non-blocking fail. skt = %d.\n", res );
-                        return;
-                    }
-                    FD_SET( skt, &fd_socket );
-                    insert_socket(skt);
-                    printf("a new client connected! from ip = %s, port = %d...\n", inet_ntoa(remote.sin_addr), ntohs(remote.sin_port) );
-                }
+            {            
+                if( socket_array[i] == listen_skt )                
+                    tcp_server_accept( listen_skt );                
                 else
-                {
-                    memset( recv_buf, 0, 1024 );
-                    ret_1 = recv( socket_array[i], recv_buf, 1024, 0 );
-                    sprintf( send_buf , "Hi. This is server's response. Nice to meet you. count = %d", count++ );                        
-                    ret_2 = 1; //ssend( socket_array[i], send_buf , strlen(send_buf), 0 );
-
-                    if( ret_1 == 0 || ret_2 == 0 )
-                    {
-                        printf("remote disconnected. ret 1 = %d, ret 2 = %d\n", ret_1, ret_2 );
-                        tcp_close_socket( socket_array[i] );
-                        FD_CLR( socket_array[i], &fd_socket);
-                        remove_socket( socket_array[i] );
-                    }
-                    else if( ret_1 < 0 || ret_2 < 0 )
-                    {
-                        printf("connect error. ret 1 = %d, ret 2 = %d\n", ret_1, ret_2 );
-                        tcp_close_socket( socket_array[i] );
-                        FD_CLR( socket_array[i], &fd_socket);
-                        remove_socket( socket_array[i] );
-                    }
-                    else
-                    {
-                        printf("recv, ret = %d, msg = %s\n", ret_1, recv_buf );
-                        printf("send. ret = %d\n", ret_2 );
-                    }
-                }
+                    tcp_server_rs( socket_array[i] );
             }
         }
     }

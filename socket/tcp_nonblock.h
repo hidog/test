@@ -31,8 +31,16 @@ void remove_socket( SOCKET skt );
 
 
 void tcp_server_non_blocking( int port );
+SOCKET tcp_server_accept( SOCKET listen_skt );
+void tcp_server_rs( SOCKET skt );
+
 void tcp_client_blocking( const char* const ip, int port );
+
 void tcp_client_non_blocking( const char* const ip, int port );
+void tcp_client_connect_test_1( SOCKET skt, SOCKADDR_IN addr );
+void tcp_client_connect_test_2( SOCKET skt, SOCKADDR_IN addr );
+void tcp_client_connect_test_3( SOCKET skt, SOCKADDR_IN addr );
+void tcp_client_connect_test_4( SOCKET skt, SOCKADDR_IN addr );
 
 
 #endif
