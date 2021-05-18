@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		6D217FA52653538700029EC9 /* tcp_nb.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6D217FA42653538700029EC9 /* tcp_nb.cpp */; };
 		6D2DDB3A2630DB130097A4D5 /* tool.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6D2DDB372630DB130097A4D5 /* tool.cpp */; };
 		6D2DDB3B2630DB130097A4D5 /* udp_example.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6D2DDB382630DB130097A4D5 /* udp_example.cpp */; };
 		6D5CCDFB2652618800A6DC95 /* tcp_nonblock.c in Sources */ = {isa = PBXBuildFile; fileRef = 6D5CCDFA2652618800A6DC95 /* tcp_nonblock.c */; };
@@ -30,6 +31,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		6D217FA32653538700029EC9 /* tcp_nb.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = tcp_nb.h; path = ../tcp_nb.h; sourceTree = "<group>"; };
+		6D217FA42653538700029EC9 /* tcp_nb.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = tcp_nb.cpp; path = ../tcp_nb.cpp; sourceTree = "<group>"; };
 		6D2DDB362630DB130097A4D5 /* udp_example.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = udp_example.h; path = ../udp_example.h; sourceTree = "<group>"; };
 		6D2DDB372630DB130097A4D5 /* tool.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = tool.cpp; path = ../tool.cpp; sourceTree = "<group>"; };
 		6D2DDB382630DB130097A4D5 /* udp_example.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = udp_example.cpp; path = ../udp_example.cpp; sourceTree = "<group>"; };
@@ -76,6 +79,8 @@
 				6D2DDB392630DB130097A4D5 /* tool.h */,
 				6D2DDB382630DB130097A4D5 /* udp_example.cpp */,
 				6D2DDB362630DB130097A4D5 /* udp_example.h */,
+				6D217FA42653538700029EC9 /* tcp_nb.cpp */,
+				6D217FA32653538700029EC9 /* tcp_nb.h */,
 			);
 			name = src;
 			sourceTree = "<group>";
@@ -169,6 +174,7 @@
 				6D8DF9C52646D8F2000A3951 /* tcp_example_2.c in Sources */,
 				6D2DDB3B2630DB130097A4D5 /* udp_example.cpp in Sources */,
 				6D2DDB3A2630DB130097A4D5 /* tool.cpp in Sources */,
+				6D217FA52653538700029EC9 /* tcp_nb.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

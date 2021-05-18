@@ -567,8 +567,8 @@ int tcp_set_nonblocking( SOCKET skt )
 
 #ifdef _WIN32
     /* 
-    If blcok_mode = 0, blocking is enabled; 
-    If blcok_mode != 0, non-blocking mode is enabled.
+        If blcok_mode = 0, blocking is enabled; 
+        If blcok_mode != 0, non-blocking mode is enabled.
     */
     u_long block_mode = 1;
     res = ioctlsocket( skt, FIONBIO, &block_mode );
