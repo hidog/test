@@ -5,9 +5,14 @@
 #include <netinet/in.h>
 #include <unistd.h>
 #include <fcntl.h>
+#include <errno.h>
+#include <sys/socket.h>
+#include <arpa/inet.h>
 #endif
 
 #include <stdio.h>
+#include <string.h>
+
 
 #if defined(MACOS) || defined(UNIX)
 #define SOCKET_ERROR -1
@@ -48,16 +53,113 @@ int TcpNb::init()
 
 
 
+void TcpNb::add_fd_set()
+{
+    FD_ZERO( &w_set );
+    FD_ZERO( &r_set );
+    
+    FD_SET( listen_skt, &r_set );
+    
+    for( auto item : client_list )
+    {
+        FD_SET( item.skt, &r_set );
+        FD_SET( item.skt, &w_set );
+    }
+}
+
+
+
+// 效率不好,但就先不管這個問題了. 畢竟只是範例程式.
+SOCKET TcpNb::get_max_skt()
+{
+    SOCKET max = listen_skt;
+    
+    for( auto item : client_list )
+    {
+        if( item.skt > max )
+            max = item.skt;
+    }
+    
+    return max;
+}
+
+
+
+
+
+
+int TcpNb::get_error_code()
+{
+#if defined(MACOS) || defined(UNIX)
+    int err = errno;
+    return err;
+#else
+#error need maintain.
+#endif
+}
+
+
+
+
+void TcpNb::recv_handle()
+{
+    if( FD_ISSET( listen_skt, &r_set ) )
+    {
+        sockaddr_in addr;
+        socklen_t len = sizeof(addr);
+        memset( &addr, 0, len );
+        
+        SOCKET skt = accept( listen_skt, (sockaddr*)&addr, &len );
+        printf("accept skt %d. remote %s, %d\n", skt, inet_ntoa(addr.sin_addr), ntohs(addr.sin_port) );
+        
+        ClientSocket item;
+        item.skt = skt;
+        item.connected = true;
+        item.connect_time = time_point_cast<milliseconds>(system_clock::now());
+        
+        client_list.push_back(item);
+    }
+    
+    for( auto item : client_list )
+    {
+        if( FD_ISSET( item.skt, &r_set ) )
+        {
+        
+            
+        }
+    }
+}
+
+
 
 
 int TcpNb::work()
 {
     init();
-    
     setup_server_skt();
     
+    //
+    int res;
+    timeval timeout = { 1, 500000 };
     while(true)
     {
+        add_fd_set();
+        max_skt = get_max_skt();
+        
+        res = select( max_skt+1, &r_set, &w_set, NULL, &timeout );
+        if( res == 0 )
+            printf("select timeout.\n");
+        else if( res < 0 )
+        {
+            int err = get_error_code();
+            printf("select fail. res = %d, err = %d break\n", res, err );
+            break;
+        }
+        else
+        {
+            recv_handle();
+        }
+        
         // select
         // if recv, handle
         // if task, handle
