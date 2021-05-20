@@ -42,6 +42,9 @@
     <ClCompile Include="..\..\tcp_nonblock.c">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\tcp_nb.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\udp_example.h">
@@ -63,6 +66,9 @@
       <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="..\..\tcp_nonblock.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\tcp_nb.h">
       <Filter>src</Filter>
     </ClInclude>
   </ItemGroup>
