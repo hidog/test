@@ -1,4 +1,4 @@
-#include "tcp_nb.h"
+﻿#include "tcp_nb.h"
 
 #if defined(MACOS) || defined(UNIX)
 #include <sys/socket.h>
@@ -206,9 +206,7 @@ void TcpNb::recv_handle()
     if( FD_ISSET( listen_skt, &r_set ) )    
         accept_handle();    
 
-    //
-    char buffer[4096];    
-    int ret;
+    // 
     for( auto itr = client_list.begin(); itr != client_list.end(); ++itr )
     {
         if( FD_ISSET( itr->skt, &r_set ) )
@@ -229,21 +227,39 @@ void TcpNb::recv_handle()
 
 
 
-void TcpNb::handle_disconnect( std::vector<ClientSocket>::iterator clt )
+void TcpNb::handle_disconnect( ClientSocket& client )
 {
-    printf( "skt %d disconnect.\n", clt->skt );
+    printf( "skt %d disconnect. net_ip = %lu\n", client.skt, client.net_ip );
+
+    for( auto itr = client_list.begin(); itr != client_list.end(); ++itr )
+    {
+        if( itr->net_ip == client.net_ip )
+        {
+            client_list.erase(itr);
+            break;
+        }
+    }
+
 #ifdef _WIN32
-    closesocket(clt->skt);
+    closesocket(client.skt);
 #else
-#error need maintain.
+    close(client.skt);
 #endif
-    client_list.erase(clt);
 }
 
 
 
-void TcpNb::handle_error( std::vector<ClientSocket>::iterator clt )
-{}
+
+
+void TcpNb::handle_error( ClientSocket& client )
+{
+    printf("client error. skt = %d, net_ip = %lu\n", client.skt, client.net_ip );
+#ifdef _WIN32
+    closesocket(client.skt);
+#else
+    close(client.skt);
+#endif
+}
 
 
 
@@ -252,7 +268,7 @@ void TcpNb::handle_error( std::vector<ClientSocket>::iterator clt )
 
 int TcpNb::find_client( unsigned long net_ip )
 {
-    int index;
+    size_t index;
     for( index = 0; index < client_list.size(); index++ )
     {
         if( client_list[index].net_ip == net_ip )
@@ -318,15 +334,46 @@ void TcpNb::send_head( ClientSocket &client )
     char *ptr = (char*)&client.send_data.head + shift;
 
     int ret = send( client.skt, ptr, remaind, 0 );
-    printf("send head ret = %d.\n", ret );
-
-    client.send_data.send_index += ret;
-    if( client.send_data.send_index == HEAD_SIZE )
+    if( ret < 0 )
+        handle_error(client);  
+    else if( ret == 0 )
+        handle_disconnect(client);
+    else
     {
-        printf("send head finish.\n");
-        client.send_state = SendState::BODY;
-        client.send_data.send_index = 0;
+        // send success.
+        printf("send head ret = %d.\n", ret );
+
+        client.send_data.send_index += ret;
+        if( client.send_data.send_index == HEAD_SIZE )
+        {
+            printf("send head finish.\n");
+            client.send_state = SendState::BODY;
+            client.send_data.send_index = 0;
+        }
     }
+}
+
+
+
+
+void TcpNb::task_finish_handle( ClientSocket &client )
+{
+    printf("task finish. close socket %d, net ip = %lu\n", client.skt, client.net_ip );
+    
+    for( auto itr = client_list.begin(); itr != client_list.end(); ++itr )
+    {
+        if( itr->net_ip == client.net_ip )
+        {
+            client_list.erase(itr);
+            break;
+        }
+    }
+
+#ifdef _WIN32
+    closesocket(client.skt);
+#else
+    close(client.skt);
+#endif
 }
 
 
@@ -340,14 +387,25 @@ void TcpNb::send_body( ClientSocket &client )
     int remaind = LONG_BODY_SIZE - shift;
 
     int ret = send( client.skt, ptr, remaind, 0 );
-    printf("send body. ret = %d\n", ret );
-    client.send_data.send_index += ret;
-
-    if( client.send_data.send_index == LONG_BODY_SIZE )
+    if( ret < 0 )
+        handle_error(client);  
+    else if( ret == 0 )
+        handle_disconnect(client);
+    else
     {
-        printf("send body finish.\n" );
-        client.send_state = SendState::STOP;
-    }   
+        printf("send body. ret = %d\n", ret );
+        client.send_data.send_index += ret;
+
+        if( client.send_data.send_index == LONG_BODY_SIZE )
+        {
+            printf("send body finish.\n" );
+            client.task_count--;
+            if( client.task_count == 0 )
+                task_finish_handle( client );
+            else        
+                client.send_state = SendState::UNKNOWN;                
+        }   
+    }
 }
 
 

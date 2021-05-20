@@ -151,8 +151,8 @@ public:
     void recv_handle();
     void send_handle();
     
-    void handle_disconnect( std::vector<ClientSocket>::iterator clt );
-    void handle_error( std::vector<ClientSocket>::iterator clt );
+    void handle_disconnect( ClientSocket& client );
+    void handle_error( ClientSocket& client );
 
     int find_client( unsigned long net_ip );
     void connect_to( const char* const ip, int port );
@@ -165,6 +165,8 @@ public:
     void prepare_recv_data( ClientSocket &client );
     void recv_head( ClientSocket &client );
     void recv_body( ClientSocket &client );
+
+    void task_finish_handle( ClientSocket &client );
 
 private:
     
