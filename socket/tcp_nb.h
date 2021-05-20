@@ -18,6 +18,8 @@ typedef int SOCKET;
 #endif
 
 
+#define LONG_DATA_SIZE 65536
+
 
 using namespace std::chrono;
 
@@ -35,7 +37,7 @@ enum class PacketType
 enum class SendState
 {
     UNKNOWN,
-    HEADER,
+    HEAD,
     BODY,
     STOP, // for test use.
 };
@@ -45,13 +47,13 @@ enum class SendState
 
 
 
-struct PacketHeader
+struct PacketHead
 {
     char name[24];
-    PacketType type;
-    int size;
+    PacketType body_type;
+    int body_size;
 };
-const int HEADER_SIZE = sizeof(PacketHeader);
+const int HEAD_SIZE = sizeof(PacketHead);
 
 
 struct PacketShort
@@ -59,13 +61,13 @@ struct PacketShort
     int count;
     char message[100];
 };
-const int PACKET_SHORT_SIZE = sizeof(PacketShort);
+
 
 
 struct PacketLong
 {
     int count;
-    char data[4096];
+    char data[LONG_DATA_SIZE];
 };
 
 
@@ -76,13 +78,13 @@ union PacketBody
     PacketShort short_data;
     PacketLong long_data;
 };
-const int BODY_SIZE_LONG = sizeof(PacketLong);
-const int BODY_SIZE_SHORT = sizeof(PacketShort);
+const int LONG_BODY_SIZE = sizeof(PacketLong);
+const int SHORT_BODY_SIZE = sizeof(PacketShort);
 
 
 struct SendData
 {
-    PacketHeader header;
+    PacketHead head;
     PacketBody body;
     int send_index;
 };
@@ -92,7 +94,7 @@ struct SendData
 enum class RecvState
 {
     UNKNOWN,
-    HEADER,
+    HEAD,
     BODY,
     STOP, // test use.
 };
@@ -103,7 +105,7 @@ enum class RecvState
 
 struct RecvData
 {
-    PacketHeader header;
+    PacketHead head;
     PacketBody body;
     int recv_index;
 };
@@ -134,7 +136,7 @@ struct ClientSocket
 class TcpNb
 {
 public:
-    TcpNb();
+    TcpNb( std::string _pc_name );
     ~TcpNb();
     
     int init();
@@ -156,12 +158,12 @@ public:
     void connect_to( const char* const ip, int port );
 
     void prepare_send_data( ClientSocket &client );
-    void send_header( ClientSocket &client );
+    void send_head( ClientSocket &client );
     void send_body( ClientSocket &client );
 
     void accept_handle();
     void prepare_recv_data( ClientSocket &client );
-    void recv_header( ClientSocket &client );
+    void recv_head( ClientSocket &client );
     void recv_body( ClientSocket &client );
 
 private:
@@ -173,6 +175,8 @@ private:
     
     fd_set w_set, r_set;
     SOCKET max_skt;
+
+    std::string pc_name;
 };
 
 

@@ -24,7 +24,8 @@ typedef int socklen_t;
 
 
 
-TcpNb::TcpNb()
+TcpNb::TcpNb( std::string _pc_name ) 
+    : pc_name(_pc_name)
 {
     ip_list = { 
                 "192.168.1.106",  // imac
@@ -141,26 +142,26 @@ void TcpNb::accept_handle()
 
 void TcpNb::prepare_recv_data( ClientSocket &client )
 {
-    client.recv_state = RecvState::HEADER;
+    client.recv_state = RecvState::HEAD;
     client.recv_data.recv_index = 0;   
 }
 
 
 
 
-void TcpNb::recv_header( ClientSocket &client )
+void TcpNb::recv_head( ClientSocket &client )
 {
     int shift = client.recv_data.recv_index;
-    char *ptr = (char*)&(client.recv_data.header) + shift;
-    int remaind = HEADER_SIZE - shift;
+    char *ptr = (char*)&(client.recv_data.head) + shift;
+    int remaind = HEAD_SIZE - shift;
 
     int ret = recv( client.skt, ptr, remaind, 0 );
-    printf( "header recv ret = %d\n", ret );
+    printf( "recv head ret = %d\n", ret );
 
     client.recv_data.recv_index += ret;
-    if( client.recv_data.recv_index == HEADER_SIZE )
+    if( client.recv_data.recv_index == HEAD_SIZE )
     {
-        printf("recv header. %s %d\n", client.recv_data.header.name, client.recv_data.header.size );
+        printf("recv head finish. name = %s, size = %d\n", client.recv_data.head.name, client.recv_data.head.body_size );
         client.recv_state = RecvState::BODY;   
         client.recv_data.recv_index = 0;
     }
@@ -172,16 +173,26 @@ void TcpNb::recv_header( ClientSocket &client )
 void TcpNb::recv_body( ClientSocket &client )
 {
     int shift = client.recv_data.recv_index;
-    char *ptr = (char*)&(client.recv_data.body.short_data) + shift;
-    int remaind = BODY_SIZE_SHORT - shift;
+    PacketType body_type = client.recv_data.head.body_type;
 
+    char *ptr = body_type == PacketType::SHORT ?
+                (char*)&(client.recv_data.body.short_data) + shift :
+                (char*)&(client.recv_data.body.long_data) + shift;
+
+    int remaind = body_type == PacketType::SHORT ? 
+                  SHORT_BODY_SIZE - shift :
+                  LONG_BODY_SIZE - shift;
+
+    int finish_size = client.recv_data.head.body_size;
+                  
+    //
     int ret = recv( client.skt, ptr, remaind, 0 );
-    printf("body recv. ret = %d\n", ret );
+    printf("recv body. ret = %d\n", ret );
     client.recv_data.recv_index += ret;
 
-    if( client.recv_data.recv_index == BODY_SIZE_SHORT )
+    if( client.recv_data.recv_index == finish_size )
     {
-        printf("recv body finish. couont = %d, msg = %s\n", client.recv_data.body.short_data.count, client.recv_data.body.short_data.message );
+        printf("recv body finish. count = %d, msg = %s\n", client.recv_data.body.long_data.count, client.recv_data.body.long_data.data );
         client.recv_state = RecvState::STOP;
     }
 }
@@ -207,8 +218,8 @@ void TcpNb::recv_handle()
 
             if( itr->recv_state == RecvState::UNKNOWN )
                 prepare_recv_data(client);
-            else if( itr->recv_state == RecvState::HEADER )
-                recv_header(client);
+            else if( itr->recv_state == RecvState::HEAD )
+                recv_head(client);
             else if( itr->recv_state == RecvState::BODY )
                 recv_body(client);                        
         }
@@ -263,39 +274,56 @@ int TcpNb::find_client( unsigned long net_ip )
 
 void TcpNb::prepare_send_data( ClientSocket &client )
 {
+    client.send_data.head.body_type = rand() % 2 == 1 ? PacketType::LONG : PacketType::SHORT;    
+    PacketType body_type = client.send_data.head.body_type;
+
     // prepare send header.
-    client.send_state = SendState::HEADER;
+    client.send_state = SendState::HEAD;
 
     // prepare header
-    strcpy( client.send_data.header.name, "Slave PC" );
-    client.send_data.header.size = PACKET_SHORT_SIZE;
-    client.send_data.header.type = PacketType::SHORT;
+    strcpy( client.send_data.head.name, pc_name.c_str() );
+    if( body_type  == PacketType::SHORT )
+        client.send_data.head.body_size = SHORT_BODY_SIZE;
+    else if( body_type  == PacketType::LONG )
+        client.send_data.head.body_size = LONG_BODY_SIZE;
+    else
+        printf("error\n");    
 
-    // prepare body
-    client.send_data.body.short_data.count = 4411;
-    sprintf( client.send_data.body.short_data.message, "Hello, this is client" );
+    // prepare body    
+    if( body_type  == PacketType::SHORT )
+    {
+        client.send_data.body.short_data.count = client.task_count;
+        sprintf( client.send_data.body.short_data.message, "Hello, this is client" );
+    }
+    else if( body_type  == PacketType::LONG )
+    {
+        client.send_data.body.long_data.count = client.task_count;
+        sprintf( client.send_data.body.long_data.data, "Hello, this is cleint" );
+    }
+    else
+        printf("error\n");
 
     client.send_data.send_index = 0;
-    client.send_state = SendState::HEADER;
+    client.send_state = SendState::HEAD;
 }
 
 
 
 
 
-void TcpNb::send_header( ClientSocket &client )
+void TcpNb::send_head( ClientSocket &client )
 {
     int shift = client.send_data.send_index;
-    int remaind = HEADER_SIZE - shift;
-    char *ptr = (char*)&client.send_data.header + shift;
+    int remaind = HEAD_SIZE - shift;
+    char *ptr = (char*)&client.send_data.head + shift;
 
     int ret = send( client.skt, ptr, remaind, 0 );
-    printf("header send ret = %d.\n", ret );
+    printf("send head ret = %d.\n", ret );
 
     client.send_data.send_index += ret;
-    if( client.send_data.send_index == HEADER_SIZE )
+    if( client.send_data.send_index == HEAD_SIZE )
     {
-        printf("send header finish.\n");
+        printf("send head finish.\n");
         client.send_state = SendState::BODY;
         client.send_data.send_index = 0;
     }
@@ -308,14 +336,14 @@ void TcpNb::send_header( ClientSocket &client )
 void TcpNb::send_body( ClientSocket &client )
 {
     int shift = client.send_data.send_index;
-    char* ptr = (char*)&client.send_data.body.short_data;
-    int remaind = PACKET_SHORT_SIZE - shift;
+    char* ptr = (char*)&client.send_data.body.long_data;
+    int remaind = LONG_BODY_SIZE - shift;
 
     int ret = send( client.skt, ptr, remaind, 0 );
-    printf("recv body. ret = %d\n", ret );
+    printf("send body. ret = %d\n", ret );
     client.send_data.send_index += ret;
 
-    if( client.send_data.send_index == PACKET_SHORT_SIZE )
+    if( client.send_data.send_index == LONG_BODY_SIZE )
     {
         printf("send body finish.\n" );
         client.send_state = SendState::STOP;
@@ -351,8 +379,8 @@ void TcpNb::send_handle()
             // 好處是比較好維護. (畢竟是測試用的程式碼)
             if( client.send_state == SendState::UNKNOWN )
                 prepare_send_data(client);
-            else if( client.send_state == SendState::HEADER )            
-                send_header(client);            
+            else if( client.send_state == SendState::HEAD )            
+                send_head(client);            
             else if( client.send_state == SendState::BODY )
                 send_body(client);
         }
