@@ -51,7 +51,7 @@ TcpNb::TcpNb( std::string _pc_name, int _port )
                     1242   // master
                 };*/
 
-    ip_list = { "127.0.0.1" };
+    ip_list = { "192.168.5.5" };
     port_list = { 1234 };
 
     task.finished = false;
