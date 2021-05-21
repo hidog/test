@@ -50,8 +50,8 @@ TcpNb::TcpNb( std::string _pc_name, int _port )
                     1234   // master
                 };*/
 
-    ip_list = { "36.231.97.222" };
-    port_list = { 1241 };
+    ip_list = { "192.168.1.106" };
+    port_list = { 1234 };
 
     task.finished = false;
     task.timestamp = time_point_cast<milliseconds>(system_clock::now());
@@ -631,13 +631,9 @@ void TcpNb::connect_handle()
     //printf("connect_handle 1\n");
     for( auto itr = client_list.begin(); itr != client_list.end(); ++itr )
     {
-        // 這邊win跟ubuntu行為似乎不同, win可以用r_set判斷, ubuntu需要用w_set
+        // 測了一下用w_set可以判斷是否連上線
         //if( itr->connected == false && ( FD_ISSET(itr->skt, &r_set) || FD_ISSET(itr->skt, &w_set) ) )
-#if _WIN32
-        if( itr->connected == false && FD_ISSET(itr->skt, &r_set)  )
-#else
         if( itr->connected == false && FD_ISSET(itr->skt, &w_set)  )
-#endif
         {
             // 實際上可以暫存addr來加快處理速度
             sockaddr_in addr;
@@ -655,10 +651,14 @@ void TcpNb::connect_handle()
             }
             else if( res == SOCKET_ERROR )
             {
+#ifdef _WIN32
+                int error = WSAGetLastError();  // win32用底下的code執行沒成功,會失敗.
+#else
                 int error;
                 socklen_t len = sizeof(error);
                 getsockopt( itr->skt, SOL_SOCKET, SO_ERROR, (char*)&error, &len );
-                //printf("error = %d\n", error );             
+                //printf("error = %d\n", error );         
+#endif
                 
 #ifdef _WIN32
                 if( error == WSAECONNREFUSED )
@@ -670,7 +670,7 @@ void TcpNb::connect_handle()
                     printf("connect fail. CONNREFUSED\n" ); 
                 }                
 #ifdef _WIN32
-                else if( error == WSAEISCONN )
+                else if( error == WSAEISCONN )  
 #else
                 else if( error == EISCONN )
 #endif
