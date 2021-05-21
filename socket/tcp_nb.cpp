@@ -27,13 +27,13 @@ typedef int socklen_t;
 TcpNb::TcpNb( std::string _pc_name, int _port ) 
     : pc_name(_pc_name), port(_port)
 {
-    /*ip_list = { 
+    ip_list = { 
                 "192.168.1.106",  // imac
                 "192.168.3.240",  // room
                 "192.168.3.191",  // 2F
                 "192.168.1.110",  // ubuntu red
                 "192.168.1.108",  // ubuntu
-                "192.168.2.247",  // x250
+                "36.231.97.222",  // x250
                 "192.168.2.116",  // mbpr
                 "192.168.1.102",  // slave
                 "192.168.1.101"   // master
@@ -49,10 +49,10 @@ TcpNb::TcpNb( std::string _pc_name, int _port )
                     1240,  // mbpr
                     1241,  // slave
                     1242   // master
-                };*/
+                };
 
-    ip_list = { "127.0.0.1" };
-    port_list = { 1234 };
+    //ip_list = { "36.226.250.20" };
+    //port_list = { 1234 };
 
     task.finished = false;
     task.timestamp = time_point_cast<milliseconds>(system_clock::now());
