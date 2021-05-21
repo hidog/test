@@ -35,7 +35,7 @@ TcpNb::TcpNb( std::string _pc_name, int _port )
                 "192.168.1.108",  // ubuntu
                 "36.231.97.222",  // x250
                 "192.168.2.116",  // mbpr
-                "192.168.1.102",  // slave
+                "36.226.250.20",  // slave
                 "192.168.1.101"   // master
               };
 
@@ -47,7 +47,7 @@ TcpNb::TcpNb( std::string _pc_name, int _port )
                     1238,  // ubuntu
                     1239,  // x250
                     1240,  // mbpr
-                    1241,  // slave
+                    1234,  // slave
                     1242   // master
                 };
 
