@@ -161,6 +161,7 @@ public:
     SOCKET get_max_skt();
     int get_error_code();
 
+    void connect_handle();     
     void recv_handle();
     void send_handle();
     

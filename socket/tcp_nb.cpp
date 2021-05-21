@@ -12,9 +12,8 @@
 
 #include <stdio.h>
 #include <string.h>
-#include <chrono>
 
-using namespace std::chrono;
+
 
 
 #if defined(MACOS) || defined(UNIX)
@@ -29,7 +28,7 @@ typedef int socklen_t;
 TcpNb::TcpNb( std::string _pc_name, int _port ) 
     : pc_name(_pc_name), port(_port)
 {
-    ip_list = { 
+    /*ip_list = { 
                 "192.168.1.106",  // imac
                 "192.168.3.240",  // room
                 "192.168.3.191",  // 2F
@@ -49,10 +48,10 @@ TcpNb::TcpNb( std::string _pc_name, int _port )
                     1240,  // mbpr
                     1234,  // slave
                     1234   // master
-                };
+                };*/
 
-    //ip_list = { "192.168.6.106" };
-    //port_list = { 1238 };
+    ip_list = { "127.0.0.1" };
+    port_list = { 1234 };
 
     task.finished = false;
     task.timestamp = time_point_cast<milliseconds>(system_clock::now());
@@ -248,25 +247,8 @@ void TcpNb::recv_handle()
     // 
     for( auto itr = client_list.begin(); itr != client_list.end(); ++itr )
     {
-        if( FD_ISSET( itr->skt, &r_set ) )
+        if( itr->connected == true && FD_ISSET( itr->skt, &r_set ) )
         {
-#ifdef UNIX
-            // 假設對象電腦開機,這邊會回傳 113 的 error code.
-            // 關機的話不會跳錯誤
-            // 行為跟windows不同
-            // #define EHOSTUNREACH 113 /* No route to host                
-            int error = 0;
-            socklen_t len = sizeof (error);
-            int retval = getsockopt( itr->skt, SOL_SOCKET, SO_ERROR, (char*)&error, &len);
-            if( error == EHOSTUNREACH )
-            {           
-                printf("recv handle error = %d. retval = %d\n", error, retval );
-                itr->task_count = 0;
-                continue;
-            }
-#endif
-        
-            itr->connected = true;
             ClientSocket &client = *itr;
 
             if( itr->recv_state == RecvState::UNKNOWN )
@@ -488,10 +470,8 @@ void TcpNb::send_handle()
     else
     {   
         ClientSocket &client = client_list[index];
-        if( FD_ISSET( client.skt, &w_set ) )
+        if( client.connected == true && FD_ISSET( client.skt, &w_set ) )
         {        
-            client.connected = true;
-
             // 放棄效率,選擇一次處理一件事情.
             // 好處是比較好維護. (畢竟是測試用的程式碼)
             if( client.send_state == SendState::UNKNOWN )
@@ -622,6 +602,56 @@ bool TcpNb::is_exist_client( std::string ip, int port )
 
 
 
+
+/*
+    測試結果用這個方式是目前比較好的一個解法
+    直接用select  send/recv判斷是否連上線,會出問題
+    在UNIX環境下,對方電腦開著,有機會select通過
+    在send/recv的時候得到error code EHOSTUNREACH 113, No route to host 
+    最後選擇用connect做判斷
+*/
+void TcpNb::connect_handle()
+{
+    for( auto &item : client_list )
+    {
+        if( item.connected == false && FD_ISSET(item.skt, &r_set) )
+        {
+            // 實際上可以暫存addr來加快處理速度
+            sockaddr_in addr;
+            addr.sin_family = AF_INET;
+            addr.sin_port = htons(item.port);
+            addr.sin_addr.s_addr = item.net_ip;
+            int res = connect( item.skt, (PSOCKADDR)&addr, sizeof(addr) );
+            if( res == 0 )
+            {
+                printf("connected ! res = %d\n", res );
+                item.connected = true;
+            }
+            else if( res == SOCKET_ERROR )
+            {
+                int error = 0;
+                socklen_t len = sizeof(error);
+                int retval = getsockopt( item.skt, SOL_SOCKET, SO_ERROR, (char*)&error, &len );
+                printf("error = %d. retval = %d\n", error, retval );
+#ifdef _WIN32
+                if( error == WSAEISCONN )
+#else
+                if( error == EISCONN )
+#endif
+                {
+                    item.connected = true;
+                    printf("connected. skt = %d\n", item.skt );
+                }
+            }
+        }
+    }
+}
+
+
+
+
+
+
 int TcpNb::work()
 {
     srand( static_cast<unsigned int>(time(NULL)) );
@@ -644,10 +674,8 @@ int TcpNb::work()
         max_skt = get_max_skt();
         
         res = select( max_skt+1, &r_set, &w_set, NULL, &timeout );
-        if( res == 0 ) 
-        {       
-            //printf("select timeout.\n");        
-        }
+        if( res == 0 )                
+            printf("select timeout.\n");                
         else if( res < 0 )
         {
             int err = get_error_code();
@@ -656,7 +684,7 @@ int TcpNb::work()
         }
         else
         {
-            printf("res = %d\n", res );
+            connect_handle();
             recv_handle();
             send_handle();
         }

@@ -72,7 +72,7 @@ void tcp_test_funcs()
 
     //tcp_server_non_blocking( 1234 );
     //tcp_client_blocking( "192.168.1.108", 1234 );
-    //tcp_client_non_blocking( "192.168.1.108", 1234 );
+    //tcp_client_non_blocking( "192.168.1.106", 1234 );
 
     TcpNb tcp_nb("Slave PC", 1234);
     tcp_nb.work();
