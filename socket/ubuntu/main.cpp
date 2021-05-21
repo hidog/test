@@ -2,6 +2,7 @@
 #include "../udp_example.h"
 #include "../tcp_example.h"
 #include "../tool.h"
+#include "../tcp_nb.h"
 
 extern "C"
 {
@@ -69,9 +70,12 @@ void tcp_funcs()
     //tcp_size_server( 2591 );
     //tcp_size_client( "36.231.96.77", 2912 );
     
-    tcp_server_non_blocking( 1234 );
-    //tcp_client_non_blocking( "192.168.1.102", 1234 );
+    //tcp_server_non_blocking( 1234 );
+    //tcp_client_non_blocking( "127.0.0.1", 1234 );
     //tcp_client_blocking( "192.168.1.102", 1234 );
+    
+    TcpNb tcp_nb("UB red", 1239 );
+    tcp_nb.work();
 }
 
 

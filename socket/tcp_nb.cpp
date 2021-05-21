@@ -12,6 +12,9 @@
 
 #include <stdio.h>
 #include <string.h>
+#include <chrono>
+
+using namespace std::chrono;
 
 
 #if defined(MACOS) || defined(UNIX)
@@ -23,7 +26,6 @@ typedef int socklen_t;
 
 
 
-
 TcpNb::TcpNb( std::string _pc_name, int _port ) 
     : pc_name(_pc_name), port(_port)
 {
@@ -31,28 +33,26 @@ TcpNb::TcpNb( std::string _pc_name, int _port )
                 "192.168.1.106",  // imac
                 "192.168.3.240",  // room
                 "192.168.3.191",  // 2F
-                "192.168.1.110",  // ubuntu red
-                "192.168.1.108",  // ubuntu
+                "36.231.97.222",  // ubuntu red
                 "36.231.97.222",  // x250
                 "192.168.2.116",  // mbpr
                 "36.226.250.20",  // slave
-                "192.168.1.101"   // master
+                "122.116.84.59"   // master
               };
 
     port_list = { 
                     1234,  // imac
                     1235,  // room
                     1236,  // 2F
-                    1237,  // ubuntu red
-                    1238,  // ubuntu
+                    1240,  // ubuntu red
                     1239,  // x250
                     1240,  // mbpr
                     1234,  // slave
-                    1242   // master
+                    1234   // master
                 };
 
-    //ip_list = { "36.226.250.20" };
-    //port_list = { 1234 };
+    //ip_list = { "192.168.6.106" };
+    //port_list = { 1238 };
 
     task.finished = false;
     task.timestamp = time_point_cast<milliseconds>(system_clock::now());
@@ -250,6 +250,22 @@ void TcpNb::recv_handle()
     {
         if( FD_ISSET( itr->skt, &r_set ) )
         {
+#ifdef UNIX
+            // 假設對象電腦開機,這邊會回傳 113 的 error code.
+            // 關機的話不會跳錯誤
+            // 行為跟windows不同
+            // #define EHOSTUNREACH 113 /* No route to host                
+            int error = 0;
+            socklen_t len = sizeof (error);
+            int retval = getsockopt( itr->skt, SOL_SOCKET, SO_ERROR, (char*)&error, &len);
+            if( error == EHOSTUNREACH )
+            {           
+                printf("recv handle error = %d. retval = %d\n", error, retval );
+                itr->task_count = 0;
+                continue;
+            }
+#endif
+        
             itr->connected = true;
             ClientSocket &client = *itr;
 
@@ -466,13 +482,14 @@ void TcpNb::send_handle()
 
     unsigned long net_ip = inet_addr(task.ip.c_str());
     int index = find_client( net_ip, task.port );
+    
     if( index == -1 )
         printf("send not found. error. ip = %s\n", task.ip.c_str() );
     else
-    {
+    {   
         ClientSocket &client = client_list[index];
         if( FD_ISSET( client.skt, &w_set ) )
-        {
+        {        
             client.connected = true;
 
             // 放棄效率,選擇一次處理一件事情.
@@ -502,7 +519,7 @@ void TcpNb::connect_to( const char* const ip, int port )
 #ifdef _WIN32
     addr.sin_addr.S_un.S_addr = inet_addr(ip);
 #else
-#error need maintain.
+    addr.sin_addr.s_addr = inet_addr(ip);
 #endif
 
     //
@@ -627,8 +644,10 @@ int TcpNb::work()
         max_skt = get_max_skt();
         
         res = select( max_skt+1, &r_set, &w_set, NULL, &timeout );
-        if( res == 0 )
-            printf("select timeout.\n");
+        if( res == 0 ) 
+        {       
+            //printf("select timeout.\n");        
+        }
         else if( res < 0 )
         {
             int err = get_error_code();
@@ -637,6 +656,7 @@ int TcpNb::work()
         }
         else
         {
+            printf("res = %d\n", res );
             recv_handle();
             send_handle();
         }
