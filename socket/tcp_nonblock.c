@@ -205,10 +205,23 @@ void tcp_client_connect_test_3( SOCKET skt, SOCKADDR_IN addr )
                 printf("select fail. res = %d\n", res );
                 return;
             }
-            else if( res == 0 )
-                printf("time out. timeout_count = %d\n", timeout_count);
+            else if( res == 0 )            
+                printf("time out. timeout_count = %d\n", timeout_count);            
             else
             {         
+                printf("res = %d\n", res);
+                
+#ifdef UNIX
+                // 假設對象電腦開機,這邊會回傳 113 的 error code.
+                // 關機的話不會跳錯誤
+                // 行為跟windows不同
+                // #define EHOSTUNREACH 113 /* No route to host                
+                int error = 0;
+                socklen_t len = sizeof (error);
+                int retval = getsockopt (skt, SOL_SOCKET, SO_ERROR, (char*)&error, &len);               
+                printf("error = %d. retval = %d\n", error, retval );
+#endif
+                
                 // 用r_set會fail.
                 if( FD_ISSET( skt, &w_set ) )
                 {
