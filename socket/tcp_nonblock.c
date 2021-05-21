@@ -372,7 +372,7 @@ void tcp_client_non_blocking( const char* const ip, int port )
     // 因為non-block模式下connect會立刻回傳.
     tcp_client_connect_test_2( skt, addr );
 
-#elif 1
+#elif 0
     // 這段code可以運作
     // 用 getsockopt 判斷連線成功
     tcp_client_connect_test_3( skt, addr );

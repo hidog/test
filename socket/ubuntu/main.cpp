@@ -74,7 +74,7 @@ void tcp_funcs()
     //tcp_client_non_blocking( "127.0.0.1", 1234 );
     //tcp_client_blocking( "192.168.1.102", 1234 );
     
-    TcpNb tcp_nb("UB red", 1239 );
+    TcpNb tcp_nb("UB red", 1240 );
     tcp_nb.work();
 }
 

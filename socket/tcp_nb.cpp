@@ -50,8 +50,8 @@ TcpNb::TcpNb( std::string _pc_name, int _port )
                     1234   // master
                 };*/
 
-    ip_list = { "127.0.0.1" };
-    port_list = { 1234 };
+    ip_list = { "36.231.97.222" };
+    port_list = { 1241 };
 
     task.finished = false;
     task.timestamp = time_point_cast<milliseconds>(system_clock::now());
@@ -140,6 +140,22 @@ void TcpNb::accept_handle()
     memset( &addr, 0, len );
 
     SOCKET skt = accept( listen_skt, (sockaddr*)&addr, &len );
+    if( skt == SOCKET_ERROR )
+    {
+
+/*#ifdef UNIX
+        // unix平台,強制中斷程式,第二次執行程式的時候會遇到這個錯誤.
+        // 需要將listen socket改成reuse.
+        int err = errno;
+        printf("accept fail. err = %d. need re-setupt listen socket.\n", err);
+        close(listen_skt);
+        setup_server_skt();
+#else*/
+        printf("accept fail.\n");
+//#endif
+        return;
+    }
+    
     printf("accept skt %d. remote %s, %d\n", skt, inet_ntoa(addr.sin_addr), ntohs(addr.sin_port) );
 
     ClientSocket item;
@@ -612,36 +628,65 @@ bool TcpNb::is_exist_client( std::string ip, int port )
 */
 void TcpNb::connect_handle()
 {
-    for( auto &item : client_list )
+    //printf("connect_handle 1\n");
+    for( auto itr = client_list.begin(); itr != client_list.end(); ++itr )
     {
-        if( item.connected == false && FD_ISSET(item.skt, &r_set) )
+        // 這邊win跟ubuntu行為似乎不同, win可以用r_set判斷, ubuntu需要用w_set
+        //if( itr->connected == false && ( FD_ISSET(itr->skt, &r_set) || FD_ISSET(itr->skt, &w_set) ) )
+#if _WIN32
+        if( itr->connected == false && FD_ISSET(itr->skt, &r_set)  )
+#else
+        if( itr->connected == false && FD_ISSET(itr->skt, &w_set)  )
+#endif
         {
             // 實際上可以暫存addr來加快處理速度
             sockaddr_in addr;
+            
             addr.sin_family = AF_INET;
-            addr.sin_port = htons(item.port);
-            addr.sin_addr.s_addr = item.net_ip;
-            int res = connect( item.skt, (PSOCKADDR)&addr, sizeof(addr) );
+            addr.sin_port = htons(itr->port);
+            addr.sin_addr.s_addr = itr->net_ip;
+            
+            int res = connect( itr->skt, (sockaddr*)&addr, sizeof(addr) );
+            //printf("connect handle res = %d\n", res);
             if( res == 0 )
             {
-                printf("connected ! res = %d\n", res );
-                item.connected = true;
+                printf("connected! res = %d\n", res );
+                itr->connected = true;
             }
             else if( res == SOCKET_ERROR )
             {
-                int error = 0;
+                int error;
                 socklen_t len = sizeof(error);
-                int retval = getsockopt( item.skt, SOL_SOCKET, SO_ERROR, (char*)&error, &len );
-                printf("error = %d. retval = %d\n", error, retval );
+                getsockopt( itr->skt, SOL_SOCKET, SO_ERROR, (char*)&error, &len );
+                //printf("error = %d\n", error );             
+                
 #ifdef _WIN32
-                if( error == WSAEISCONN )
+                if( error == WSAECONNREFUSED )
 #else
-                if( error == EISCONN )
+                if( error == ECONNREFUSED )
 #endif
                 {
-                    item.connected = true;
-                    printf("connected. skt = %d\n", item.skt );
+                    itr->task_count = 0;
+                    printf("connect fail. CONNREFUSED\n" ); 
+                }                
+#ifdef _WIN32
+                else if( error == WSAEISCONN )
+#else
+                else if( error == EISCONN )
+#endif
+                {
+                    itr->connected = true;
+                    printf("connected. skt = %d\n", itr->skt );
                 }
+#ifdef _WIN32
+                if( error == WSAEINPROGRESS )
+#else
+                if( error == EINPROGRESS )
+#endif
+                {
+                    printf("in progress...\n");
+                }
+
             }
         }
     }
@@ -674,8 +719,11 @@ int TcpNb::work()
         max_skt = get_max_skt();
         
         res = select( max_skt+1, &r_set, &w_set, NULL, &timeout );
-        if( res == 0 )                
-            printf("select timeout.\n");                
+        //printf("select res = %d\n", res);
+        if( res == 0 )
+        {
+            //printf("select timeout.\n");                
+        }
         else if( res < 0 )
         {
             int err = get_error_code();
@@ -745,6 +793,16 @@ int TcpNb::setup_server_skt()
         printf("create listen socket fail.\n");
         return -1;
     }
+    
+
+#ifdef UNIX
+    // ubuntu環境,如果沒設置這個選項,強制中斷程式後,會造成無法連線,
+    // 需要close listen socket後重新bind, listen.
+    int optval = 1;
+    setsockopt(listen_skt, SOL_SOCKET, SO_REUSEADDR, &optval, sizeof optval);
+#endif
+    
+  
     set_blocking( listen_skt, false );
     
     //
