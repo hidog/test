@@ -18,7 +18,7 @@ typedef int SOCKET;
 #endif
 
 
-#define LONG_DATA_SIZE 65536
+#define LONG_DATA_SIZE 4096
 
 
 using namespace std::chrono;
@@ -117,6 +117,7 @@ struct RecvData
 struct ClientSocket
 {
     unsigned long net_ip;
+    int port;
     SOCKET skt;
     bool connected;
     int task_count;    
@@ -133,17 +134,29 @@ struct ClientSocket
 
 
 
+struct Task
+{
+    std::string ip;
+    int port;
+    PacketType type;
+    bool finished;
+    time_point<system_clock,milliseconds> timestamp;
+};
+
+
+
+
 class TcpNb
 {
 public:
-    TcpNb( std::string _pc_name );
+    TcpNb( std::string _pc_name, int _port );
     ~TcpNb();
     
     int init();
     int work();
     
     int setup_server_skt();
-    int set_non_blocking( SOCKET skt, bool enable );
+    int set_blocking( SOCKET skt, bool enable );
     void add_fd_set();
     SOCKET get_max_skt();
     int get_error_code();
@@ -152,9 +165,10 @@ public:
     void send_handle();
     
     void handle_disconnect( ClientSocket& client );
-    void handle_error( ClientSocket& client );
+    void handle_error( ClientSocket& client );   
 
-    int find_client( unsigned long net_ip );
+    bool is_exist_client( std::string ip, int port );
+    int find_client( unsigned long net_ip, int port );
     void connect_to( const char* const ip, int port );
 
     void prepare_send_data( ClientSocket &client );
@@ -166,19 +180,25 @@ public:
     void recv_head( ClientSocket &client );
     void recv_body( ClientSocket &client );
 
-    void task_finish_handle( ClientSocket &client );
+    void task_finish_handle();
+    void handle_connect_timeout();
+
+    void get_new_task();
 
 private:
     
-    const int port = 1234;
+    int port;
     SOCKET listen_skt = INVALID_SOCKET;
     std::vector<std::string> ip_list;
+    std::vector<int> port_list;
     std::vector<ClientSocket> client_list;
     
     fd_set w_set, r_set;
     SOCKET max_skt;
 
     std::string pc_name;
+    Task task;
+
 };
 
 

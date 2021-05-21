@@ -24,10 +24,10 @@ typedef int socklen_t;
 
 
 
-TcpNb::TcpNb( std::string _pc_name ) 
-    : pc_name(_pc_name)
+TcpNb::TcpNb( std::string _pc_name, int _port ) 
+    : pc_name(_pc_name), port(_port)
 {
-    ip_list = { 
+    /*ip_list = { 
                 "192.168.1.106",  // imac
                 "192.168.3.240",  // room
                 "192.168.3.191",  // 2F
@@ -38,7 +38,27 @@ TcpNb::TcpNb( std::string _pc_name )
                 "192.168.1.102",  // slave
                 "192.168.1.101"   // master
               };
-    
+
+    port_list = { 
+                    1234,  // imac
+                    1235,  // room
+                    1236,  // 2F
+                    1237,  // ubuntu red
+                    1238,  // ubuntu
+                    1239,  // x250
+                    1240,  // mbpr
+                    1241,  // slave
+                    1242   // master
+                };*/
+
+    ip_list = { "127.0.0.1" };
+    port_list = { 1234 };
+
+    task.finished = false;
+    task.timestamp = time_point_cast<milliseconds>(system_clock::now());
+    task.ip = ip_list[0];
+    task.port = port_list[0];
+    task.type = PacketType::SHORT;
 }
 
 
@@ -125,6 +145,9 @@ void TcpNb::accept_handle()
 
     ClientSocket item;
 
+    item.port = ntohs(addr.sin_port);
+    item.net_ip = addr.sin_addr.s_addr;
+
     item.skt = skt;
     item.connected = true;
     item.task_count = rand() % 10 + 10;
@@ -156,14 +179,22 @@ void TcpNb::recv_head( ClientSocket &client )
     int remaind = HEAD_SIZE - shift;
 
     int ret = recv( client.skt, ptr, remaind, 0 );
-    printf( "recv head ret = %d\n", ret );
-
-    client.recv_data.recv_index += ret;
-    if( client.recv_data.recv_index == HEAD_SIZE )
+    if( ret < 0 )
+        handle_error(client);
+    else if( ret == 0 )
+        handle_disconnect(client);
+    else
     {
-        printf("recv head finish. name = %s, size = %d\n", client.recv_data.head.name, client.recv_data.head.body_size );
-        client.recv_state = RecvState::BODY;   
-        client.recv_data.recv_index = 0;
+        // recv success.
+        printf( "recv head ret = %d\n", ret );
+
+        client.recv_data.recv_index += ret;
+        if( client.recv_data.recv_index == HEAD_SIZE )
+        {
+            printf("recv head finish. name = %s, size = %d\n", client.recv_data.head.name, client.recv_data.head.body_size );
+            client.recv_state = RecvState::BODY;   
+            client.recv_data.recv_index = 0;
+        }
     }
 }
 
@@ -182,18 +213,26 @@ void TcpNb::recv_body( ClientSocket &client )
     int remaind = body_type == PacketType::SHORT ? 
                   SHORT_BODY_SIZE - shift :
                   LONG_BODY_SIZE - shift;
-
-    int finish_size = client.recv_data.head.body_size;
                   
     //
     int ret = recv( client.skt, ptr, remaind, 0 );
-    printf("recv body. ret = %d\n", ret );
-    client.recv_data.recv_index += ret;
-
-    if( client.recv_data.recv_index == finish_size )
+    if( ret < 0 )
+        handle_error(client);
+    else if( ret == 0 )
+        handle_disconnect(client);
+    else
     {
-        printf("recv body finish. count = %d, msg = %s\n", client.recv_data.body.long_data.count, client.recv_data.body.long_data.data );
-        client.recv_state = RecvState::STOP;
+        // recv success.
+        printf("recv body. ret = %d\n", ret );
+        client.recv_data.recv_index += ret;
+        remaind -= ret;
+
+        if( remaind == 0 )
+        {
+            printf("recv body finish. count = %d, msg = %s\n", client.recv_data.body.long_data.count, client.recv_data.body.long_data.data );
+            client.task_count--;
+            client.recv_state = RecvState::UNKNOWN;
+        }
     }
 }
 
@@ -233,18 +272,12 @@ void TcpNb::handle_disconnect( ClientSocket& client )
 
     for( auto itr = client_list.begin(); itr != client_list.end(); ++itr )
     {
-        if( itr->net_ip == client.net_ip )
+        if( itr->net_ip == client.net_ip && itr->port == client.port )
         {
-            client_list.erase(itr);
+            itr->task_count = 0;
             break;
         }
     }
-
-#ifdef _WIN32
-    closesocket(client.skt);
-#else
-    close(client.skt);
-#endif
 }
 
 
@@ -254,11 +287,7 @@ void TcpNb::handle_disconnect( ClientSocket& client )
 void TcpNb::handle_error( ClientSocket& client )
 {
     printf("client error. skt = %d, net_ip = %lu\n", client.skt, client.net_ip );
-#ifdef _WIN32
-    closesocket(client.skt);
-#else
-    close(client.skt);
-#endif
+    client.task_count = 0;
 }
 
 
@@ -266,12 +295,12 @@ void TcpNb::handle_error( ClientSocket& client )
 
 
 
-int TcpNb::find_client( unsigned long net_ip )
+int TcpNb::find_client( unsigned long net_ip, int port )
 {
     size_t index;
     for( index = 0; index < client_list.size(); index++ )
     {
-        if( client_list[index].net_ip == net_ip )
+        if( client_list[index].net_ip == net_ip && client_list[index].port == port )
             break;
     }
 
@@ -290,7 +319,7 @@ int TcpNb::find_client( unsigned long net_ip )
 
 void TcpNb::prepare_send_data( ClientSocket &client )
 {
-    client.send_data.head.body_type = rand() % 2 == 1 ? PacketType::LONG : PacketType::SHORT;    
+    client.send_data.head.body_type = task.type;    
     PacketType body_type = client.send_data.head.body_type;
 
     // prepare send header.
@@ -356,24 +385,33 @@ void TcpNb::send_head( ClientSocket &client )
 
 
 
-void TcpNb::task_finish_handle( ClientSocket &client )
+void TcpNb::task_finish_handle()
 {
-    printf("task finish. close socket %d, net ip = %lu\n", client.skt, client.net_ip );
-    
-    for( auto itr = client_list.begin(); itr != client_list.end(); ++itr )
-    {
-        if( itr->net_ip == client.net_ip )
-        {
-            client_list.erase(itr);
-            break;
-        }
-    }
+    /*
+        實際上需要做標記 task finish, 並在work最後面一起把資料清掉.
+        這邊就不做這件事情了, 缺點是有機會count為負數.
+    */
 
+    std::vector<ClientSocket>::iterator itr = client_list.begin();
+    while(true)
+    {
+        // 一定要先檢查end, 不然會crash.
+        if( itr == client_list.end() )
+            break;
+        else if( itr->task_count <= 0 )
+        {
+            printf("task finish. close socket %d, net ip = %lu, port = %d\n", itr->skt, itr->net_ip, itr->port );
 #ifdef _WIN32
-    closesocket(client.skt);
+            closesocket(itr->skt);
 #else
-    close(client.skt);
+            close(itr->skt);
 #endif
+            auto old_itr = itr;
+            itr = client_list.erase(old_itr);
+        }
+        else
+            ++itr;
+    }
 }
 
 
@@ -384,7 +422,10 @@ void TcpNb::send_body( ClientSocket &client )
 {
     int shift = client.send_data.send_index;
     char* ptr = (char*)&client.send_data.body.long_data;
-    int remaind = LONG_BODY_SIZE - shift;
+
+    int remaind = client.send_data.head.body_type == PacketType::LONG ? 
+                  LONG_BODY_SIZE - shift :
+                  SHORT_BODY_SIZE - shift;
 
     int ret = send( client.skt, ptr, remaind, 0 );
     if( ret < 0 )
@@ -395,15 +436,14 @@ void TcpNb::send_body( ClientSocket &client )
     {
         printf("send body. ret = %d\n", ret );
         client.send_data.send_index += ret;
+        remaind -= ret;
 
-        if( client.send_data.send_index == LONG_BODY_SIZE )
+        if( remaind == 0 )
         {
             printf("send body finish.\n" );
-            client.task_count--;
-            if( client.task_count == 0 )
-                task_finish_handle( client );
-            else        
-                client.send_state = SendState::UNKNOWN;                
+            client.task_count--;      
+            client.send_state = SendState::UNKNOWN;                
+            task.finished = true;
         }   
     }
 }
@@ -421,11 +461,13 @@ void TcpNb::send_handle()
         1. 發送對象
         2. 發送內容. (目前分長訊息跟短訊息)
     */
-    
-    unsigned long net_ip = inet_addr("127.0.0.1");
-    int index = find_client( net_ip );
+    if( task.finished == true )
+        return;
+
+    unsigned long net_ip = inet_addr(task.ip.c_str());
+    int index = find_client( net_ip, task.port );
     if( index == -1 )
-        printf("not found. error. ip = %s\n", "127.0.0.1" );
+        printf("send not found. error. ip = %s\n", task.ip.c_str() );
     else
     {
         ClientSocket &client = client_list[index];
@@ -465,7 +507,7 @@ void TcpNb::connect_to( const char* const ip, int port )
 
     //
     SOCKET skt = socket( PF_INET, SOCK_STREAM, IPPROTO_TCP );
-    set_non_blocking( skt, true );
+    set_blocking( skt, false );
     if( skt == INVALID_SOCKET )
     {
         int err = get_error_code();
@@ -487,6 +529,7 @@ void TcpNb::connect_to( const char* const ip, int port )
     client.connected = false;
     client.connect_time = time_point_cast<milliseconds>(system_clock::now());
     client.net_ip = inet_addr(ip);
+    client.port = port;
     client.task_count = rand() % 10 + 10;
 
     client.send_state = SendState::UNKNOWN;
@@ -498,7 +541,67 @@ void TcpNb::connect_to( const char* const ip, int port )
 
 
 
+void TcpNb::handle_connect_timeout()
+{
+    for( auto itr = client_list.begin(); itr != client_list.end(); ++itr )
+    {
+        if( itr->connected == false )
+        {
+            auto now = time_point_cast<milliseconds>(system_clock::now());
+            auto diff = duration_cast<milliseconds>( now - itr->connect_time ).count();
+            if( diff > 10000 )
+            {
+                // timeout = 10s            
+                itr->task_count = 0; // 用mark的方式移除 
+                printf("skt %d, net ip %X, connect timeout.\n", itr->skt, itr->net_ip );
+            }
+        }
+    }
+}
 
+
+
+
+
+void TcpNb::get_new_task()
+{
+    // 每秒一個task
+    time_point<system_clock,milliseconds> now = time_point_cast<milliseconds>(system_clock::now());
+    long long diff = duration_cast<milliseconds>( now - task.timestamp ).count();
+    if( diff <= 1000 )
+        return;    
+
+    int index;
+
+    task.finished = false;
+    index = rand() % ip_list.size();
+    task.ip = ip_list[index];
+    task.port = port_list[index];
+    task.type = rand()%2 == 1 ? PacketType::LONG : PacketType::SHORT;
+    task.timestamp = time_point_cast<milliseconds>(system_clock::now());
+
+    printf("create task. ip = %s, port = %d\n", task.ip.c_str(), task.port );
+}
+
+
+
+
+
+
+bool TcpNb::is_exist_client( std::string ip, int port )
+{
+    bool res = false;
+    unsigned long net_ip = inet_addr(ip.c_str());
+    for( auto &item : client_list )
+    {
+        if( item.net_ip == net_ip && item.port == port )
+        {
+            res = true;
+            break;
+        }
+    }
+    return res;
+}
 
 
 
@@ -508,19 +611,17 @@ int TcpNb::work()
 
     init();
     setup_server_skt();
-    
-    bool flag = false;
-
+   
     //
     int res;
     timeval timeout = { 1, 500000 };
     while(true)
     {
-        if( flag == false )
-        {
-            connect_to("127.0.0.1", port );
-            flag = true;
-        }
+        if( task.finished == true )
+            get_new_task();
+
+        if( is_exist_client(task.ip, task.port) == false )
+            connect_to( task.ip.c_str(), task.port );
 
         add_fd_set();
         max_skt = get_max_skt();
@@ -539,12 +640,8 @@ int TcpNb::work()
             recv_handle();
             send_handle();
         }
-        
-        // select
-        // if recv, handle
-        // if task, handle
-        
-        
+        handle_connect_timeout();        
+        task_finish_handle();
     }
     
     return 1;
@@ -553,14 +650,14 @@ int TcpNb::work()
 
 
 
-int TcpNb::set_non_blocking( SOCKET skt, bool enable )
+int TcpNb::set_blocking( SOCKET skt, bool enable )
 {
     int res;
 
 #if defined(MACOS) || defined(UNIX)    
     int skt_flags = fcntl( skt, F_GETFL, 0 );
     
-    if( enable == true )
+    if( enable == false )
         skt_flags |= O_NONBLOCK;
     else
         skt_flags &= (~O_NONBLOCK);
@@ -600,7 +697,7 @@ int TcpNb::setup_server_skt()
         printf("create listen socket fail.\n");
         return -1;
     }
-    set_non_blocking( listen_skt, true );
+    set_blocking( listen_skt, false );
     
     //
     sockaddr_in addr;
