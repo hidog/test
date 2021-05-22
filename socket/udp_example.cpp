@@ -1,4 +1,4 @@
-#include "udp_example.h"
+﻿#include "udp_example.h"
 #include <stdio.h>
 #include <string>
 #include <string.h>
@@ -36,6 +36,10 @@ typedef int socklen_t;
 typedef int ssize_t; // 查了一下windows沒找到ssize_t這個定義,在研究一下. 看討論目前非標準定義
 #endif
 
+
+#ifndef NULL
+#define NULL 0
+#endif
 
 
 struct OrderData

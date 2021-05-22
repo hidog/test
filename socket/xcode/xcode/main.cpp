@@ -3,27 +3,28 @@
 #include "../../tool.h"
 #include "../../udp_example.h"
 #include "../../tcp_example.h"
+#include "../../tcp_nb.h"
 
 extern "C" {
 #include "../../tool_2.h"
 #include "../../udp_example_2.h"
+#include "../../tcp_example_2.h"
+#include "../../tcp_nonblock.h"
 }
 
 
-int main(int argc, const char * argv[])
+
+
+
+void udp_funcs()
 {
-    udp_error_test();
-    
-    //transform_test();
-    //test_getaddrinfo();
+    //udp_error_test();
     
     //udp_hello_server(1234);
     //udp_hello_client( std::string("127.0.0.1"), 1234 );
 
     //udp_package_order_server();
     //udp_package_order_client();
-    
-    //sockopt_test();
     
     //udp_RTT_server();
     //udp_RTT_client();
@@ -38,9 +39,47 @@ int main(int argc, const char * argv[])
     
     //udp_broadcast_recver();
     //udp_broadcast_sender();
+}
+
+
+
+void tool_funcs()
+{
+    //transform_test();
+    //test_getaddrinfo();
     
+    //sockopt_test();
+}
+
+
+
+
+void tcp_funcs()
+{
     //tcp_hello_server(8888);
     //tcp_hello_client( "192.168.1.101", 8888 );
+    
+    //tcp_hello_server_2(1234);
+    //tcp_hello_client_2( "192.168.1.108", 1234 );
+    
+    //tcp_client_timeout_test();
+    
+    //tcp_size_server(2912);
+    
+    //tcp_server_non_blocking(1234);
+    //tcp_client_non_blocking( "192.168.1.102", 1234 );
+    //tcp_client_blocking( "192.168.1.102", 1234 );
+    
+    TcpNb tcp_nb("imac", 1234);
+    tcp_nb.work();
+}
+
+
+
+
+int main(int argc, const char * argv[])
+{
+    tcp_funcs();
     
     return 0;
 }

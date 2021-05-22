@@ -1,4 +1,4 @@
-// ref : https://www.cnblogs.com/churi/archive/2013/02/27/2935427.html
+﻿// ref : https://www.cnblogs.com/churi/archive/2013/02/27/2935427.html
 
 
 #ifdef _WIN32
@@ -29,6 +29,118 @@ typedef sockaddr* LPSOCKADDR;
 typedef int socklen_t;
 typedef int ssize_t;
 #endif
+
+
+
+
+
+
+
+void tcp_size_server( int port )
+{
+#ifdef _WIN32
+    WORD ws_version = MAKEWORD(2,2);
+    WSADATA wsa_data;
+    if( WSAStartup(ws_version, &wsa_data) != 0 )
+    {
+        printf("init error\n");
+        return;
+    }
+#endif
+
+    SOCKET listen_skt = socket( PF_INET, SOCK_STREAM, IPPROTO_TCP );
+    int ret;
+
+    sockaddr_in local_addr;
+    socklen_t local_addr_len = sizeof(local_addr);
+    memset( &local_addr, 0, local_addr_len );
+
+    local_addr.sin_port = htons(port);
+    local_addr.sin_family = AF_INET;
+    local_addr.sin_addr.s_addr = INADDR_ANY;
+
+    ret = bind( listen_skt, (sockaddr*)&local_addr, local_addr_len );
+    if( ret == SOCKET_ERROR )
+    {
+        printf("bind fail. ret = %d\n", ret );
+        return;
+    }
+
+    ret = listen( listen_skt, 1 );
+    if( ret == SOCKET_ERROR )
+    {
+        printf("listen fail. ret = %d\n", ret );
+        return;
+    }
+
+    printf("listen success.\n");
+#ifdef MACOS
+    fflush(stdout);
+#endif
+
+    //
+    sockaddr_in remote_addr;
+    socklen_t remote_addr_len = sizeof(remote_addr);
+    memset( &remote_addr, 0, remote_addr_len );
+
+    SOCKET skt = accept( listen_skt, (sockaddr*)&remote_addr, &remote_addr_len );
+    if( skt == INVALID_SOCKET )
+    {
+        printf("accept fail.\n");
+        return;
+    }
+
+    printf("accept. remote = %s, %d\n", inet_ntoa(remote_addr.sin_addr), ntohs(remote_addr.sin_port) );
+
+    /*
+        實驗tcp socket, 傳輸的時候資料不會一次全部傳完
+    */
+    const int buffer_size = 300;
+    char *buf = new char[buffer_size];
+    int count = 0;
+    while(true)
+    {
+        for( int i = 0; i < buffer_size; i++ )
+            buf[i] = (i%26) + 'a';
+
+        ret = (int)send( skt, buf, buffer_size, 0 );
+        if( ret != buffer_size )
+        {
+            printf("\nsend ret = %d, not %d. break.\n", ret, buffer_size );
+            break;
+        }
+        printf(".");    
+#ifdef MACOS
+        fflush(stdout);
+#endif
+        
+        if( count % 5 == 0 )
+#ifdef _WIN32
+            Sleep(10);
+#else
+            usleep(10000);
+#endif
+        count++;
+    }
+
+    delete [] buf;
+    buf = nullptr;
+
+#ifdef _WIN32
+    closesocket(skt);
+    closesocket(listen_skt);
+    WSACleanup();
+#else
+    close(skt);
+    close(listen_skt);
+#endif
+}
+
+
+
+
+
+
 
 
 
@@ -179,23 +291,87 @@ void tcp_hello_server( int port )
 #endif
         return;
     }   
-
-#ifdef _WIN32
-    closesocket(client_skt);
-#else
-    close(client_skt);
-#endif
     
     // 
 #ifdef _WIN32
+    closesocket(client_skt);
     closesocket(listen_skt);
     WSACleanup();
 #else
+    close(client_skt);
     close(listen_skt);
 #endif
 
     return;
 }
+
+
+
+
+
+void tcp_size_client( const char* const ip, int port )
+{
+#ifdef _WIN32
+    WORD ws_version = MAKEWORD(2,2);
+    WSADATA wsa_data;
+    if( WSAStartup( ws_version, &wsa_data) != 0 )
+    {
+        printf("init error\n");
+        return;
+    }
+#endif
+
+    SOCKET skt = socket( PF_INET, SOCK_STREAM, IPPROTO_TCP );
+    if( skt == INVALID_SOCKET )
+    {
+        printf("get skt fail.\n");
+        return;
+    }
+
+    //
+    sockaddr_in remote_addr;
+    socklen_t remote_addr_len = sizeof(remote_addr);
+
+    memset( &remote_addr, 0, remote_addr_len );
+    remote_addr.sin_family = AF_INET;
+    remote_addr.sin_port = htons(port);
+    remote_addr.sin_addr.s_addr = inet_addr(ip);
+
+    int ret;
+    ret = connect( skt, (sockaddr*)&remote_addr, remote_addr_len );
+    if( ret == SOCKET_ERROR )
+    {
+        printf("connect fail. ret = %d\n", ret );
+        return;
+    }
+
+    const int buffer_size = 300;
+    char *buf = new char[buffer_size];
+    int count = 0;
+
+    while(true)
+    {
+        memset( buf, 0, buffer_size );
+
+        ret = (int)recv( skt, buf, buffer_size, 0 );
+        if( ret != buffer_size )
+        {
+            printf( "\nret = %d, size = %d, break\n", ret, buffer_size );
+            break;
+        }
+        
+        printf( "%c", buf[count] );
+        count = (count+1) % buffer_size;
+    }
+
+#ifdef _WIN32
+    closesocket(skt);
+    WSACleanup();
+#else
+    close(skt);
+#endif
+}
+
 
 
 
@@ -312,94 +488,107 @@ void tcp_hello_client( const char *ip, int  port )
 
 
 
-#if 0
-
-int tcp_server_non_blocking()
+void tcp_client_timeout_test()
 {
-    WORD sockVersion = MAKEWORD(2,2);
-    WSADATA wsaData;
-    if(WSAStartup(sockVersion, &wsaData)!=0)
+#ifdef _WIN32
+    WORD sock_version = MAKEWORD(2,2);
+    WSADATA wsa_data; 
+    if( 0 != WSAStartup(sock_version, &wsa_data) )
     {
-        printf("error");
-        return 0;
+        printf("init error\n");
+        return;
+    }
+#endif
+
+    SOCKET skt = socket( PF_INET, SOCK_STREAM, IPPROTO_TCP );
+    if( skt == INVALID_SOCKET )
+    {
+        printf( "invalid socket! skt = %d\n", (int)skt );
+        return;
     }
 
-    SOCKET slisten = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
-    if(slisten == INVALID_SOCKET)
+    sockaddr_in remote_addr;
+    remote_addr.sin_family = AF_INET;
+    remote_addr.sin_port = htons(3425);
+    remote_addr.sin_addr.s_addr = inet_addr("192.168.1.142");
+
+    // 有網頁說無法設置connect timeout,但實際測試有成功
+    // note: windows底下測試, connect timeout沒效果.
+#if defined(UNIX) || defined(MACOS)
+    timeval timeout;
+    socklen_t timeout_len = sizeof(timeout);
+#else
+    int timeout;
+    int timeout_len = sizeof(timeout);
+#endif
+    getsockopt( skt, SOL_SOCKET, SO_SNDTIMEO, (char*)&timeout, &timeout_len );
+
+#ifdef _WIN32
+    printf("timeout = %d\n", timeout );
+#elif defined(UNIX)
+    printf("timeout = %ld, %ld\n", timeout.tv_sec, timeout.tv_usec );
+#elif defined(MACOS)
+    printf("timeout = %ld, %d\n", timeout.tv_sec, timeout.tv_usec );
+#endif
+
+#ifdef _WIN32
+    timeout = 1;
+#else
+    timeout.tv_sec = 1;
+    timeout.tv_usec = 0;
+#endif
+    // mac環境測試結果, timeout沒成功
+    setsockopt( skt, SOL_SOCKET, SO_SNDTIMEO, (char*)&timeout, sizeof(timeout) );
+
+    //
+    printf("start connect...\n");
+    int res = connect( skt, (sockaddr *)&remote_addr, sizeof(remote_addr) );
+    if( res == SOCKET_ERROR )
     {
-        printf("socket error !");
-        return 0;
+#ifdef _WIN32
+        int err = WSAGetLastError();
+#else
+        int err = errno;
+#endif
+        printf("connect error! res = %d, err = %d\n", res, err );
+        return;
     }
+    printf("connected.\n");
 
-    sockaddr_in sin;
-    sin.sin_family = AF_INET;
-    sin.sin_port = htons(8888);
-    sin.sin_addr.S_un.S_addr = INADDR_ANY; 
-    if(bind(slisten, (LPSOCKADDR)&sin, sizeof(sin)) == SOCKET_ERROR)    
-        printf("bind error !");
+    // 本來懷疑沒設回來會造成timeout過短,但實測並沒有
+    // 就算直接close skt也沒有觸發timeout,需要研究原因
+    // 試了很多方式, send都成功, 沒有觸發timeout.
+    // 實務上blocking的寫法不太需要設timeout,就先不追究了.
+    // timeout.tv_sec = 0;
+    // timeout.tv_usec = 0;
+    // setsockopt( skt, SOL_SOCKET, SO_SNDTIMEO, &timeout, sizeof(timeout) );
 
-    if(listen(slisten, SOMAXCONN) == SOCKET_ERROR)
+    //
+    const char *send_buf = "hello, server. this is client.";
+    ssize_t ret = send( skt, send_buf, (int)strlen(send_buf), 0 );
+    if( ret > 0 )    
+        printf( "send. ret = %d\n", (int)ret );        
+    else if( ret == 0 )
+        printf("remote disconnect\n");
+    else
     {
-        printf("listen error !");
-        return 0;
+#ifdef _WIN32
+        int err = WSAGetLastError();
+#else
+        int err = errno;
+#endif
+        printf( "send fail. ret = %d, err = %d\n", (int)ret, err );
+        return;
     }
-
-    fd_set fdSocket;
-    FD_ZERO( &fdSocket );
-    FD_SET( slisten, &fdSocket );
-
-    fd_set fdRead, fdWrite;
-
-
-    while (true)
-    {
-        FD_ZERO( &fdRead );
-        fdRead = fdSocket;
-
-        FD_ZERO( &fdWrite );
-        fdWrite = fdSocket;
-
-        int nRet = select( 0, &fdRead, &fdWrite, nullptr, nullptr ); // can set timeout by parameter 5
-
-        if (nRet <= 0)
-            break;
-
-        for( int i = 0; i < (int)fdSocket.fd_count; ++i )
-        {
-            if ( FD_ISSET(fdSocket.fd_array[i], &fdRead) )
-            {
-                if ( fdSocket.fd_array[i] == slisten )
-                {
-                    sockaddr_in addrRemote;
-                    int nAddrLen = sizeof(addrRemote);
-                    SOCKET sNew = accept( slisten, (sockaddr*)&addrRemote, &nAddrLen);
-                    FD_SET( sNew, &fdSocket );
-                    printf("Clietn %s connected\n", inet_ntoa(addrRemote.sin_addr));
-                }
-                else
-                {
-                    char buffer[1024];
-                    memset(buffer, 0, 1024);
-                    int nRecev = recv(fdSocket.fd_array[i], buffer, 1024, 0);
-
-                    if (nRecev > 0)
-                    {
-                        printf("Received Client Msg:%s\n", buffer);
-                        send(fdSocket.fd_array[i], buffer , strlen(buffer), 0);
-                    }
-                    else
-                    {
-                        closesocket( fdSocket.fd_array[i] );
-                        FD_CLR(fdSocket.fd_array[i], &fdSocket);
-                    }
-                }
-            }
-        }
-    }
-
-    closesocket(slisten);
+    
+#ifdef _WIN32
+    closesocket(skt);
     WSACleanup();
-    return 0;
+#else
+    close(skt);
+#endif
+
+    return;
 }
 
 
@@ -407,14 +596,127 @@ int tcp_server_non_blocking()
 
 
 
-
-
-
-
-
-
-
-
-
-
+void tcp_server_timeout_test()
+{
+#ifdef _WIN32
+    WORD winsock_version = MAKEWORD(2,2);
+    WSADATA wsa_data;
+    if(WSAStartup(winsock_version, &wsa_data)!=0)
+    {
+        printf("init error\n");
+        return;
+    }
 #endif
+
+    SOCKET listen_skt = socket( PF_INET, SOCK_STREAM, IPPROTO_TCP );
+    if( listen_skt == INVALID_SOCKET )
+    {
+        printf( "socket error ! listen_skt = %d\n", (int)listen_skt );
+        return;
+    }
+
+    //
+    sockaddr_in local_addr;
+    local_addr.sin_family = AF_INET;
+    local_addr.sin_port = htons(3425);
+    local_addr.sin_addr.s_addr = INADDR_ANY;
+
+    // note: linux not support LPSOCKADDR, need defined it.
+    int res = bind( listen_skt, (LPSOCKADDR)&local_addr, sizeof(local_addr) );  // LPSOCKADDR 在window下可以取代 sockaddr*
+    if( res == SOCKET_ERROR)   
+    {
+#ifdef _WIN32
+        int err = WSAGetLastError();
+#else
+        int err = errno;
+#endif
+        printf( "bind error! res = %d, err = %d\n", res, err );
+        return;
+    }
+
+    res = listen( listen_skt, SOMAXCONN );   // listen 的第二個傳入變數代表的是最高連線數.   so max conn 代表預設最大連線數
+    if( res  == SOCKET_ERROR )
+    {
+#ifdef _WIN32
+        int err = WSAGetLastError();
+#else
+        int err = errno;
+#endif
+        printf( "listen error ! res = %d, err = %d\n", res, err );
+        return;
+    }
+
+    //
+    SOCKET client_skt;
+    sockaddr_in remote_addr;
+    socklen_t remote_addr_len = sizeof(remote_addr);
+    char recv_buf[255]; 
+
+    printf("listened. wait for accept...\n");
+
+    // ubuntu下設定timeout有作用
+    // 沒設定的話accept似乎沒有timeout.
+    // windows測試沒成功
+#ifdef _WIN32
+    int timeout = 1;
+#else
+    timeval timeout = { 1, 0 };
+#endif
+    setsockopt( listen_skt, SOL_SOCKET, SO_RCVTIMEO, (char*)&timeout, sizeof(timeout) );
+
+    //
+    client_skt = accept( listen_skt, (sockaddr*)&remote_addr, &remote_addr_len );
+    if( client_skt == INVALID_SOCKET )
+    {
+#ifdef _WIN32
+        int err = WSAGetLastError();
+#else
+        int err = errno;
+#endif
+        printf( "accept error ! client_skt = %d, err = %d\n", (int)client_skt, err );
+        return;
+    }   
+    printf("accept from : %s, port = %d\n", inet_ntoa(remote_addr.sin_addr), ntohs(remote_addr.sin_port) );
+#ifdef _WIN32
+    closesocket(client_skt);
+#else
+    close(client_skt);
+#endif
+
+    // recv
+    memset( recv_buf, 0, 255 );
+    ssize_t ret = recv( client_skt, recv_buf, 255, 0 );        
+    if( ret > 0 )
+    {
+        printf( "recv. ret = %d\n", (int)ret );
+        printf( "msg = %s\n", recv_buf );
+    }
+    else if( ret <= 0 )
+    {
+#ifdef _WIN32
+        int err_code = WSAGetLastError();  
+#else
+        int err_code = errno;
+#endif
+        printf("recv ret = %d, err = %d, end.\n", (int)ret, err_code );
+        return;
+    }
+
+    // 
+#ifdef _WIN32
+    closesocket(client_skt);
+    closesocket(listen_skt);
+    WSACleanup();
+#else
+    close(client_skt);
+    close(listen_skt);
+#endif
+
+    return;
+}
+
+
+
+
+
+

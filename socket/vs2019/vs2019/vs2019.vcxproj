@@ -93,6 +93,8 @@
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>ws2_32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <StackReserveSize>9999999</StackReserveSize>
+      <StackCommitSize>9999999</StackCommitSize>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -145,6 +147,8 @@
   <ItemGroup>
     <ClCompile Include="..\..\tcp_example.cpp" />
     <ClCompile Include="..\..\tcp_example_2.c" />
+    <ClCompile Include="..\..\tcp_nb.cpp" />
+    <ClCompile Include="..\..\tcp_nonblock.c" />
     <ClCompile Include="..\..\tool.cpp" />
     <ClCompile Include="..\..\tool_2.c">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
@@ -158,6 +162,8 @@
   <ItemGroup>
     <ClInclude Include="..\..\tcp_example.h" />
     <ClInclude Include="..\..\tcp_example_2.h" />
+    <ClInclude Include="..\..\tcp_nb.h" />
+    <ClInclude Include="..\..\tcp_nonblock.h" />
     <ClInclude Include="..\..\tool.h" />
     <ClInclude Include="..\..\tool_2.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
