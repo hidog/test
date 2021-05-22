@@ -30,7 +30,7 @@ TcpNb::TcpNb( std::string _pc_name, int _port )
 {
     ip_list = { 
                 "36.231.106.136",   // imac
-                "192.168.3.240",    // room
+                "36.231.106.136",   // room
                 "36.231.97.222",    // ubuntu red
                 "111.248.196.108",  // slave
                 "122.116.84.59"     // master
