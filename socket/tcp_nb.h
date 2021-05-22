@@ -23,6 +23,8 @@ typedef int SOCKET;
 
 #ifdef MACOS
 typedef in_addr_t NetAddr;
+#elif defined(UNIX)
+typedef uint32_t NetAddr;
 #else
 #error need maintain
 #endif

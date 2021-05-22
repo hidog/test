@@ -50,7 +50,7 @@ TcpNb::TcpNb( std::string _pc_name, int _port )
                     1234   // master
                 };*/
 
-    ip_list = { "36.231.106.136" };
+    ip_list = { "127.0.0.1" };
     port_list = { 1234 };
 
     task.finished = false;
@@ -282,7 +282,7 @@ void TcpNb::recv_handle()
 
 void TcpNb::handle_disconnect( ClientSocket& client )
 {
-#ifdef MACOS
+#if defined(MACOS) || defined(UNIX)
     printf( "skt %d disconnect. net_ip = %u\n", client.skt, client.net_ip );
 #else
 #error need maintain.
@@ -304,7 +304,7 @@ void TcpNb::handle_disconnect( ClientSocket& client )
 
 void TcpNb::handle_error( ClientSocket& client )
 {
-#ifdef MACOS
+#if defined(MACOS) || defined(UNIX)
     printf("client error. skt = %d, net_ip = %u\n", client.skt, client.net_ip );
 #else
 #error need maintain.
@@ -422,7 +422,7 @@ void TcpNb::task_finish_handle()
             break;
         else if( itr->task_count <= 0 )
         {
-#ifdef MACOS
+#if defined(MACOS) || defined(UNIX)
             printf("task finish. close socket %d, net ip = %u, port = %d\n", itr->skt, itr->net_ip, itr->port );
 #else
 #error need maintain.
@@ -580,7 +580,7 @@ void TcpNb::handle_connect_timeout()
             {
                 // timeout = 10s            
                 itr->task_count = 0; // 用mark的方式移除 
-#ifdef MACOS
+#if defined(MACOS) || defined(UNIX)
                 printf("skt %d, net ip %u, connect timeout.\n", itr->skt, itr->net_ip );
 #else
 #error need maintain.
