@@ -29,7 +29,7 @@ TcpNb::TcpNb( std::string _pc_name, int _port )
     : pc_name(_pc_name), port(_port)
 {
     /*ip_list = { 
-                "192.168.1.106",  // imac
+                "36.231.106.136", // imac
                 "192.168.3.240",  // room
                 "192.168.3.191",  // 2F
                 "36.231.97.222",  // ubuntu red
@@ -50,8 +50,8 @@ TcpNb::TcpNb( std::string _pc_name, int _port )
                     1234   // master
                 };*/
 
-    ip_list = { "127.0.0.1" };
-    port_list = { 1235 };
+    ip_list = { "36.231.106.136" };
+    port_list = { 1234 };
 
     task.finished = false;
     task.timestamp = time_point_cast<milliseconds>(system_clock::now());
