@@ -11,11 +11,22 @@
 #include <Winsock2.h>
 #endif
 
+#ifdef MACOS
+#include <sys/types.h>
+#endif
+
 
 #if defined(MACOS) || defined(UNIX)
 typedef int SOCKET;
 #define INVALID_SOCKET -1
 #endif
+
+#ifdef MACOS
+typedef in_addr_t NetAddr;
+#else
+#error need maintain
+#endif
+
 
 
 #define LONG_DATA_SIZE 4096
@@ -23,7 +34,9 @@ typedef int SOCKET;
 
 using namespace std::chrono;
 
-
+/*
+    筆記: ubuntu環境下,socket有error的時候會被select標記為可讀寫,但send/recv後會報錯.
+*/
 
 enum class PacketType
 {
@@ -116,7 +129,7 @@ struct RecvData
 
 struct ClientSocket
 {
-    unsigned long net_ip;
+    NetAddr net_ip;
     int port;
     SOCKET skt;
     bool connected;

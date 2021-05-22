@@ -3,6 +3,7 @@
 #include "../../tool.h"
 #include "../../udp_example.h"
 #include "../../tcp_example.h"
+#include "../../tcp_nb.h"
 
 extern "C" {
 #include "../../tool_2.h"
@@ -67,7 +68,10 @@ void tcp_funcs()
     
     //tcp_server_non_blocking(1234);
     //tcp_client_non_blocking( "192.168.1.102", 1234 );
-    tcp_client_blocking( "192.168.1.102", 1234 );
+    //tcp_client_blocking( "192.168.1.102", 1234 );
+    
+    TcpNb tcp_nb("imac", 1234);
+    tcp_nb.work();
 }
 
 

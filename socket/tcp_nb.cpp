@@ -1,4 +1,4 @@
-﻿#include "tcp_nb.h"
+#include "tcp_nb.h"
 
 #if defined(MACOS) || defined(UNIX)
 #include <sys/socket.h>
@@ -50,8 +50,8 @@ TcpNb::TcpNb( std::string _pc_name, int _port )
                     1234   // master
                 };*/
 
-    ip_list = { "192.168.1.106" };
-    port_list = { 1234 };
+    ip_list = { "127.0.0.1" };
+    port_list = { 1235 };
 
     task.finished = false;
     task.timestamp = time_point_cast<milliseconds>(system_clock::now());
@@ -193,7 +193,7 @@ void TcpNb::recv_head( ClientSocket &client )
     char *ptr = (char*)&(client.recv_data.head) + shift;
     int remaind = HEAD_SIZE - shift;
 
-    int ret = recv( client.skt, ptr, remaind, 0 );
+    int ret = (int)recv( client.skt, ptr, remaind, 0 );
     if( ret < 0 )
         handle_error(client);
     else if( ret == 0 )
@@ -230,7 +230,7 @@ void TcpNb::recv_body( ClientSocket &client )
                   LONG_BODY_SIZE - shift;
                   
     //
-    int ret = recv( client.skt, ptr, remaind, 0 );
+    int ret = (int)recv( client.skt, ptr, remaind, 0 );
     if( ret < 0 )
         handle_error(client);
     else if( ret == 0 )
@@ -282,7 +282,11 @@ void TcpNb::recv_handle()
 
 void TcpNb::handle_disconnect( ClientSocket& client )
 {
-    printf( "skt %d disconnect. net_ip = %lu\n", client.skt, client.net_ip );
+#ifdef MACOS
+    printf( "skt %d disconnect. net_ip = %u\n", client.skt, client.net_ip );
+#else
+#error need maintain.
+#endif
 
     for( auto itr = client_list.begin(); itr != client_list.end(); ++itr )
     {
@@ -300,7 +304,11 @@ void TcpNb::handle_disconnect( ClientSocket& client )
 
 void TcpNb::handle_error( ClientSocket& client )
 {
-    printf("client error. skt = %d, net_ip = %lu\n", client.skt, client.net_ip );
+#ifdef MACOS
+    printf("client error. skt = %d, net_ip = %u\n", client.skt, client.net_ip );
+#else
+#error need maintain.
+#endif
     client.task_count = 0;
 }
 
@@ -324,7 +332,7 @@ int TcpNb::find_client( unsigned long net_ip, int port )
         index = -1;
     }
 
-    return index;
+    return static_cast<int>(index);
 }
 
 
@@ -376,7 +384,7 @@ void TcpNb::send_head( ClientSocket &client )
     int remaind = HEAD_SIZE - shift;
     char *ptr = (char*)&client.send_data.head + shift;
 
-    int ret = send( client.skt, ptr, remaind, 0 );
+    int ret = (int)send( client.skt, ptr, remaind, 0 );
     if( ret < 0 )
         handle_error(client);  
     else if( ret == 0 )
@@ -414,7 +422,13 @@ void TcpNb::task_finish_handle()
             break;
         else if( itr->task_count <= 0 )
         {
-            printf("task finish. close socket %d, net ip = %lu, port = %d\n", itr->skt, itr->net_ip, itr->port );
+#ifdef MACOS
+            printf("task finish. close socket %d, net ip = %u, port = %d\n", itr->skt, itr->net_ip, itr->port );
+#else
+#error need maintain.
+#endif
+            
+            
 #ifdef _WIN32
             closesocket(itr->skt);
 #else
@@ -441,7 +455,7 @@ void TcpNb::send_body( ClientSocket &client )
                   LONG_BODY_SIZE - shift :
                   SHORT_BODY_SIZE - shift;
 
-    int ret = send( client.skt, ptr, remaind, 0 );
+    int ret = (int)send( client.skt, ptr, remaind, 0 );
     if( ret < 0 )
         handle_error(client);  
     else if( ret == 0 )
@@ -566,7 +580,11 @@ void TcpNb::handle_connect_timeout()
             {
                 // timeout = 10s            
                 itr->task_count = 0; // 用mark的方式移除 
-                printf("skt %d, net ip %X, connect timeout.\n", itr->skt, itr->net_ip );
+#ifdef MACOS
+                printf("skt %d, net ip %u, connect timeout.\n", itr->skt, itr->net_ip );
+#else
+#error need maintain.
+#endif
             }
         }
     }
@@ -654,9 +672,10 @@ void TcpNb::connect_handle()
 #ifdef _WIN32
                 int error = WSAGetLastError();  // win32用底下的code執行沒成功,會失敗.
 #else
-                int error;
-                socklen_t len = sizeof(error);
-                getsockopt( itr->skt, SOL_SOCKET, SO_ERROR, (char*)&error, &len );
+                int error = errno;
+                // 底下的code似乎只能在ubuntu底下work. 在windows, macos都會取得error = 0
+                //socklen_t len = sizeof(error);
+                //getsockopt( itr->skt, SOL_SOCKET, SO_ERROR, (char*)&error, &len );
                 //printf("error = %d\n", error );         
 #endif
                 
@@ -794,8 +813,7 @@ int TcpNb::setup_server_skt()
         return -1;
     }
     
-
-#ifdef UNIX
+#if defined(UNIX) || defined(MACOS)
     // ubuntu環境,如果沒設置這個選項,強制中斷程式後,會造成無法連線,
     // 需要close listen socket後重新bind, listen.
     int optval = 1;

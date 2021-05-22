@@ -1,4 +1,4 @@
-﻿#include "tcp_nonblock.h"
+#include "tcp_nonblock.h"
 
 #include <stdio.h>
 #include <string.h>
@@ -189,7 +189,7 @@ void tcp_client_connect_test_3( SOCKET skt, SOCKADDR_IN addr )
         int timeout_count;
         // 測試結果只能用timeout, 如果一直跑迴圈, 並沒有得到錯誤訊息.
         // 只有測試windows
-        for( timeout_count = 0; timeout_count < 10; timeout_count++ ) 
+        for( timeout_count = 0; timeout_count < 10000; timeout_count++ ) 
         { 
             FD_ZERO( &r_set );
             FD_ZERO( &w_set );
@@ -211,11 +211,14 @@ void tcp_client_connect_test_3( SOCKET skt, SOCKADDR_IN addr )
             {         
                 printf("res = %d\n", res);
                 
-#ifdef UNIX
+#if defined(UNIX) || defined(MACOS) 
                 // 假設對象電腦開機,這邊會回傳 113 的 error code.
                 // 關機的話不會跳錯誤
                 // 行為跟windows不同
-                // #define EHOSTUNREACH 113 /* No route to host                
+                // #define EHOSTUNREACH 113 /* No route to host
+                // mac測的結果,在73次的時候跳錯. (沒連線成功但顯示connected
+                // mac的error code = 60, Device not a stream
+                // 查了一下,發生error的socket也會被標記為可讀寫.
                 int error = 0;
                 socklen_t len = sizeof (error);
                 int retval = getsockopt (skt, SOL_SOCKET, SO_ERROR, (char*)&error, &len);               
@@ -373,7 +376,7 @@ void tcp_client_non_blocking( const char* const ip, int port )
     tcp_client_connect_test_2( skt, addr );
 
 #elif 0
-    // 這段code可以運作
+    // 這段code可以運作, 但本身有問題, 比較喜歡底下的做法 
     // 用 getsockopt 判斷連線成功
     tcp_client_connect_test_3( skt, addr );
 
@@ -381,7 +384,6 @@ void tcp_client_non_blocking( const char* const ip, int port )
     //  這段code也有成功    
     // 會不停 connect
     tcp_client_connect_test_4( skt, addr );
-
 #endif
 
     char buffer[1024];
