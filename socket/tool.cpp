@@ -9,6 +9,10 @@
 #include <errno.h>
 #include <sys/socket.h>
 #include <sys/types.h> 
+#include <netdb.h>      // use for get host by name.
+#include <ifaddrs.h>    // use for get local ip.
+#include <net/if.h>      // use for get local ip. use ifreq
+#include <sys/ioctl.h>
 #endif
 
 #include <stdio.h>
@@ -316,14 +320,14 @@ void get_domain_name()
     {
         // 用host name的作法.
         sockaddr_in addr;
-        addr.sin_family = AF_INET;
-        //addr.sin_port = htons(1234);
-        addr.sin_addr = *( (in_addr *)host_name->h_addr );
+        addr.sin_family = AF_INET;        
+        //addr.sin_port = htons(1234);        
+        addr.sin_addr = *( (in_addr *)host_name->h_addr );        
 
         // 把網址轉換成ip address的範例
-        char* str = inet_ntoa(addr.sin_addr);
-        printf("ip address: %s\n", str );
-    }
+        char* str = inet_ntoa(addr.sin_addr);        
+        printf("ip address: %s\n", str );        
+    }    
 
 #ifdef _WIN32
     WSACleanup();
@@ -334,7 +338,12 @@ void get_domain_name()
 
 
 
-
+#include <string.h>
+// 搜尋了一下,看起來有別的方式可以取得local ip
+// http://www.samirchen.com/get-client-server-ip-port/
+// getsockname  getpeername   TCP連上線後可以用這個來取得ip address
+// https://www.binarytides.com/hostname-to-ip-address-c-sockets-linux/
+// getaddrinfo
 void get_local_ip()
 {
 #ifdef _WIN32
@@ -348,26 +357,109 @@ void get_local_ip()
 #endif
 
     char str[80];
-    int ret;
+    int ret;    
 
     hostent	*phe = NULL; 
+    
+    ret	= gethostname( str, sizeof(str) );    
+    printf( "host name = %s\n", str );    
 
-    ret	= gethostname( str, sizeof(str) );
-    printf( "host name = %s\n", str );
-
-    phe	= gethostbyname(str);
-    if( phe != NULL )
+    phe	= gethostbyname(str);    
+    if( phe != NULL )    
     {
         // 0 抓到virtualbox的ip. 1 抓到實體網卡的ip. 有空再研究怎麼過濾了.
+        // ubuntu底下會抓到127.0.1.1, 搜尋了一下, 用getsockname等會比較好...
         in_addr sin = *( (in_addr *)phe->h_addr_list[0] );
         char *ip = inet_ntoa(sin);
         printf("local ip = %s\n", ip);
     }
-
+    
 #ifdef _WIN32
     WSACleanup();
 #endif
 }
+
+
+
+
+
+
+
+
+
+// http://wiki.lang.idv.tw/doku.php/program/c/linux%E7%B7%A8%E7%A8%8B%E7%8D%B2%E5%8F%96%E6%9C%AC%E6%A9%9Fip%E5%9C%B0%E5%9D%80
+void get_local_ip_2()
+{
+// 不確定是否能用在windows平台,就不做確認了.
+#ifdef UNIX
+    //ifaddrs* ifAddrStruct = NULL;
+    ifaddrs* ifa = NULL;
+    //void* tmpAddrPtr = NULL;
+    void *ptr = NULL;
+ 
+    getifaddrs(&ifa);
+ 
+    while( ifa != NULL ) 
+    {
+        if( ifa->ifa_addr->sa_family == AF_INET ) 
+        { 
+            // check it is IP4
+            // is a valid IP4 Address
+            ptr = &((sockaddr_in *)ifa->ifa_addr)->sin_addr;
+            char address[INET_ADDRSTRLEN];
+            inet_ntop( AF_INET, ptr, address, INET_ADDRSTRLEN );
+            printf( "%s IP Address %s\n", ifa->ifa_name, address );             
+        } 
+        else if( ifa->ifa_addr->sa_family == AF_INET6 ) 
+        { 
+            // check it is IP6
+            // is a valid IP6 Address
+            ptr = &((struct sockaddr_in *)ifa->ifa_addr)->sin_addr;
+            char address[INET6_ADDRSTRLEN];
+            inet_ntop( AF_INET6, ptr, address, INET6_ADDRSTRLEN);
+            printf("%s IP Address %s\n", ifa->ifa_name, address); 
+        } 
+        
+        ifa = ifa->ifa_next;
+    }
+#else
+    printf("this function use for ubuntu.\n");
+#endif
+}
+
+
+
+
+void get_local_ip_3()
+{
+#ifdef UNIX
+    int sock_get_ip;  
+    char ipaddr[50];  
+ 
+    sockaddr_in *sin;  
+    ifreq ifr_ip;     
+ 
+    sock_get_ip = socket( AF_INET, SOCK_STREAM, IPPROTO_TCP );
+
+    memset( &ifr_ip, 0, sizeof(ifr_ip) );
+    strncpy( ifr_ip.ifr_name, "enp6s0", sizeof(ifr_ip.ifr_name) - 1);  // 範例用eth0, 失敗. 改用 enp6s0, 成功. 如何取得網卡的名稱呢?
+ 
+    if( ioctl( sock_get_ip, SIOCGIFADDR, &ifr_ip ) < 0 )     
+    {     
+        printf("error\n");
+        return;
+    }   
+        
+    sin = (sockaddr_in *)&ifr_ip.ifr_addr;     
+    strcpy( ipaddr, inet_ntoa(sin->sin_addr) );
+ 
+    printf("local ip : %s \n", ipaddr );
+    close( sock_get_ip );  
+#else
+    printf("use for ubuntu.\n");
+#endif
+}
+
 
 
 
@@ -406,7 +498,37 @@ void	get_mac_address()
         printf("\n");
     }
 #else
-    //#error need maintain.
-    //assert(0);
+    int sock_mac;  
+ 
+    ifreq ifr_mac;  
+    char mac_addr[30];     
+ 
+    sock_mac = socket( AF_INET, SOCK_STREAM, IPPROTO_TCP );  
+    if( sock_mac == -1)  
+    {  
+        printf("create socket falise...mac\n");  
+        return;  
+    }  
+ 
+    memset( &ifr_mac, 0, sizeof(ifr_mac) );     
+    strncpy( ifr_mac.ifr_name, "enp6s0", sizeof(ifr_mac.ifr_name)-1 );   // 範例程式用eth0. 改成enp6s0   
+ 
+    if( ioctl( sock_mac, SIOCGIFHWADDR, &ifr_mac) < 0 )
+    {  
+        printf("mac ioctl error\n");  
+        return;
+    }  
+ 
+    sprintf( mac_addr,"%02x %02x %02x %02x %02x %02x",  
+             (unsigned char)ifr_mac.ifr_hwaddr.sa_data[0],  
+             (unsigned char)ifr_mac.ifr_hwaddr.sa_data[1],  
+             (unsigned char)ifr_mac.ifr_hwaddr.sa_data[2],  
+             (unsigned char)ifr_mac.ifr_hwaddr.sa_data[3],  
+             (unsigned char)ifr_mac.ifr_hwaddr.sa_data[4],  
+             (unsigned char)ifr_mac.ifr_hwaddr.sa_data[5] );
+ 
+    printf("local mac : %s \n", mac_addr );
+ 
+    close( sock_mac );  
 #endif
 }

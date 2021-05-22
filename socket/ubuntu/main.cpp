@@ -50,6 +50,10 @@ void tool_funcs()
     //test_getaddrinfo();
     //error_handle_test();
     //sockopt_test();
+    get_domain_name();
+    get_local_ip_2();
+    get_local_ip_3();
+    get_mac_address();
 }
 
 
@@ -84,8 +88,9 @@ void tcp_funcs()
 
 int main()
 {
+    tool_funcs();
     //udp_test_funcs();
-    tcp_funcs();
+    //tcp_funcs();
 
     return 0;
 }

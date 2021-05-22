@@ -17,6 +17,9 @@ void get_domain_name();
 void get_local_ip();
 void get_mac_address();
 
+void get_local_ip_2();  // 這個會列舉全部的資訊
+void get_local_ip_3();
+
 
 /*
     理論上應該可以,但沒有找到很簡單的作法.   1. get MTU
