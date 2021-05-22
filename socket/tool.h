@@ -2,24 +2,25 @@
 #define TOOL_H
 
 
+/*
+https://www.winsocketdotnetworkprogramming.com/winsock2programming/winsock2advancedrawsocket11d.html
+有時間研究這段code
+*/
+
 
 
 void transform_test();
 void error_handle_test();
 void sockopt_test();
 
-/*
-    1. get MTU
-    2. TCP如何知道一次可以傳多少資料?
-    3. TCP send, non-block,是否會block?
-    4. get mac address
+void get_domain_name();
+void get_local_ip();
+void get_mac_address();
 
-    http://www.cs.tau.ac.il/~eddiea/samples/Non-Blocking/tcp-nonblocking-client.c.html
-    study        struct hostent *he;
-    if ((he=gethostbyname(argv[1])) == NULL) {  // get the host info 
-herror("gethostbyname");
-exit(1);
-        
+
+/*
+    理論上應該可以,但沒有找到很簡單的作法.   1. get MTU
+    會自動切段                             2. TCP如何知道一次可以傳多少資料?
  */
 
 

@@ -52,6 +52,9 @@ void tool_test_funcs()
     //error_handle_test();
 
     //sockopt_test();
+    //get_domain_name();
+    //get_local_ip();
+    get_mac_address();
 }
 
 
@@ -82,7 +85,8 @@ void tcp_test_funcs()
 
 int main()
 {
-    tcp_test_funcs();
+    tool_test_funcs();
+    //tcp_test_funcs();
 
     system("PAUSE");
     return 0;

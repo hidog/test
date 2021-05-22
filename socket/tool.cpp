@@ -12,6 +12,7 @@
 #endif
 
 #include <stdio.h>
+#include <iostream>
 
 
 #if defined(UNIX) || defined(MACOS)
@@ -20,6 +21,23 @@ typedef int SOCKET;
 #else
 typedef int socklen_t;
 #endif
+
+
+
+#ifdef _WIN32
+#include <iphlpapi.h>   //For SendARP.  查詢mac address用
+#endif
+
+#ifdef _WIN32
+//#pragma comment ( lib, "Ws2_32.lib" )
+//#pragma comment ( lib, "Mswsock.lib")
+//#pragma comment ( lib, "AdvApi32.lib")
+#pragma comment ( lib, "iphlpapi.lib")		// for iphlpapi. 例如查詢mac address會用到.
+#endif
+
+
+
+
 
 
 
@@ -273,5 +291,122 @@ void sockopt_test()
     closesocket(skt);
 #else
     close(skt);
+#endif
+}
+
+
+
+void get_domain_name()
+{
+#ifdef _WIN32
+    WORD socket_version = MAKEWORD(2,2);
+    WSADATA wsa_data; 
+    if( WSAStartup(socket_version,&wsa_data) != 0 )
+    {
+        printf("init error\n");
+        return;
+    }
+#endif
+
+    // http://www.cs.tau.ac.il/~eddiea/samples/Non-Blocking/tcp-nonblocking-client.c.html
+    // http://haoyuanliu.github.io/2017/01/16/%E5%9C%B0%E5%9D%80%E6%9F%A5%E8%AF%A2%E5%87%BD%E6%95%B0gethostbyname-%E5%92%8Cgetaddrinfo/
+    hostent *host_name;
+    host_name = gethostbyname("www.google.com");
+    if( host_name != NULL )
+    {
+        // 用host name的作法.
+        sockaddr_in addr;
+        addr.sin_family = AF_INET;
+        //addr.sin_port = htons(1234);
+        addr.sin_addr = *( (in_addr *)host_name->h_addr );
+
+        // 把網址轉換成ip address的範例
+        char* str = inet_ntoa(addr.sin_addr);
+        printf("ip address: %s\n", str );
+    }
+
+#ifdef _WIN32
+    WSACleanup();
+#endif
+
+}
+
+
+
+
+
+void get_local_ip()
+{
+#ifdef _WIN32
+    WORD socket_version = MAKEWORD(2,2);
+    WSADATA wsa_data; 
+    if( WSAStartup(socket_version,&wsa_data) != 0 )
+    {
+        printf("init error\n");
+        return;
+    }
+#endif
+
+    char str[80];
+    int ret;
+
+    hostent	*phe = NULL; 
+
+    ret	= gethostname( str, sizeof(str) );
+    printf( "host name = %s\n", str );
+
+    phe	= gethostbyname(str);
+    if( phe != NULL )
+    {
+        // 0 抓到virtualbox的ip. 1 抓到實體網卡的ip. 有空再研究怎麼過濾了.
+        in_addr sin = *( (in_addr *)phe->h_addr_list[0] );
+        char *ip = inet_ntoa(sin);
+        printf("local ip = %s\n", ip);
+    }
+
+#ifdef _WIN32
+    WSACleanup();
+#endif
+}
+
+
+
+
+void	get_mac_address()
+{
+#ifdef _WIN32
+    //const int	mac_len	=	12;
+    unsigned char mac[12];
+
+    int     i;
+    DWORD	ret;
+    IPAddr	src_ip;
+    ULONG	mac_addr[2];
+    ULONG	phy_addr_len	=	6; 
+    BYTE	*b_mac_addr		=	NULL;
+
+    // 指向目標網卡的ip address.
+    in_addr sin;
+    sin.S_un.S_addr = inet_addr( "192.168.1.102" ); //inet_addr( "192.168.1.2" );
+
+
+    //
+    src_ip	=	0;
+    ret		=	SendARP( (IPAddr)sin.S_un.S_addr , src_ip , mac_addr , &phy_addr_len);
+
+    //
+    if( phy_addr_len )
+    {
+        b_mac_addr	=	(BYTE*)&mac_addr;
+        for ( i = 0; i < (int)phy_addr_len; i++ )
+        {
+            mac[i]	=	(char)b_mac_addr[i];
+            printf("%X ", mac[i] );
+        }        
+        printf("\n");
+    }
+#else
+    //#error need maintain.
+    //assert(0);
 #endif
 }

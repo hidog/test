@@ -38,6 +38,7 @@ using namespace std::chrono;
 
 /*
     筆記: ubuntu環境下,socket有error的時候會被select標記為可讀寫,但send/recv後會報錯.
+    這個範例同時支援 server/client, send/recv, connect/accept  non-blocking.
 */
 
 enum class PacketType
