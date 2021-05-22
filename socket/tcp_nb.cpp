@@ -1,4 +1,4 @@
-﻿#include "tcp_nb.h"
+#include "tcp_nb.h"
 
 #if defined(MACOS) || defined(UNIX)
 #include <sys/socket.h>
@@ -31,9 +31,7 @@ TcpNb::TcpNb( std::string _pc_name, int _port )
     ip_list = { 
                 "36.231.106.136",   // imac
                 "192.168.3.240",    // room
-                "192.168.3.191",    // 2F
                 "36.231.97.222",    // ubuntu red
-                "192.168.2.116",    // mbpr
                 "111.248.196.108",  // slave
                 "122.116.84.59"     // master
               };
@@ -41,9 +39,7 @@ TcpNb::TcpNb( std::string _pc_name, int _port )
     port_list = { 
                     1234,  // imac
                     1235,  // room
-                    1236,  // 2F
                     1240,  // ubuntu red
-                    1240,  // mbpr
                     1234,  // slave
                     1234   // master
                 };
