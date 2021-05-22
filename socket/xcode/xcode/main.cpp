@@ -49,6 +49,12 @@ void tool_funcs()
     //test_getaddrinfo();
     
     //sockopt_test();
+    
+    get_domain_name();
+    get_mac_address();
+    get_local_ip();
+    get_local_ip_2();
+    get_local_ip_3();
 }
 
 
@@ -79,7 +85,8 @@ void tcp_funcs()
 
 int main(int argc, const char * argv[])
 {
-    tcp_funcs();
+    tool_funcs();
+    //tcp_funcs();
     
     return 0;
 }

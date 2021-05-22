@@ -1,4 +1,4 @@
-﻿#include "tool.h"
+#include "tool.h"
 
 #ifdef _WIN32
 #include <WinSock2.h>
@@ -17,6 +17,7 @@
 
 #include <stdio.h>
 #include <iostream>
+#include <string.h>
 
 
 #if defined(UNIX) || defined(MACOS)
@@ -338,7 +339,7 @@ void get_domain_name()
 
 
 
-#include <string.h>
+
 // 搜尋了一下,看起來有別的方式可以取得local ip
 // http://www.samirchen.com/get-client-server-ip-port/
 // getsockname  getpeername   TCP連上線後可以用這個來取得ip address
@@ -391,7 +392,7 @@ void get_local_ip()
 void get_local_ip_2()
 {
 // 不確定是否能用在windows平台,就不做確認了.
-#ifdef UNIX
+#if defined(UNIX) || defined(MACOS)
     //ifaddrs* ifAddrStruct = NULL;
     ifaddrs* ifa = NULL;
     //void* tmpAddrPtr = NULL;
@@ -432,7 +433,7 @@ void get_local_ip_2()
 
 void get_local_ip_3()
 {
-#ifdef UNIX
+#if defined(UNIX) || defined(MACOS)
     int sock_get_ip;  
     char ipaddr[50];  
  
@@ -442,11 +443,15 @@ void get_local_ip_3()
     sock_get_ip = socket( AF_INET, SOCK_STREAM, IPPROTO_TCP );
 
     memset( &ifr_ip, 0, sizeof(ifr_ip) );
+#ifdef UNIX
     strncpy( ifr_ip.ifr_name, "enp6s0", sizeof(ifr_ip.ifr_name) - 1);  // 範例用eth0, 失敗. 改用 enp6s0, 成功. 如何取得網卡的名稱呢?
+#else
+    strncpy( ifr_ip.ifr_name, "en0", sizeof(ifr_ip.ifr_name) - 1); // mac用 en0 才成功.
+#endif
  
     if( ioctl( sock_get_ip, SIOCGIFADDR, &ifr_ip ) < 0 )     
     {     
-        printf("error\n");
+        printf("get_local_ip_3 error\n");
         return;
     }   
         
@@ -459,8 +464,6 @@ void get_local_ip_3()
     printf("use for ubuntu.\n");
 #endif
 }
-
-
 
 
 
@@ -497,7 +500,7 @@ void	get_mac_address()
         }        
         printf("\n");
     }
-#else
+#elif defined(UNIX)
     int sock_mac;  
  
     ifreq ifr_mac;  
@@ -530,5 +533,9 @@ void	get_mac_address()
     printf("local mac : %s \n", mac_addr );
  
     close( sock_mac );  
+#else
+    // mac下, 找不到 SIOCGIFHWADDR 這個定義
+    // 有空再研究了.
+    printf("not implement\n");
 #endif
 }

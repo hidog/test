@@ -1,4 +1,4 @@
-﻿#ifndef TOOL_H
+#ifndef TOOL_H
 #define TOOL_H
 
 
@@ -23,7 +23,9 @@ void get_local_ip_3();
 
 /*
     理論上應該可以,但沒有找到很簡單的作法.   1. get MTU
-    會自動切段                             2. TCP如何知道一次可以傳多少資料?
+    會自動切段                          2. TCP如何知道一次可以傳多少資料?
+ 
+ ifreq  裡面有MTU參數,有機會再研究吧
  */
 
 
