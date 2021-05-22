@@ -1,4 +1,4 @@
-#ifndef TCP_NB_H
+﻿#ifndef TCP_NB_H
 #define TCP_NB_H
 
 #include <vector>
@@ -26,7 +26,7 @@ typedef in_addr_t NetAddr;
 #elif defined(UNIX)
 typedef uint32_t NetAddr;
 #else
-#error need maintain
+typedef unsigned long NetAddr;
 #endif
 
 

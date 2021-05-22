@@ -1,4 +1,4 @@
-#include "tcp_nb.h"
+﻿#include "tcp_nb.h"
 
 #if defined(MACOS) || defined(UNIX)
 #include <sys/socket.h>
@@ -28,15 +28,14 @@ typedef int socklen_t;
 TcpNb::TcpNb( std::string _pc_name, int _port ) 
     : pc_name(_pc_name), port(_port)
 {
-    /*ip_list = { 
-                "36.231.106.136", // imac
-                "192.168.3.240",  // room
-                "192.168.3.191",  // 2F
-                "36.231.97.222",  // ubuntu red
-                "36.231.97.222",  // x250
-                "192.168.2.116",  // mbpr
-                "36.226.250.20",  // slave
-                "122.116.84.59"   // master
+    ip_list = { 
+                "36.231.106.136",   // imac
+                "192.168.3.240",    // room
+                "192.168.3.191",    // 2F
+                "36.231.97.222",    // ubuntu red
+                "192.168.2.116",    // mbpr
+                "111.248.196.108",  // slave
+                "122.116.84.59"     // master
               };
 
     port_list = { 
@@ -44,14 +43,13 @@ TcpNb::TcpNb( std::string _pc_name, int _port )
                     1235,  // room
                     1236,  // 2F
                     1240,  // ubuntu red
-                    1239,  // x250
                     1240,  // mbpr
                     1234,  // slave
                     1234   // master
-                };*/
+                };
 
-    ip_list = { "127.0.0.1" };
-    port_list = { 1234 };
+    //ip_list = { "127.0.0.1" };
+    //port_list = { 1234 };
 
     task.finished = false;
     task.timestamp = time_point_cast<milliseconds>(system_clock::now());
@@ -282,12 +280,7 @@ void TcpNb::recv_handle()
 
 void TcpNb::handle_disconnect( ClientSocket& client )
 {
-#if defined(MACOS) || defined(UNIX)
     printf( "skt %d disconnect. net_ip = %u\n", client.skt, client.net_ip );
-#else
-#error need maintain.
-#endif
-
     for( auto itr = client_list.begin(); itr != client_list.end(); ++itr )
     {
         if( itr->net_ip == client.net_ip && itr->port == client.port )
@@ -304,11 +297,7 @@ void TcpNb::handle_disconnect( ClientSocket& client )
 
 void TcpNb::handle_error( ClientSocket& client )
 {
-#if defined(MACOS) || defined(UNIX)
     printf("client error. skt = %d, net_ip = %u\n", client.skt, client.net_ip );
-#else
-#error need maintain.
-#endif
     client.task_count = 0;
 }
 
@@ -422,13 +411,7 @@ void TcpNb::task_finish_handle()
             break;
         else if( itr->task_count <= 0 )
         {
-#if defined(MACOS) || defined(UNIX)
-            printf("task finish. close socket %d, net ip = %u, port = %d\n", itr->skt, itr->net_ip, itr->port );
-#else
-#error need maintain.
-#endif
-            
-            
+            printf("task finish. close socket %d, net ip = %u, port = %d\n", itr->skt, itr->net_ip, itr->port );      
 #ifdef _WIN32
             closesocket(itr->skt);
 #else
@@ -580,11 +563,7 @@ void TcpNb::handle_connect_timeout()
             {
                 // timeout = 10s            
                 itr->task_count = 0; // 用mark的方式移除 
-#if defined(MACOS) || defined(UNIX)
                 printf("skt %d, net ip %u, connect timeout.\n", itr->skt, itr->net_ip );
-#else
-#error need maintain.
-#endif
             }
         }
     }
