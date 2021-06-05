@@ -20,6 +20,13 @@ void get_mac_address();
 void get_local_ip_2();  // 這個會列舉全部的資訊
 void get_local_ip_3();
 
+/*
+    get local ip不是很可靠,在ubuntu下會抓到127.0.1.1, 有需要再研究有沒有更好的做法
+    改用 getpeername, getsockname, 已連線的話可以抓到對外的ip
+    get mac address沒測mac環境,有需要再測了
+*/
+
+
 
 /*
     理論上應該可以,但沒有找到很簡單的作法.   1. get MTU

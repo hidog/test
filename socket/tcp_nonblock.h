@@ -32,6 +32,9 @@ void remove_socket( SOCKET skt );
 
 
 
+void tcp_show_ip_address( SOCKET skt );
+
+
 
 
 void tcp_server_non_blocking( int port );

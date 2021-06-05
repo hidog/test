@@ -57,6 +57,23 @@ void insert_socket( SOCKET skt )
 
 
 
+void tcp_show_ip_address( SOCKET skt )
+{
+    struct sockaddr_in addr;
+    socklen_t len = sizeof(addr);
+    
+    // 這邊沒處理error code. 一般來講需要根據回傳值做判斷
+    getsockname( skt, (struct sockaddr*)&addr, &len );
+    printf("current ip address %s, %d\n", inet_ntoa(addr.sin_addr), ntohs(addr.sin_port) );
+
+    getpeername( skt, (struct sockaddr*)&addr, &len );
+    printf("remote ip address %s, %d\n", inet_ntoa(addr.sin_addr), ntohs(addr.sin_port) );
+
+}
+
+
+
+
 
 void remove_socket( SOCKET skt )
 {
@@ -706,6 +723,8 @@ SOCKET tcp_server_accept( SOCKET listen_skt )
     FD_SET( skt, &server_set );
     insert_socket(skt);
     printf("a new client connected! from ip = %s, port = %d...\n", inet_ntoa(remote.sin_addr), ntohs(remote.sin_port) );
+
+    tcp_show_ip_address(skt);
 
     return skt;
 }
