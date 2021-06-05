@@ -76,10 +76,10 @@ void tcp_funcs()
     
     //tcp_server_non_blocking( 1234 );
     //tcp_client_non_blocking( "127.0.0.1", 1234 );
-    //tcp_client_blocking( "192.168.1.102", 1234 );
+    tcp_client_blocking( "111.248.199.3", 1234 );
     
-    TcpNb tcp_nb("UB red", 1235 );
-    tcp_nb.work();
+    //TcpNb tcp_nb("UB red", 1235 );
+    //tcp_nb.work();
 }
 
 
@@ -88,9 +88,9 @@ void tcp_funcs()
 
 int main()
 {
-    tool_funcs();
+    //tool_funcs();
     //udp_test_funcs();
-    //tcp_funcs();
+    tcp_funcs();
 
     return 0;
 }

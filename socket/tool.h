@@ -24,6 +24,10 @@ void get_local_ip_3();
     get local ip不是很可靠,在ubuntu下會抓到127.0.1.1, 有需要再研究有沒有更好的做法
     改用 getpeername, getsockname, 已連線的話可以抓到對外的ip
     get mac address沒測mac環境,有需要再測了
+    
+    get peer/sock name 參考程式碼 tcp_server_non_blocking , tcp_nonblock.h
+    裡面的 tcp_show_ip_address (沒處理error code)
+    
 */
 
 
