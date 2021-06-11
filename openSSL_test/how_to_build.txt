@@ -36,6 +36,20 @@ https://zhuanlan.zhihu.com/p/141273949
 以上是舊版 (1.1.0之前), win32, dll的測試
 
 
+
+編譯debug
+4. 改成 perl Configure debug-VC-WIN32 --prefix=c:\openssl
+
+
+
+編譯 x64
+4. 改成 perl Configure VC-WIN64A --prefix=c:\openssl
+5. ms\do_win64a
+
+
+
+
+
 note:  (直接copy paste)
 
     以上編譯的是 release 版本，若要編譯 debug 版，將上述第 2 步中的 VC-WIN32 改成 debug-VC-WIN32即可。
