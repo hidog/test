@@ -1,3 +1,8 @@
+http://slproweb.com/products/Win32OpenSSL.html
+windows下載連結
+
+
+
 https://www.openssl.org/source/gitrepo.html
 
 git clone git://git.openssl.org/openssl.git
@@ -66,4 +71,18 @@ note:  (直接copy paste)
 https://www.huaweicloud.com/articles/1369e955462030d3bbfdd9e9796c70b2.html
 https://www.itread01.com/p/882707.html
 https://wiki.openssl.org/index.php/Compilation_and_Installation#Windows
+
+
+
+
+
+
+
+
+新版的編譯方式 (1.1.0以後)
+
+卡在perl, 暫時先跳過. (不想安裝跟設定perl,暫時也用不到新版,直接抓編譯好的版本即可)
+
+
+
 
