@@ -41,23 +41,21 @@ void test_recv2( SRTSOCKET handle )
 }*/
 
 
-void test_function( SOCKET fhandle )
+void test_client_func( SOCKET fhandle )
 {
     char buf[1316];
     int res;
 
     while(true)
-    {
+    {        
         res = srt_recvmsg( fhandle, buf, 1316 );
-
         if( res <= 0 )
             break;        
         printf( "recv. res = %d\n", res );
-        
+
         res = srt_sendmsg2( fhandle, buf, 1316, nullptr );
         if( res <= 0 )
             break;
-
         printf("send. res = %d\n", res );
     }
 
@@ -71,7 +69,7 @@ void test_function( SOCKET fhandle )
 
 void srt_client_test()
 {
-    std::string ip = "127.0.0.1", 
+    std::string ip = "1.163.97.19", 
                 port = "1234";
 
     //
@@ -84,7 +82,7 @@ void srt_client_test()
     hints.ai_family = AF_INET;
     hints.ai_socktype = SOCK_DGRAM;
 
-    SRTSOCKET fhandle = -1; 
+    SRTSOCKET fhandle = SRT_INVALID_SOCK; 
 
     if( 0 != getaddrinfo( ip.c_str(), port.c_str(), &hints, &peer ) )
     {
@@ -124,7 +122,7 @@ void srt_client_test()
         cout << "connect to " << ip << ":" << port << "\n";
 
         // start
-        test_function(fhandle);
+        test_client_func(fhandle);
 
         //
         srt_close(fhandle);

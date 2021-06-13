@@ -6,7 +6,7 @@
 
 
 void srt_client_test();
-void test_function( SOCKET fhandle );
+void test_client_func( SOCKET fhandle );
 
 
 

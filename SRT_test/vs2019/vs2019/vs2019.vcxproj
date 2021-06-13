@@ -142,10 +142,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\srt_server.cpp" />
     <ClCompile Include="..\..\srt_client.cpp" />
     <ClCompile Include="vs2019.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\srt_server.h" />
     <ClInclude Include="..\..\srt_client.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

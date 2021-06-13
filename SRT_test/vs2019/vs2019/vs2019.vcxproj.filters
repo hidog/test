@@ -24,9 +24,15 @@
     <ClCompile Include="..\..\srt_client.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\srt_server.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\srt_client.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\srt_server.h">
       <Filter>src</Filter>
     </ClInclude>
   </ItemGroup>
