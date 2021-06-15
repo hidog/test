@@ -150,7 +150,7 @@ void test_server_func()
 
         //test_server_func_2();
 
-        if( index % 100 == 0 )
+        if( index % 20 == 0 )
             Sleep(1);
 
     }
@@ -183,7 +183,7 @@ void test_server_func_2()
         if( max < diff )
             max = diff;
         //if( diff > 200 )
-        if( last_diff > diff && diff > 200 )
+        if( last_diff > diff && diff > 150 )
             printf( "index = %d, diff = %lld, max = %d\n", index, diff, max );
 
         last_diff = diff;
