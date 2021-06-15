@@ -6,7 +6,8 @@
 
 
 void srt_server_test();
-void test_server_func( SRTSOCKET handle );
+void test_server_func();
+void test_server_func_2();
 
 
 #endif

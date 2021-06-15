@@ -3,8 +3,15 @@
 #include <iostream>
 #include <string>
 
+#include <chrono>
+#include <thread>
+
 
 using namespace std;
+using namespace std::chrono;
+
+
+SRTSOCKET g_skt = -1;
 
 
 
@@ -97,10 +104,10 @@ SRTSOCKET accept_srt( SRTSOCKET serv )
         break;
     }
 
-    int send_buf = 627680;  // default = 8192
+    int send_buf = 62768000;  // default = 8192
     srt_setsockopt( fhandle, 0, SRTO_SNDBUF, &send_buf, sizeof send_buf );
 
-    int recv_buf = 627680;  // default = 8192
+    int recv_buf = 62768000;  // default = 8192
     srt_setsockopt( fhandle, 0, SRTO_RCVBUF, &recv_buf, sizeof recv_buf );
 
     int64_t maxbw = 0; 
@@ -115,22 +122,37 @@ SRTSOCKET accept_srt( SRTSOCKET serv )
 
 
 
-void test_server_func( SRTSOCKET handle )
+void test_server_func()
 {
     char buf[1316] = {0};
     int res;
+    int index = 0;
+    int index2 = 0;
+    int max = 0;
+    time_point<system_clock,milliseconds> ts;
 
     while(true)
     {      
-        res = srt_sendmsg2( handle, buf, 1316, nullptr );
+        ts = time_point_cast<milliseconds>(system_clock::now());
+        memcpy( buf, &index, sizeof(index) );
+        memcpy( buf + sizeof(index), &ts, sizeof(ts) );
+        index++;
+        res = srt_sendmsg2( g_skt, buf, 1316, nullptr );        
         if( res <= 0 )
             break;
-        printf( "send res = %d\n", res );
+        //printf( "send res = %d\n", res );
 
-        res = srt_recvmsg( handle, buf, 1316 );
+        /*res = srt_recvmsg( g_skt, buf, 1316 );
         if( res <= 0 )
             break;
-        printf( "recv res = %d\n", res ); 
+        memcpy( &index2, buf, sizeof(index2) );
+        printf( "index = %d\n", index2 );*/
+
+        //test_server_func_2();
+
+        if( index % 100 == 0 )
+            Sleep(1);
+
     }
 
     cout << "disconnected....\n";
@@ -139,29 +161,64 @@ void test_server_func( SRTSOCKET handle )
 
 
 
+void test_server_func_2()
+{
+    char buf[1316] = {0};
+    int res;
+    int index = 0;
+    int max = 0;
+    int last_diff = 0;
+    time_point<system_clock,milliseconds> ts, ts2;
+
+    while(true)
+    {
+        res = srt_recvmsg( g_skt, buf, 1316 );
+        if( res <= 0 )
+            break;
+        memcpy( &index, buf, sizeof(index) );
+        memcpy( &ts, buf + sizeof(index), sizeof(ts) );
+        ts2 = time_point_cast<milliseconds>(system_clock::now());
+        auto diff = duration_cast<milliseconds>( ts2 - ts ).count();
+        diff /= 2;
+        if( max < diff )
+            max = diff;
+        //if( diff > 200 )
+        if( last_diff > diff && diff > 200 )
+            printf( "index = %d, diff = %lld, max = %d\n", index, diff, max );
+
+        last_diff = diff;
+        //break;
+    }
+
+    printf("disconnected...\n");
+}
+
+
+
 
 
 void srt_server_test()
 {
-    SRTSOCKET handle;
-
     std::string port = "1234";
-    SRTSOCKET serv =init_srt(port);
+    SRTSOCKET serv = init_srt(port);
 
     //
-    handle = accept_srt(serv);
+    g_skt = accept_srt(serv);
 
-    // 移除的話會出錯, 看起來需要等一下才能開始送資料
-    // 理論上能避免這個問題才對
-    // 再研究一下相關的code
+    /*
+        accept後, send, client端容易沒收到第一個封包
+        之後造成收不到 client 的response, 造成程式卡住.
+        先Sleep可以避免這個錯誤.
+    */
     Sleep(10);
 
     //
-    test_server_func( handle );
+    std::thread thr( test_server_func_2 );
+    test_server_func();
 
     // note: call srt_close, it will not send data in buffer. 
     // 理論上能讓他送完資料才關閉. 有空再研究.
-    srt_close(handle);  
+    srt_close(g_skt);  
 
     srt_close(serv);
     srt_cleanup();
