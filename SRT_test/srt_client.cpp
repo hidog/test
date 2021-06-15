@@ -2,15 +2,11 @@
 
 #include <iostream>
 #include <string>
-#include <thread>
+
 
 
 using namespace std;
 
-
-
-#include <chrono>
-using namespace std::chrono;
 
 
 void test_client_func( SOCKET fhandle )
@@ -18,10 +14,6 @@ void test_client_func( SOCKET fhandle )
     char buf[1316];
     int res;
     int index;
-    int max = 0;
-
-    time_point<system_clock,milliseconds> ts, ts2;
-
 
     while(true)
     {        

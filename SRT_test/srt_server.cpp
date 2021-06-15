@@ -122,7 +122,7 @@ SRTSOCKET accept_srt( SRTSOCKET serv )
 
 
 
-void test_server_func()
+void test_server_send()
 {
     char buf[1316] = {0};
     int res;
@@ -140,15 +140,7 @@ void test_server_func()
         res = srt_sendmsg2( g_skt, buf, 1316, nullptr );        
         if( res <= 0 )
             break;
-        //printf( "send res = %d\n", res );
-
-        /*res = srt_recvmsg( g_skt, buf, 1316 );
-        if( res <= 0 )
-            break;
-        memcpy( &index2, buf, sizeof(index2) );
-        printf( "index = %d\n", index2 );*/
-
-        //test_server_func_2();
+        printf( "send res = %d\n", res );
 
         if( index % 20 == 0 )
             Sleep(1);
@@ -161,13 +153,12 @@ void test_server_func()
 
 
 
-void test_server_func_2()
+void test_server_recv()
 {
     char buf[1316] = {0};
     int res;
     int index = 0;
     int max = 0;
-    int last_diff = 0;
     time_point<system_clock,milliseconds> ts, ts2;
 
     while(true)
@@ -182,12 +173,7 @@ void test_server_func_2()
         diff /= 2;
         if( max < diff )
             max = diff;
-        //if( diff > 200 )
-        if( last_diff > diff && diff > 150 )
-            printf( "index = %d, diff = %lld, max = %d\n", index, diff, max );
-
-        last_diff = diff;
-        //break;
+        printf( "index = %d, diff = %lld, max = %d\n", index, diff, max );
     }
 
     printf("disconnected...\n");
@@ -213,8 +199,8 @@ void srt_server_test()
     Sleep(10);
 
     //
-    std::thread thr( test_server_func_2 );
-    test_server_func();
+    std::thread thr( test_server_recv );
+    test_server_send();
 
     // note: call srt_close, it will not send data in buffer. 
     // 理論上能讓他送完資料才關閉. 有空再研究.

@@ -6,8 +6,8 @@
 
 
 void srt_server_test();
-void test_server_func();
-void test_server_func_2();
+void test_server_send();
+void test_server_recv();
 
 
 #endif
