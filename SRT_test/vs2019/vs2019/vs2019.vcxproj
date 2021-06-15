@@ -145,11 +145,15 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\ffmpeg_client.cpp" />
+    <ClCompile Include="..\..\ffmpeg_server.cpp" />
     <ClCompile Include="..\..\srt_server.cpp" />
     <ClCompile Include="..\..\srt_client.cpp" />
     <ClCompile Include="vs2019.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\ffmpeg_client.h" />
+    <ClInclude Include="..\..\ffmpeg_server.h" />
     <ClInclude Include="..\..\srt_server.h" />
     <ClInclude Include="..\..\srt_client.h" />
   </ItemGroup>

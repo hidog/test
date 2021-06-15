@@ -27,12 +27,24 @@
     <ClCompile Include="..\..\srt_server.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\ffmpeg_server.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ffmpeg_client.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\srt_client.h">
       <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="..\..\srt_server.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ffmpeg_client.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ffmpeg_server.h">
       <Filter>src</Filter>
     </ClInclude>
   </ItemGroup>
