@@ -20,8 +20,8 @@
 
 int main()
 {
-    //srt_client_test();
-    srt_server_test();
+    srt_client_test();
+    //srt_server_test();
 
     system("PAUSE");
     return 0;

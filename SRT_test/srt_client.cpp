@@ -47,7 +47,7 @@ void test_client_func( SOCKET fhandle )
 
 void srt_client_test()
 {
-    std::string ip = "127.0.0.1", 
+    std::string ip = "111.248.195.148", 
                 port = "1234";
 
     //
