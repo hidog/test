@@ -48,8 +48,13 @@ int main( int argc, char* argv[] )
         這個是測試用程式,一些細節沒有處理的很嚴謹,有機會在修吧
 
         使用方式請參考
+        
+        vs2019.exe 122.116.84.59 1234 | ffplay -                                                      (client recv)
+        ffmpeg -stream_loop -1 -re -i test.mp4 -bf 0 -b:v 40M -f mpegts - | vs2019.exe 1234           (server send)
 
-        vs2019.exe 122.116.84.59 1234 | ffplay - 
+        vs2019.exe 122.116.84.59 1234 | ffplay - -fflags nobuffer                      (client send)
+        ffmpeg -stream_loop -1 -re -i test.mp4 -f mpegts - | vs2019.exe 1234           (server recv)
+
     */
     std::string ip, port;
 
