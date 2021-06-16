@@ -1,0 +1,69 @@
+cpp netlib
+https://github.com/cpp-netlib/cpp-netlib
+0.13.final
+
+
+
+
+編譯 openssl 的時候
+會使用 git config --global core.autocrlf false
+這會造成編譯boost失敗  (使用cmd的話, 某些場合編譯錯誤跟這個無關)
+
+呼叫 git config --global core.autocrlf true 解決
+
+
+
+git config --global core.autocrlf true 
+git clone https://github.com/boostorg/boost.git 
+cd boost
+git checkout boost-1.58.0
+git submodule init
+git submodule update
+
+
+
+編輯檔案  project-config.jam  內容如下  (似乎要保留空行)
+
+
+
+
+import option ; 
+
+using msvc : 16.0 : "C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.29.30037\bin\Hostx86\x86";
+
+option.set keep-going : false ;
+
+
+
+
+
+
+
+
+
+bootstrap.bat --prefix=D:\code\{target_path}      (好像無效,原因不明)
+b2 headers --with-thread --with-system
+b2 --with-thread --with-system
+b2 install --prefix=D:\code\{target_path}
+
+
+
+
+
+
+
+
+https://www.ptt.cc/bbs/C_and_CPP/M.1455637005.A.3C0.html
+https://blog.csdn.net/Xingewudi21/article/details/45116991
+https://blog.csdn.net/zhangzq86/article/details/90030094
+
+
+https://blog.csdn.net/lixiang987654321/article/details/81154255
+
+（4）完全编译
+
+如果需要编译所有库则不需要单独指定--witch-组件名，直接使用编译选项：--build-type=complete
+
+
+
+https://stackoverflow.com/questions/23100240/how-do-i-build-boost-from-github/35784421
