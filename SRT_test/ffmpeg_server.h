@@ -6,8 +6,8 @@
 #include <cstring>
 
 
-#define SERVER_SEND
-//#define SERVER_RECV
+//#define SERVER_SEND
+#define SERVER_RECV
 
 
 int ffmpeg_server( std::string port );

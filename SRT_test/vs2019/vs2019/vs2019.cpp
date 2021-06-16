@@ -15,6 +15,13 @@
 */
 
 
+#if defined(SERVER_SEND) & defined(CLIENT_SEND)
+#error defined error.
+#elif defined(SERVER_RECV) & defined(CLIENT_RECV)
+#error defined error.
+#endif
+
+
 int main( int argc, char* argv[] )
 {
     /*
@@ -32,6 +39,18 @@ int main( int argc, char* argv[] )
     //srt_client_test();
     //srt_server_test();
 
+
+    /*
+        播放40M影片一段時間後,有看到錯誤訊息. (影片持續播放)
+        感覺SRT這次改版仍然有一些問題....
+        關閉單向的時候另外一邊會跳broken pipe line錯誤,不管他
+        (解決方式是,斷線的時候須保持重連狀態不要切斷連線)
+        這個是測試用程式,一些細節沒有處理的很嚴謹,有機會在修吧
+
+        使用方式請參考
+
+        vs2019.exe 122.116.84.59 1234 | ffplay - 
+    */
     std::string ip, port;
 
     if( argc == 2 )

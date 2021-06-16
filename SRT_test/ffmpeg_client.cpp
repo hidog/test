@@ -18,6 +18,12 @@ using namespace std;
 
 
 
+#ifdef CLIENT_SEND
+bool g_cnn_start = false;
+bool g_hold_flag = false;
+#endif
+
+
 
 #ifdef CLIENT_RECV
 void client_recv( SRTSOCKET handle )
@@ -49,6 +55,8 @@ void client_send( SOCKET fhandle )
     char buf[1316];
     int res;
 
+    while(g_hold_flag == false);
+
     while(true)
     {
         int res = fread( buf, 1316, 1, stdin );
@@ -61,6 +69,21 @@ void client_send( SOCKET fhandle )
     }
 }
 #endif
+
+
+
+
+#ifdef CLIENT_SEND
+// 跳過這些資料 (要等待連線)
+void read_skip_stdin()
+{
+    char buf[1316];    
+    while( g_cnn_start == false )
+        fread( buf, 1316, 1, stdin );  
+    g_hold_flag = true;
+}
+#endif
+
 
 
 
@@ -120,7 +143,8 @@ int ffmpeg_client( std::string ip, std::string port )
 
         // start
 #ifdef CLIENT_SEND
-        test_send(fhandle);
+        g_cnn_start = true;
+        client_send(fhandle);
 #elif defined(CLIENT_RECV)
         client_recv(fhandle);
 #else
