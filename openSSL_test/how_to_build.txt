@@ -44,7 +44,7 @@ https://zhuanlan.zhihu.com/p/141273949
 
 編譯debug
 4. 改成 perl Configure debug-VC-WIN32 --prefix=c:\openssl
-
+* 編輯 ms\ntdll.mak, 移除 CFLAG裡面的 -WX  (不然會導致編譯錯誤)
 
 
 編譯 x64
