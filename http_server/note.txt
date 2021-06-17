@@ -1,3 +1,12 @@
+最後使用cpp-netlib 0.12版本,能編譯
+0.13怎麼做都失敗
+底下的紀錄留著當參考,但不是重點.
+
+
+
+
+
+
 cpp netlib
 https://github.com/cpp-netlib/cpp-netlib
 0.13.final
