@@ -1,10 +1,13 @@
-#include "test2.h"
+#include "static_lib_1.h"
 #include <stdio.h>
 
-int test2()
+int static_lib_func_1()
 {
-    printf("This is .a test2\n");
-    return 20;
+#ifdef WIN32
+    printf("this is win32 static lib cpp test.\n");
+#endif
+
+    return 1;
 }
 
 

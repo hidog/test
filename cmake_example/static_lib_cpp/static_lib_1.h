@@ -1,6 +1,6 @@
-#ifndef TEST2_H
-#define TEST2_H
+#ifndef STATIC_LIB_1_H
+#define STATIC_LIB_1_H
 
-int test2();
+int static_lib_func_1();
 
 #endif

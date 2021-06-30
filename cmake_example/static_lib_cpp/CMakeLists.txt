@@ -27,16 +27,16 @@ endif( MSVC )
 add_definitions( ${DEFINE} )
 
 # include path
-set( INCLUDE_PATH ${CMAKE_SOURCE_DIR}/src )
+set( INCLUDE_PATH ${CMAKE_SOURCE_DIR}/ )
 include_directories( ${INCLUDE_PATH} )
 
 # source 
 set( SOURCE static_lib_1.cpp )
 
 # head
-set( HEAD static_lib_2.h )
+set( HEAD static_lib_1.h )
 
 # 
-add_library( ${PROJECT_NAME} STATIC ${SOURCE} )
+add_library( ${PROJECT_NAME} STATIC ${HEAD} ${SOURCE} )
 
 
