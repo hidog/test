@@ -12,6 +12,7 @@ set( PROJECT_NAME dynamic_lib )
 project(${PROJECT_NAME})
 
 # output path
+# windows似乎要用 CMAKE_ARCHIVE_OUTPUT_DIRECTORY, 有空回頭修
 set( CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/dynamic/ )
 
 # preprocessor define
