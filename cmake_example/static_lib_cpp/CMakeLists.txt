@@ -1,11 +1,11 @@
 cmake_minimum_required(VERSION 3.6)
 
 # print message
-message("cmake static lib cpp project ")
+message("cmake static lib project ")
 message("root path =" ${CMAKE_SOURCE_DIR} )
 
 # Project Name
-set( PROJECT_NAME static_lib_cpp )
+set( PROJECT_NAME static_lib )
 project(${PROJECT_NAME})
 
 # output path
