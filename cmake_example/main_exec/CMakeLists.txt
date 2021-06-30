@@ -36,20 +36,32 @@ endif()
 
 # preprocessor define
 set( DEFINE -DHIDOG_DEFINE )
-if( UNIX )
-	message("define unix")
-    set( DEFINE ${DEFINE} -DUNIX )
-endif( UNIX )
+if( MSVC )
+	message("define MSVC")
+	set( DEFINE ${DEFINE} -DMSVC 
+	                      -DWIN32 )
+elseif( XCODE )
+	message("define xcode")
+	set( DEFINE ${DEFINE} -DMACOS )
+elseif( UNIX )
+        message("define unix")
+        set( DEFINE ${DEFINE} -DUNIX )
+endif( MSVC )
 add_definitions( ${DEFINE} )
 
-# include path
-set( INCLUDE_PATH /home/hidog/code/test/cmake_example/ubuntu/so 
-                  /home/hidog/code/test/cmake_example/ubuntu/a  )
+# include path 
+# 需要切分 windows, linux, macos. 有空修
+#set( INCLUDE_PATH /home/hidog/code/test/cmake_example/ubuntu/so 
+#                  /home/hidog/code/test/cmake_example/ubuntu/a  )
+set( INCLUDE_PATH D:/code/test/cmake_example/static_lib_cpp
+                  D:/code/test/cmake_example/dynamic_lib_cpp )
 include_directories( ${INCLUDE_PATH} )
 message("可以用 CMAKE_SOURCE_DIR. " ${CMAKE_SOURCE_DIR} )
 
 # library path 
-set( LIB_PATH /home/hidog/code/test/cmake_example/ubuntu/a )
+#set( LIB_PATH /home/hidog/code/test/cmake_example/ubuntu/a )
+set( LIB_PATH D:/code/test/cmake_example/static_lib_cpp/build/static/Debug
+              D:/code/test/cmake_example/dynamic_lib_cpp/build/Debug )
 link_directories( ${LIB_PATH} )
 
 # source 
@@ -59,8 +71,10 @@ set( SOURCE main.cpp )
 add_executable( ${PROJECT_NAME} ${SOURCE} )
 
 # 指定路徑連結so的範例
-target_link_libraries( ${PROJECT_NAME} /home/hidog/code/test/cmake_example/ubuntu/so/libtest.so )
+#target_link_libraries( ${PROJECT_NAME} /home/hidog/code/test/cmake_example/ubuntu/so/libtest.so )
+# windows似乎不能這樣, 研究一下這邊的語法
+#target_link_libraries( ${PROJECT_NAME} D:/code/test/cmake_example/dynamic_lib_cpp/build/Debug/dynamic_lib.dll )
 
 # 自己製作出來的 libtest2.a
-target_link_libraries( ${PROJECT_NAME} test2 )
+target_link_libraries( ${PROJECT_NAME} dynamic_lib )
 

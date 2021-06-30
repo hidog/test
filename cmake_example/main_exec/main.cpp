@@ -1,13 +1,12 @@
-#include "test.h"
-#include "test2.h"
+#include "dynamic_lib_1.h"
 #include <stdio.h>
 
 int main()
 {
-    int a = test();
+    int a = dynamic_func_1();
     printf("a = %d\n", a);
     
-    int b = test2();
+    int b = dynamic_func_1();
     printf("b = %d\n", b);
     
 #ifdef HIDOG_DEFINE
