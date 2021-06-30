@@ -4,18 +4,18 @@
 cmake_minimum_required(VERSION 3.6)
 
 # print message
-message("cmake dynamic lib cpp project ")
+message("cmake dynamic lib project ")
 message("root path =" ${CMAKE_SOURCE_DIR} )
 
 # Project Name
-set( PROJECT_NAME dynamic_lib_cpp )
+set( PROJECT_NAME dynamic_lib )
 project(${PROJECT_NAME})
 
 # output path
 set( CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/dynamic/ )
 
 # preprocessor define
-set( DEFINE -DSTATIC_LIB_CPP )
+set( DEFINE -DDYNAMIC_LIB_CPP )
 if( MSVC )
 	message("define MSVC")
 	set( DEFINE ${DEFINE} -DMSVC 
@@ -34,12 +34,17 @@ set( INCLUDE_PATH ${CMAKE_SOURCE_DIR}/ )
 include_directories( ${INCLUDE_PATH} )
 
 # source 
-set( SOURCE static_lib_1.cpp )
+set( SOURCE dynamic_lib_1.cpp
+			dynamic_lib_2.c
+            dynamic_lib_3.c )
 
 # head
-set( HEAD static_lib_1.h )
+set( HEAD dynamic_lib_1.h 
+		  dynamic_lib_2.h 
+		  dynamic_lib_3.h 
+		  def.h )
 
 # 
-add_library( ${PROJECT_NAME} SHARED ${SOURCE} )
+add_library( ${PROJECT_NAME} SHARED ${SOURCE} ${HEAD} )
 
 
