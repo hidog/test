@@ -19,8 +19,11 @@ project(${PROJECT_NAME})
 # windows跟UNIX平台在這邊定義不同
 # 參考 https://zh.wikibooks.org/wiki/CMake_%E5%85%A5%E9%96%80/%E8%BC%B8%E5%87%BA%E4%BD%8D%E7%BD%AE%E8%88%87%E5%AE%89%E8%A3%9D
 if( UNIX )
-	# 改成根據debug, release決定目錄
-	set( CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/dynamic/ )
+    if( "${CMAKE_BUILD_TYPE}" STREQUAL "Debug" )
+        set( CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/debug/ )
+    else()
+        set( CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib/ )
+    endif()
 endif( UNIX )
 
 

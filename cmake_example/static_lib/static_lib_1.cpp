@@ -1,6 +1,7 @@
 #include "static_lib_1.h"
 #include <iostream>
 #include <string>
+#include <cassert>
 
 
 StaticObj::StaticObj()
@@ -24,6 +25,10 @@ int StaticObj::test_func()
 
 int static_lib_func_1()
 {
+#ifdef UNIX
+    assert(0);
+#endif
+
 #ifdef _DEBUG
     std::string debug_release = "Debug";
 #else
@@ -32,6 +37,8 @@ int static_lib_func_1()
 
 #ifdef _WIN32
     std::string platform = "Windows";
+#elif defined(UNIX)
+    std::string platform = "Linux";
 #endif
 
     std::cout << "This is static lib test" << std::endl;

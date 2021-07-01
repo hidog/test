@@ -12,6 +12,8 @@ int static_lib_func_2()
 
 #ifdef _WIN32
     char platform[100] = "Windows";
+#elif defined(UNIX)
+    char platform[100] = "Linux";
 #endif
 
     printf( "test for pure C.\n" );   

@@ -33,16 +33,25 @@ project(${PROJECT_NAME})
 
 
 
-# output path
 if( UNIX )
-	set( CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin )
+    # 不指定的話,UNIX預設編譯成Release
+	if( "${CMAKE_BUILD_TYPE}" STREQUAL "")
+		set(CMAKE_BUILD_TYPE Release)
+	else()
+	    # UNIX 平台下不會自動產生這兩個macro
+	    add_definitions( -DDEBUG -D_DEBUG )
+	endif()
 endif( UNIX )
 
 
+
+
+# output path
 if( UNIX )
-# 不指定的話,UNIX預設編譯成Release
-	if( "${CMAKE_BUILD_TYPE}" STREQUAL "")
-		set(CMAKE_BUILD_TYPE Release)
+    if( CMAKE_BUILD_TYPE MATCHES Release )
+	    set( CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin )
+	else()
+    	set( CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/debug )
 	endif()
 endif( UNIX )
 
@@ -63,14 +72,9 @@ add_definitions( ${DEFINE} )
 
 
 # include path 
-if( MSVC )
-	set( INCLUDE_PATH ${CMAKE_SOURCE_DIR}/../static_lib/
-					  ${CMAKE_SOURCE_DIR}/../dynamic_lib )
-	include_directories( ${INCLUDE_PATH} )
-elseif( UNIX )
-	set( INCLUDE_PATH /home/hidog/code/test/cmake_example/ubuntu/so 
-                      /home/hidog/code/test/cmake_example/ubuntu/a  )
-endif( MSVC )
+set( INCLUDE_PATH ${CMAKE_SOURCE_DIR}/../static_lib/
+			      ${CMAKE_SOURCE_DIR}/../dynamic_lib )
+include_directories( ${INCLUDE_PATH} )
 # message("可以用 CMAKE_SOURCE_DIR. " ${CMAKE_SOURCE_DIR} )
 
 
@@ -81,7 +85,13 @@ if( MSVC )
 		 ${CMAKE_SOURCE_DIR}/../static_lib/build/
 		 ${CMAKE_SOURCE_DIR}/../dynamic_lib/build/ )
 elseif( UNIX )
-	set( LIB_PATH /home/hidog/code/test/cmake_example/ubuntu/a )
+    if( CMAKE_BUILD_TYPE MATCHES Release )
+    	set( LIB_PATH ${CMAKE_SOURCE_DIR}/../static_lib/lib/
+                      ${CMAKE_SOURCE_DIR}/../dynamic_lib/lib/ )
+    else()
+        set( LIB_PATH ${CMAKE_SOURCE_DIR}/../static_lib/debug/
+                      ${CMAKE_SOURCE_DIR}/../dynamic_lib/debug/ )
+    endif()
 endif( MSVC )
 link_directories( ${LIB_PATH} )
 
@@ -101,12 +111,10 @@ set( HEAD static.h
 add_executable( ${PROJECT_NAME} ${SOURCE} ${HEAD} )
 
 
-# 指定路徑連結so的範例
-#target_link_libraries( ${PROJECT_NAME} /home/hidog/code/test/cmake_example/ubuntu/so/libtest.so )
-# windows似乎不能這樣, 研究一下這邊的語法
-#target_link_libraries( ${PROJECT_NAME} D:/code/test/cmake_example/dynamic_lib_cpp/build/Debug/dynamic_lib.dll )
-
-
-# 自己製作出來的 libtest2.a
+# 底下是指定路徑連結so的範例, linux環境下可以用這個方式讀取指定路徑的 .so 檔案. 
+# windows無法用這個方式載入dll
+# target_link_libraries( ${PROJECT_NAME} static_lib /home/hidog/code/test/cmake_example/dynamic_lib/lib/libdynamic_lib.so )
 target_link_libraries( ${PROJECT_NAME} dynamic_lib static_lib )
+
+
 

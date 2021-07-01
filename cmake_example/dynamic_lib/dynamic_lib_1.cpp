@@ -1,5 +1,6 @@
 #include "dynamic_lib_1.h"
 #include <iostream>
+#include <cassert>
 
 using namespace std;
 
@@ -30,6 +31,10 @@ void DynamicObj::test_func()
 
 int dynamic_func_1()
 {
+#ifdef UNIX
+    assert(0);
+#endif
+
     printf("dynamic func test.\n");
 
 #ifdef __cplusplus

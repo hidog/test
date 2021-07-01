@@ -11,10 +11,14 @@ set( PROJECT_NAME static_lib )
 project(${PROJECT_NAME})
 
 
+
 # output path
 if( UNIX )
-	# 改成根據debug, release決定目錄
-	set( CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/static/ )
+	if( "${CMAKE_BUILD_TYPE}" STREQUAL "Debug" )
+    	set( CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/debug/ )
+    else ()
+        set( CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib/ )
+    endif()
 endif( UNIX )
 
 

@@ -9,7 +9,7 @@
 #       define LIBRARY_API __declspec(dllimport)
 #   endif
 #else
-#define DLL_EXPORT
+#   define LIBRARY_API
 #endif
 
 

@@ -91,8 +91,8 @@ void explicit_load_func()
     FreeLibrary(hDLL);
 
 #elif  defined(MACOS) | defined(UNIX)
-    void        *handle;
-    DllFunc     func;
+    /*void        *handle;
+    DllFunc_1   func;
 
     handle  =   dlopen( "libdlldyn.so", RTLD_LAZY );
     if( handle )
@@ -107,7 +107,7 @@ void explicit_load_func()
         cout << "load func fail\n";
 
     char    str[100]    =   "load .so dynamic.\n";
-    func( str );
+    func( str );*/
 #else
 # error. undefined operator system.
 #endif
