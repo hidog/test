@@ -23,8 +23,9 @@ if( UNIX )
 	set( CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/dynamic/ )
 endif( UNIX )
 
+
 # preprocessor define
-set( DEFINE -DDYNAMIC_LIB_CPP )
+set( DEFINE -DDYNAMIC_LIB )
 if( MSVC )
 	message("define MSVC")
 	set( DEFINE ${DEFINE} -DMSVC 

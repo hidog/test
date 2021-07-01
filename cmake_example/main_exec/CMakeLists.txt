@@ -88,11 +88,18 @@ link_directories( ${LIB_PATH} )
 
 
 # source 
-set( SOURCE main.cpp )
+set( SOURCE main.cpp 
+            static.cpp
+			dynamic.cpp )
+			
+			
+# head
+set( HEAD static.h
+          dynamic.h )
 
 
 # 
-add_executable( ${PROJECT_NAME} ${SOURCE} )
+add_executable( ${PROJECT_NAME} ${SOURCE} ${HEAD} )
 
 
 # 指定路徑連結so的範例

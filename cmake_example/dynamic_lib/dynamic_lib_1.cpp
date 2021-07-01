@@ -3,6 +3,21 @@
 
 
 
+
+
+DynamicObj::DynamicObj()
+{}
+
+
+DynamicObj::~DynamicObj()
+{}
+
+void DynamicObj::test_func()
+{}
+
+
+
+
 int dynamic_func_1()
 {
     std::cout << "test dynamic lib" << std::endl;

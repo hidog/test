@@ -4,6 +4,6 @@
 #include "def.h"
 
 
-DLL_EXPORT int dynamic_func_3();
+LIBRARY_API int dynamic_func_3();
 
 #endif

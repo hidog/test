@@ -10,7 +10,7 @@ extern "C" {
 #endif
 
 
-DLL_EXPORT int dynamic_func_2();
+LIBRARY_API int dynamic_func_2();
 
 
 #ifdef __cplusplus

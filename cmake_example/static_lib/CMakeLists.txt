@@ -19,7 +19,7 @@ endif( UNIX )
 
 
 # preprocessor define
-set( DEFINE -DSTATIC_LIB_CPP=1 )
+set( DEFINE -DSTATIC_LIB=1 )
 if( MSVC )
 	message("define MSVC")
 	set( DEFINE ${DEFINE} -DMSVC 
