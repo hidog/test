@@ -91,23 +91,49 @@ void explicit_load_func()
     FreeLibrary(hDLL);
 
 #elif  defined(MACOS) | defined(UNIX)
-    /*void        *handle;
-    DllFunc_1   func;
+    
+    //
+    void *handle;
 
-    handle  =   dlopen( "libdlldyn.so", RTLD_LAZY );
+    handle = dlopen( "libdynamic_lib.so", RTLD_LAZY );
     if( handle )
         cout << "open .so success\n";
     else
         cout << "open .so fail\n";
 
-    func    =   (DllFunc)dlsym( handle, "dll_dynamic_message" );
-    if( func )
+    //
+    DllFunc_4 func_4;
+    func_4 = (DllFunc_4)dlsym( handle, "dynamic_func_4" );
+    if( func_4 )
         cout << "load func success\n";
     else
         cout << "load func fail\n";
+    int ret = func_4();
+    printf( "ret = %d\n\n", ret );
+    
+    //
+    DllFunc_2 func_2;
+    func_2 = (DllFunc_2)dlsym( handle, "dynamic_func_2" );
+    if( func_2 )
+        cout << "load func success\n";
+    else
+        cout << "load func fail\n";
+    double ret2 = func_2(113,552);
+    printf( "ret2 = %lf\n\n", ret2 );
+    
+    //
+    DllFunc_3 func_3;
+    func_3 = (DllFunc_3)dlsym( handle, "dynamic_func_3" );
+    if( func_3 )
+        cout << "load func success\n";
+    else
+        cout << "load func fail\n";
+    func_3();
 
-    char    str[100]    =   "load .so dynamic.\n";
-    func( str );*/
+    
+    //
+    dlclose(handle);
+    
 #else
 # error. undefined operator system.
 #endif

@@ -8,6 +8,7 @@
 
 int main()
 {
+    printf("cmake test.\n");
 
 #ifdef DEBUG
     printf("This is debug version.\n");

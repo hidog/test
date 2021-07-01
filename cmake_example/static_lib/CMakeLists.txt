@@ -11,13 +11,21 @@ set( PROJECT_NAME static_lib )
 project(${PROJECT_NAME})
 
 
+# 沒設定的話, 預設是debug
+if( "${CMAKE_BUILD_TYPE}" STREQUAL "" )
+    set(CMAKE_BUILD_TYPE Release)
+else()
+	add_definitions( -DDEBUG -D_DEBUG )
+endif()
+
+
 
 # output path
 if( UNIX )
-	if( "${CMAKE_BUILD_TYPE}" STREQUAL "Debug" )
+	if( CMAKE_BUILD_TYPE MATCHES Release )
+	    set( CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib/ )
+    else()
     	set( CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/debug/ )
-    else ()
-        set( CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib/ )
     endif()
 endif( UNIX )
 

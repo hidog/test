@@ -34,8 +34,9 @@ project(${PROJECT_NAME})
 
 
 if( UNIX )
-    # 不指定的話,UNIX預設編譯成Release
-	if( "${CMAKE_BUILD_TYPE}" STREQUAL "")
+    # 不指定的話,UNIX預設編譯成Debug
+    # 這邊不可以用MATCHES, 要用STREQUAL.
+	if( "${CMAKE_BUILD_TYPE}" STREQUAL "") 
 		set(CMAKE_BUILD_TYPE Release)
 	else()
 	    # UNIX 平台下不會自動產生這兩個macro
@@ -48,10 +49,10 @@ endif( UNIX )
 
 # output path
 if( UNIX )
-    if( CMAKE_BUILD_TYPE MATCHES Release )
-	    set( CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin )
+    if( CMAKE_BUILD_TYPE MATCHES Debug )
+	    set( CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/debug )
 	else()
-    	set( CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/debug )
+    	set( CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin )
 	endif()
 endif( UNIX )
 
@@ -85,12 +86,12 @@ if( MSVC )
 		 ${CMAKE_SOURCE_DIR}/../static_lib/build/
 		 ${CMAKE_SOURCE_DIR}/../dynamic_lib/build/ )
 elseif( UNIX )
-    if( CMAKE_BUILD_TYPE MATCHES Release )
-    	set( LIB_PATH ${CMAKE_SOURCE_DIR}/../static_lib/lib/
-                      ${CMAKE_SOURCE_DIR}/../dynamic_lib/lib/ )
-    else()
-        set( LIB_PATH ${CMAKE_SOURCE_DIR}/../static_lib/debug/
+    if( CMAKE_BUILD_TYPE MATCHES Debug )
+    	set( LIB_PATH ${CMAKE_SOURCE_DIR}/../static_lib/debug/
                       ${CMAKE_SOURCE_DIR}/../dynamic_lib/debug/ )
+    else()
+        set( LIB_PATH ${CMAKE_SOURCE_DIR}/../static_lib/lib/
+                      ${CMAKE_SOURCE_DIR}/../dynamic_lib/lib/ )
     endif()
 endif( MSVC )
 link_directories( ${LIB_PATH} )
@@ -114,7 +115,11 @@ add_executable( ${PROJECT_NAME} ${SOURCE} ${HEAD} )
 # 底下是指定路徑連結so的範例, linux環境下可以用這個方式讀取指定路徑的 .so 檔案. 
 # windows無法用這個方式載入dll
 # target_link_libraries( ${PROJECT_NAME} static_lib /home/hidog/code/test/cmake_example/dynamic_lib/lib/libdynamic_lib.so )
-target_link_libraries( ${PROJECT_NAME} dynamic_lib static_lib )
-
+if( UNIX )
+    target_link_libraries( ${PROJECT_NAME} dynamic_lib static_lib dl )
+    # dl use for explicit load so.
+else()
+    target_link_libraries( ${PROJECT_NAME} dynamic_lib static_lib )
+endif()
 
 

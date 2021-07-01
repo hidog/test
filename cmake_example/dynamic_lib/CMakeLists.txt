@@ -15,14 +15,24 @@ set( PROJECT_NAME dynamic_lib )
 project(${PROJECT_NAME})
 
 
+
+# 沒設定的話, 預設是debug
+if( "${CMAKE_BUILD_TYPE}" STREQUAL "" )
+    set(CMAKE_BUILD_TYPE Release)
+else()
+    add_definitions( -DDEBUG -D_DEBUG )
+endif()
+
+
+
 # output path
 # windows跟UNIX平台在這邊定義不同
 # 參考 https://zh.wikibooks.org/wiki/CMake_%E5%85%A5%E9%96%80/%E8%BC%B8%E5%87%BA%E4%BD%8D%E7%BD%AE%E8%88%87%E5%AE%89%E8%A3%9D
 if( UNIX )
-    if( "${CMAKE_BUILD_TYPE}" STREQUAL "Debug" )
-        set( CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/debug/ )
-    else()
+    if( CMAKE_BUILD_TYPE MATCHES Release )
         set( CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib/ )
+    else()
+        set( CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/debug/ )
     endif()
 endif( UNIX )
 
