@@ -7,6 +7,7 @@
     測試macro
     測試動態載入dll func
     測試class
+    導入其他library
 */
 
 DLL_EXPORT int dynamic_func_1();

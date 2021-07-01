@@ -15,8 +15,10 @@ int static_lib_func_2()
 #endif
 
     printf( "test for pure C.\n" );   
+    printf( "build type = %s, platform = %s\n", debug_release, platform );
+    printf( "file = %s\nfunction = %s\nline = %d\n", __FILE__, __FUNCTION__, __LINE__ );
 
-    return 1;
+    return 2;
 }
 
 

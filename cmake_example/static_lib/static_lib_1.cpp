@@ -3,6 +3,25 @@
 #include <string>
 
 
+StaticObj::StaticObj()
+{
+    std::cout << "StaticObj constructor" << std::endl;
+}
+
+
+StaticObj::~StaticObj()
+{
+    std::cout << "StaticObj destructor" << std::endl;
+}
+
+
+int StaticObj::test_func()
+{
+    std::cout << "File = " << __FILE__ << "\nFunction = " << __FUNCTION__ << "\nline = " << __LINE__ << std::endl;
+    return 4;
+}
+
+
 int static_lib_func_1()
 {
 #ifdef _DEBUG
@@ -15,10 +34,11 @@ int static_lib_func_1()
     std::string platform = "Windows";
 #endif
 
-    std::cout << "this is static lib cpp test" << std::endl;
+    std::cout << "This is static lib test" << std::endl;
+    std::cout << "File = " << __FILE__ << "\nFunction = " << __FUNCTION__ << "\nline = " << __LINE__ << std::endl;
     std::cout << debug_release << " build, OS = " << platform << std::endl;
 
-    return 1;
+    return STATIC_LIB_CPP;
 }
 
 

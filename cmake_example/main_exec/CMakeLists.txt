@@ -1,11 +1,13 @@
 cmake_minimum_required(VERSION 3.6)
 
+
 # print message
-message("cmake ubuntu test project")
+message("cmake exec test project")
 message("root path =" ${CMAKE_SOURCE_DIR} )
 
+
 # Project Name
-set( PROJECT_NAME cmake_ub_test )
+set( PROJECT_NAME cmake_exec )
 project(${PROJECT_NAME})
 
 
@@ -22,20 +24,30 @@ project(${PROJECT_NAME})
 # set(CMAKE_CXX_FLAGS_DEBUG "-O0 -ggdb")
 # set(CMAKE_CXX_FLAGS_RELEASE "-O0 -ggdb")
 
+# 看到但沒測過
+# set(CMAKE_CXX_FLAGS_DEBUG_INIT "-Wall")
+# set(CMAKE_CXX_FLAGS_RELEASE_INIT "-Wall")
 
+# https://www.796t.com/article.php?id=49714
+# 參考這篇網誌的cmake設置	
 
 
 
 # output path
-set( CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin )
+if( UNIX )
+	set( CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin )
+endif( UNIX )
 
-# 不指定的話,編譯成Release
-if( "${CMAKE_BUILD_TYPE}" STREQUAL "")
-    set(CMAKE_BUILD_TYPE Release)
-endif()
+
+if( UNIX )
+# 不指定的話,UNIX預設編譯成Release
+	if( "${CMAKE_BUILD_TYPE}" STREQUAL "")
+		set(CMAKE_BUILD_TYPE Release)
+	endif()
+endif( UNIX )
+
 
 # preprocessor define
-set( DEFINE -DHIDOG_DEFINE )
 if( MSVC )
 	message("define MSVC")
 	set( DEFINE ${DEFINE} -DMSVC 
@@ -44,37 +56,51 @@ elseif( XCODE )
 	message("define xcode")
 	set( DEFINE ${DEFINE} -DMACOS )
 elseif( UNIX )
-        message("define unix")
-        set( DEFINE ${DEFINE} -DUNIX )
+    message("define unix")
+    set( DEFINE ${DEFINE} -DUNIX )
 endif( MSVC )
 add_definitions( ${DEFINE} )
 
-# include path 
-# 需要切分 windows, linux, macos. 有空修
-#set( INCLUDE_PATH /home/hidog/code/test/cmake_example/ubuntu/so 
-#                  /home/hidog/code/test/cmake_example/ubuntu/a  )
-set( INCLUDE_PATH D:/code/test/cmake_example/static_lib_cpp
-                  D:/code/test/cmake_example/dynamic_lib_cpp )
-include_directories( ${INCLUDE_PATH} )
-message("可以用 CMAKE_SOURCE_DIR. " ${CMAKE_SOURCE_DIR} )
 
-# library path 
-#set( LIB_PATH /home/hidog/code/test/cmake_example/ubuntu/a )
-set( LIB_PATH D:/code/test/cmake_example/static_lib_cpp/build/static/Debug
-              D:/code/test/cmake_example/dynamic_lib_cpp/build/Debug )
+# include path 
+if( MSVC )
+	set( INCLUDE_PATH ${CMAKE_SOURCE_DIR}/../static_lib/
+					  ${CMAKE_SOURCE_DIR}/../dynamic_lib )
+	include_directories( ${INCLUDE_PATH} )
+elseif( UNIX )
+	set( INCLUDE_PATH /home/hidog/code/test/cmake_example/ubuntu/so 
+                      /home/hidog/code/test/cmake_example/ubuntu/a  )
+endif( MSVC )
+# message("可以用 CMAKE_SOURCE_DIR. " ${CMAKE_SOURCE_DIR} )
+
+
+# library path
+if( MSVC )
+	set( LIB_PATH 
+		  debug ${CMAKE_SOURCE_DIR}/../static_lib/build/Debug/
+		        ${CMAKE_SOURCE_DIR}/../dynamic_lib/build/Debug/
+          optimized ${CMAKE_SOURCE_DIR}/../static_lib/build/Release/ 
+		            ${CMAKE_SOURCE_DIR}/../dynamic_lib/build/Release/)
+elseif( UNIX )
+	set( LIB_PATH /home/hidog/code/test/cmake_example/ubuntu/a )
+endif( MSVC )
 link_directories( ${LIB_PATH} )
+
 
 # source 
 set( SOURCE main.cpp )
 
+
 # 
 add_executable( ${PROJECT_NAME} ${SOURCE} )
+
 
 # 指定路徑連結so的範例
 #target_link_libraries( ${PROJECT_NAME} /home/hidog/code/test/cmake_example/ubuntu/so/libtest.so )
 # windows似乎不能這樣, 研究一下這邊的語法
 #target_link_libraries( ${PROJECT_NAME} D:/code/test/cmake_example/dynamic_lib_cpp/build/Debug/dynamic_lib.dll )
 
+
 # 自己製作出來的 libtest2.a
-target_link_libraries( ${PROJECT_NAME} dynamic_lib )
+target_link_libraries( ${PROJECT_NAME} dynamic_lib static_lib )
 

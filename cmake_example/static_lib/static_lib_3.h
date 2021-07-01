@@ -1,5 +1,5 @@
-#ifndef STATIC_LIB_2_H
-#define STATIC_LIB_2_H
+#ifndef STATIC_LIB_3_H
+#define STATIC_LIB_3_H
 
 /*
 不加extern "C" 的情況下測試混編

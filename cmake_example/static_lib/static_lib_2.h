@@ -10,7 +10,11 @@
 extern "C" {
 #endif
 
+
+
 int static_lib_func_2();
+
+
 
 #ifdef __cplusplus
 } // end extern "C"

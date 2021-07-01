@@ -4,19 +4,9 @@
 
 int static_lib_func_3()
 {
-#ifdef _DEBUG
-    char debug_release[100] = "Debug";
-#else
-    char debug_release[100] = "Release";
-#endif
+    printf( "file = %s, function = %s, line = %d\n", __FILE__, __FUNCTION__, __LINE__ );
 
-#ifdef _WIN32
-    char platform[100] = "Windows";
-#endif
-
-    printf( "test for pure C with out extern C.\n" );   
-
-    return 1;
+    return 3;
 }
 
 

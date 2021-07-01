@@ -2,11 +2,24 @@
 #define STATIC_LIB_1_H
 
 /*
-    製作class
-    製作C/C++混鯿
     各種macro應用
 */
 
+
+class StaticObj
+{
+public:
+    StaticObj();
+    ~StaticObj();
+
+    int test_func();
+
+private:
+};
+
+
+
 int static_lib_func_1();
+
 
 #endif
