@@ -4,6 +4,9 @@
 #include "def.h"
 
 
-LIBRARY_API int dynamic_func_3();
+// 跟猜測的不同, 這邊 explicit load 成功.
+LIBRARY_API void dynamic_func_3();
+
+
 
 #endif

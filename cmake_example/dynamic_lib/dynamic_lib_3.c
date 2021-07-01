@@ -4,10 +4,9 @@
 
 
 
-int dynamic_func_3()
+void dynamic_func_3()
 {
-    printf("This is so test\n");
-    return 10;
+    printf("file = %s\nfunction = %s\nline = %d\n", __FILE__, __FUNCTION__, __LINE__ );
 }
 
 

@@ -1,7 +1,17 @@
 #include "dynamic.h"
+
 #include "dynamic_lib_1.h"
+#include "dynamic_lib_2.h"
+
+extern "C" {
+#include "dynamic_lib_3.h"
+}
+
+
 #include <iostream>
 
+
+// use for explicit load dll.
 #ifdef WIN32
 #include <windows.h>
 #elif defined(MACOS) | defined(UNIX)
@@ -12,17 +22,17 @@
 
 using namespace std;
 
-
-typedef int (*DllFunc_1)(void);
-
-
-
-
+// use for explicit load dll.
+typedef int (*DllFunc_4)(void);
+typedef double (*DllFunc_2)(int,int);
+typedef void (*DllFunc_3)(void);
 
 
 void explicit_load_func()
 {
 #ifdef WIN32
+
+    //
     HINSTANCE hDLL;
     hDLL = LoadLibrary("dynamic_lib");
     if( hDLL != NULL )
@@ -33,10 +43,11 @@ void explicit_load_func()
         return;
     }
 
-    DllFunc_1 dll_func_1 = NULL;
+    //
+    DllFunc_4 dll_func_4 = NULL;
 
-    dll_func_1 = (DllFunc_1)GetProcAddress( hDLL, "dynamic_func_1" );
-    if( dll_func_1 != NULL )
+    dll_func_4 = (DllFunc_4)GetProcAddress( hDLL, "dynamic_func_4" );
+    if( dll_func_4 != NULL )
         cout << "get func point sucess\n" ;
     else
     {
@@ -44,9 +55,39 @@ void explicit_load_func()
         return;
     }
 
-    int ret = dll_func_1();
-    printf( "ret = %d\n", ret );
+    int ret = dll_func_4();
+    printf( "ret = %d\n\n", ret );
 
+    //
+    DllFunc_2 dll_func_2 = NULL;
+
+    dll_func_2 = (DllFunc_2)GetProcAddress( hDLL, "dynamic_func_2" );
+    if( dll_func_2 != NULL )
+        cout << "get func point sucess\n" ;
+    else
+    {
+        cout << "Get func point fail.\n" ;
+        return;
+    }
+
+    double ret2 = dll_func_2(97,101);
+    printf( "ret2 = %lf\n\n", ret2 );
+
+    //
+    DllFunc_3 dll_func_3 = NULL;
+
+    dll_func_3 = (DllFunc_3)GetProcAddress( hDLL, "dynamic_func_3" );
+    if( dll_func_3 != NULL )
+        cout << "get func point sucess\n" ;
+    else
+    {
+        cout << "Get func point fail.\n" ;
+        return;
+    }
+    dll_func_3();
+    printf("\n\n");
+
+    //
     FreeLibrary(hDLL);
 
 #elif  defined(MACOS) | defined(UNIX)
@@ -78,10 +119,28 @@ void explicit_load_func()
 
 void dynamic_test()
 {
-    // dynamic lib test.
-    int b = dynamic_func_1();
+    int ret;
+    
+    //
+    ret = dynamic_func_1();
+    cout << "ret = " << ret << "\n\n";
+
+    //
+    double ret2 = dynamic_func_2( 481421, 9982157 );
+    cout << "ret2 = " << ret2 << "\n\n";
+
+    // 
+    dynamic_func_3();
+    
+    // 
+    ret = dynamic_func_4();
+    cout << "ret = " << ret << "\n\n";
+
+    
 
     DynamicObj d_obj;
     d_obj.test_func();
+
+    cout << endl;
 
 }

@@ -9,8 +9,6 @@ int main()
 
     explicit_load_func();
 
-
-   
     return 0;
 }
     
