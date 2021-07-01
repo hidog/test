@@ -76,11 +76,10 @@ endif( MSVC )
 
 # library path
 if( MSVC )
+	# MSVC 環境下會自動增加debug/release分類進去.
 	set( LIB_PATH 
-		  debug ${CMAKE_SOURCE_DIR}/../static_lib/build/Debug/
-		        ${CMAKE_SOURCE_DIR}/../dynamic_lib/build/Debug/
-          optimized ${CMAKE_SOURCE_DIR}/../static_lib/build/Release/ 
-		            ${CMAKE_SOURCE_DIR}/../dynamic_lib/build/Release/)
+		 ${CMAKE_SOURCE_DIR}/../static_lib/build/
+		 ${CMAKE_SOURCE_DIR}/../dynamic_lib/build/ )
 elseif( UNIX )
 	set( LIB_PATH /home/hidog/code/test/cmake_example/ubuntu/a )
 endif( MSVC )

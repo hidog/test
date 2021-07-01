@@ -38,7 +38,7 @@ int static_lib_func_1()
     std::cout << "File = " << __FILE__ << "\nFunction = " << __FUNCTION__ << "\nline = " << __LINE__ << std::endl;
     std::cout << debug_release << " build, OS = " << platform << std::endl;
 
-    return STATIC_LIB_CPP;
+    return STATIC_LIB;
 }
 
 
