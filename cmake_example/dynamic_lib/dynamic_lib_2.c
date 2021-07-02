@@ -5,8 +5,9 @@
 
 double dynamic_func_2( int a, int b )
 {
-    printf("file = %s\nfunction = %s\nline = %d\n", __FILE__, __FUNCTION__, __LINE__ );
-    printf("date = %s, time = %s\n", __DATE__, __TIME__ );
+    printf("\n\n* dynamic_func_2\n");
+    printf("    file = %s\n    function = %s, line = %d\n", __FILE__, __FUNCTION__, __LINE__ );
+    printf("    date = %s, time = %s\n", __DATE__, __TIME__ );
 
 #ifdef __cplusplus
     int cpp_def = __cplusplus;
@@ -20,7 +21,7 @@ double dynamic_func_2( int a, int b )
     int c_def = 0;
 #endif
 
-    printf("cpp_def = %d, c_def = %d\n", cpp_def, c_def );
+    printf("    cpp_def = %d, c_def = %d\n", cpp_def, c_def );
 
     if( b == 0 )
         b = 1;

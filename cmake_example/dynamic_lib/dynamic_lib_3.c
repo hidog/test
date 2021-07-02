@@ -6,7 +6,8 @@
 
 void dynamic_func_3()
 {
-    printf("file = %s\nfunction = %s\nline = %d\n", __FILE__, __FUNCTION__, __LINE__ );
+    printf("\n\n* dynamic_func_3\n");
+    printf("    file = %s\n    function = %s\nline = %d\n", __FILE__, __FUNCTION__, __LINE__ );
 }
 
 

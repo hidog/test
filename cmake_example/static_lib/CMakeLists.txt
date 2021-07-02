@@ -12,33 +12,37 @@ project(${PROJECT_NAME})
 
 
 # 沒設定的話, 預設是debug
-if( "${CMAKE_BUILD_TYPE}" STREQUAL "" )
-    set(CMAKE_BUILD_TYPE Release)
-else()
-	add_definitions( -DDEBUG -D_DEBUG )
-endif()
+if( UNIX )
+    if( "${CMAKE_BUILD_TYPE}" STREQUAL "" )
+        set(CMAKE_BUILD_TYPE Release)
+    endif()
+endif( UNIX )
 
+
+#
+set( CMAKE_C_FLAGS_DEBUG "-DDEBUG -D_DEBUG -DTEST_DEBUG -O0 -ggdb" )
+set( CMAKE_CXX_FLAGS_DEBUG "-DDEBUG -D_DEBUG -DTEST_DEBUG -O0 -ggdb" )
 
 
 # output path
 if( UNIX )
-	if( CMAKE_BUILD_TYPE MATCHES Release )
-	    set( CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib/ )
+    if( CMAKE_BUILD_TYPE MATCHES Release )
+        set( CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib/ )
     else()
-    	set( CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/debug/ )
+        set( CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/debug/ )
     endif()
 endif( UNIX )
 
 
 # preprocessor define
-set( DEFINE -DSTATIC_LIB=1 )
+set( DEFINE -DSTATIC_LIB=3242 )
 if( MSVC )
-	message("define MSVC")
-	set( DEFINE ${DEFINE} -DMSVC 
-	                      -DWIN32 )
+    message("define MSVC")
+    set( DEFINE ${DEFINE} -DMSVC 
+                          -DWIN32 )
 elseif( XCODE )
-	message("define xcode")
-	set( DEFINE ${DEFINE} -DMACOS )
+    message("define xcode")
+    set( DEFINE ${DEFINE} -DMACOS )
 elseif( UNIX )
         message("define unix")
         set( DEFINE ${DEFINE} -DUNIX )
@@ -54,13 +58,13 @@ include_directories( ${INCLUDE_PATH} )
 # source 
 set( SOURCE static_lib_1.cpp
             static_lib_2.c
-			static_lib_3.c )
+            static_lib_3.c )
 
 
 # head
 set( HEAD static_lib_1.h 
           static_lib_2.h 
-		  static_lib_3.h )
+          static_lib_3.h )
 
 
 # 

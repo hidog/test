@@ -3,8 +3,6 @@
 
 
 void dynamic_test();
-void explicit_load_func();
-
 
 
 #endif

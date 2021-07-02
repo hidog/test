@@ -38,13 +38,18 @@ if( UNIX )
     # 這邊不可以用MATCHES, 要用STREQUAL.
 	if( "${CMAKE_BUILD_TYPE}" STREQUAL "") 
 		set(CMAKE_BUILD_TYPE Release)
-	else()
-	    # UNIX 平台下不會自動產生這兩個macro
-	    add_definitions( -DDEBUG -D_DEBUG )
 	endif()
 endif( UNIX )
 
 
+# 切換到windows, unix的時候側一下這段效果
+# mac有效,會增加macro進去. mac沒設定的情況下會自動增加 NDEBUG到Releae build底下.
+# mac環境下進行底下測試 
+# 1. 沒設置 CMAKE_C_FLAGS_DEBUG, CMAKE_CXX_FLAGS_DEBUG, 能用中斷點debug
+# 2. 設置 set( CMAKE_C_FLAGS_DEBUG "-DDEBUG -D_DEBUG -DTEST_DEBUG" ), 無法用中斷點debug
+# 3. 增加 -ggdb, 可進行debug.
+set( CMAKE_C_FLAGS_DEBUG "-DDEBUG -D_DEBUG -DTEST_DEBUG -O0 -ggdb" )
+set( CMAKE_CXX_FLAGS_DEBUG "-DDEBUG -D_DEBUG -DTEST_DEBUG -O0 -ggdb" )
 
 
 # output path
@@ -58,6 +63,7 @@ endif( UNIX )
 
 
 # preprocessor define
+set( DEFINE -DMAIN_EXEC=55113 )
 if( MSVC )
 	message("define MSVC")
 	set( DEFINE ${DEFINE} -DMSVC 
@@ -85,6 +91,10 @@ if( MSVC )
 	set( LIB_PATH 
 		 ${CMAKE_SOURCE_DIR}/../static_lib/build/
 		 ${CMAKE_SOURCE_DIR}/../dynamic_lib/build/ )
+elseif( XCODE )
+	set( LIB_PATH 
+		 ${CMAKE_SOURCE_DIR}/../static_lib/build/lib/
+		 ${CMAKE_SOURCE_DIR}/../dynamic_lib/build/lib/ )
 elseif( UNIX )
     if( CMAKE_BUILD_TYPE MATCHES Debug )
     	set( LIB_PATH ${CMAKE_SOURCE_DIR}/../static_lib/debug/
@@ -100,12 +110,14 @@ link_directories( ${LIB_PATH} )
 # source 
 set( SOURCE main.cpp 
             static.cpp
-			dynamic.cpp )
+			dynamic.cpp 
+			explicit_load.cpp )
 			
 			
 # head
 set( HEAD static.h
-          dynamic.h )
+          dynamic.h 
+          explicit_load.h )
 
 
 # 
@@ -118,6 +130,7 @@ add_executable( ${PROJECT_NAME} ${SOURCE} ${HEAD} )
 if( UNIX )
     target_link_libraries( ${PROJECT_NAME} dynamic_lib static_lib dl )
     # dl use for explicit load so.
+    # 測試結果, mac 自動增加 dl 進去專案.
 else()
     target_link_libraries( ${PROJECT_NAME} dynamic_lib static_lib )
 endif()

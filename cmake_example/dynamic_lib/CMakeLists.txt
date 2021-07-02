@@ -17,12 +17,16 @@ project(${PROJECT_NAME})
 
 
 # 沒設定的話, 預設是debug
-if( "${CMAKE_BUILD_TYPE}" STREQUAL "" )
-    set(CMAKE_BUILD_TYPE Release)
-else()
-    add_definitions( -DDEBUG -D_DEBUG )
-endif()
+if( UNIX )
+	if( "${CMAKE_BUILD_TYPE}" STREQUAL "" )
+    	set(CMAKE_BUILD_TYPE Release)
+	endif()
+endif( UNIX )
 
+
+#
+set( CMAKE_C_FLAGS_DEBUG "-DDEBUG -D_DEBUG -DTEST_DEBUG -O0 -ggdb" )
+set( CMAKE_CXX_FLAGS_DEBUG "-DDEBUG -D_DEBUG -DTEST_DEBUG -O0 -ggdb" )
 
 
 # output path
@@ -38,7 +42,7 @@ endif( UNIX )
 
 
 # preprocessor define
-set( DEFINE -DDYNAMIC_LIB )
+set( DEFINE -DDYNAMIC_LIB=55113 )
 if( MSVC )
 	message("define MSVC")
 	set( DEFINE ${DEFINE} -DMSVC 

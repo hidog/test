@@ -7,23 +7,22 @@ using namespace std;
 
 
 DynamicObj::DynamicObj()
-{
-    cout << "DynamicObj constructor" << endl;
-}
+{}
 
 
 
 DynamicObj::~DynamicObj()
-{
-    cout << "DynamicObj destructor" << endl;
-}
+{}
 
 
 
 
 void DynamicObj::test_func()
 {
-    cout << "file = " << __FILE__ << "\nfunction = " << __FUNCTION__ << "\nline = " << __LINE__ << endl;
+    cout << "\n\n* test_func" << endl;
+    cout << "    file = " << __FILE__ << endl 
+         << "    function = " << __FUNCTION__ << endl 
+         << "    line = " << __LINE__ << endl;
 }
 
 
@@ -31,26 +30,37 @@ void DynamicObj::test_func()
 
 int dynamic_func_1()
 {
+    cout << "\n\n* dynamic_func_1" << endl;
+    
 #ifdef UNIX
-    assert(0);
+    //assert(0);
 #endif
-
-    printf("dynamic func test.\n");
 
 #ifdef __cplusplus
     int cpp_def = __cplusplus;
 #else
-    int cpp_def = 0;
+    int cpp_def = -1;
 #endif
 
 #ifdef __STDC__
     int c_def = __STDC__;
 #else
-    int c_def = 0;
+    int c_def = -1;
 #endif
+    
+    cout << "    cpp_def = " << cpp_def << ", c_def = " << c_def << endl;
 
-    printf("cpp_def = %d, c_def = %d\n", cpp_def, c_def );
-    return 10;
+#ifdef DEBUG
+    cout << "    defined DEBUG" << endl;
+#endif
+    
+#ifdef NDEBUG 
+    cout << "    defined NDEBUG" << endl;
+#endif
+    
+    cout << "    DYNAMIC_LIB = " << DYNAMIC_LIB << endl;
+
+    return DYNAMIC_LIB;
 }
 
 
@@ -58,7 +68,8 @@ int dynamic_func_1()
 
 int dynamic_func_4()
 {
-    cout << "This function allow load explicitly." << endl;
+    cout << "\n\n* dynamic_func_4" << endl;
+    cout << "    This function allow load explicitly." << endl;
     return 8195;
 }
 

@@ -3,30 +3,36 @@
 #include <string>
 #include <cassert>
 
+using namespace std;
+
 
 StaticObj::StaticObj()
-{
-    std::cout << "StaticObj constructor" << std::endl;
-}
+{}
 
 
 StaticObj::~StaticObj()
-{
-    std::cout << "StaticObj destructor" << std::endl;
-}
+{}
 
 
 int StaticObj::test_func()
 {
-    std::cout << "File = " << __FILE__ << "\nFunction = " << __FUNCTION__ << "\nline = " << __LINE__ << std::endl;
+    std::cout << "\n\n* StaticObj::test_func" << endl;
+    std::cout << "    File = " << __FILE__ << endl
+              << "    Function = " << __FUNCTION__ << endl
+              << "    line = " << __LINE__ << endl;
     return 4;
 }
 
 
+
+
+
 int static_lib_func_1()
 {
+    cout << "\n\n* static_lib_func_1" << endl;
+    
 #ifdef UNIX
-    assert(0);
+    //assert(0);
 #endif
 
 #ifdef _DEBUG
@@ -39,12 +45,26 @@ int static_lib_func_1()
     std::string platform = "Windows";
 #elif defined(UNIX)
     std::string platform = "Linux";
+#elif defined(MACOS)
+    std::string platform = "MACOS";
+#endif
+    
+#ifdef TEST_DEBUG
+    cout << "    define TEST_DEBUG" << endl;
 #endif
 
-    std::cout << "This is static lib test" << std::endl;
-    std::cout << "File = " << __FILE__ << "\nFunction = " << __FUNCTION__ << "\nline = " << __LINE__ << std::endl;
-    std::cout << debug_release << " build, OS = " << platform << std::endl;
+#ifdef NDEBUG
+    cout << "    define _NDEBUG" << endl;
+#endif
+    
 
+    cout << "    This is static lib test" << endl;
+    cout << "    File = " << __FILE__ << endl 
+         << "    Function = " << __FUNCTION__ << endl 
+         << "    line = " << __LINE__ << endl;
+    cout << "    " << debug_release << " build, OS = " << platform << endl;
+    cout << "    STATIC_LIB = " << STATIC_LIB << endl;
+    
     return STATIC_LIB;
 }
 
