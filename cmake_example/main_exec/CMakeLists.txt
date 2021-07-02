@@ -52,6 +52,13 @@ set( CMAKE_C_FLAGS_DEBUG "-DDEBUG -D_DEBUG -DTEST_DEBUG -O0 -ggdb" )
 set( CMAKE_CXX_FLAGS_DEBUG "-DDEBUG -D_DEBUG -DTEST_DEBUG -O0 -ggdb" )
 
 
+# Release build可以用底下的方式啟動debug模式
+# 這個出錯,跑出多餘的 ';'    set( CMAKE_C_FLAGS_RELEASE ${CMAKE_C_FLAGS_RELEASE} "-DNDEBUG -DTEST_RELEASE -ggdb" )
+#set( CMAKE_C_FLAGS_RELEASE "-DNDEBUG -DTEST_RELEASE -ggdb" )
+#set( CMAKE_CXX_FLAGS_RELEASE "-DNDEBUG -DTEST_RELEASE -ggdb" )
+
+
+
 # output path
 if( UNIX )
     if( CMAKE_BUILD_TYPE MATCHES Debug )
@@ -92,6 +99,7 @@ if( MSVC )
 		 ${CMAKE_SOURCE_DIR}/../static_lib/build/
 		 ${CMAKE_SOURCE_DIR}/../dynamic_lib/build/ )
 elseif( XCODE )
+	# xcode環境同樣會自動搜尋到debug/release. 預設編譯輸出路徑是lib
 	set( LIB_PATH 
 		 ${CMAKE_SOURCE_DIR}/../static_lib/build/lib/
 		 ${CMAKE_SOURCE_DIR}/../dynamic_lib/build/lib/ )
@@ -131,6 +139,7 @@ if( UNIX )
     target_link_libraries( ${PROJECT_NAME} dynamic_lib static_lib dl )
     # dl use for explicit load so.
     # 測試結果, mac 自動增加 dl 進去專案.
+    # mac 環境下需要複製dylib到執行檔目錄
 else()
     target_link_libraries( ${PROJECT_NAME} dynamic_lib static_lib )
 endif()

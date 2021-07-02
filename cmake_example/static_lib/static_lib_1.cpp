@@ -16,9 +16,12 @@ StaticObj::~StaticObj()
 
 int StaticObj::test_func()
 {
+    // 推薦使用 __func__
     std::cout << "\n\n* StaticObj::test_func" << endl;
     std::cout << "    File = " << __FILE__ << endl
+              << "    name = " << __PRETTY_FUNCTION__ << endl
               << "    Function = " << __FUNCTION__ << endl
+              << "    func = " << __func__ << endl
               << "    line = " << __LINE__ << endl;
     return 4;
 }
@@ -54,13 +57,13 @@ int static_lib_func_1()
 #endif
 
 #ifdef NDEBUG
-    cout << "    define _NDEBUG" << endl;
+    cout << "    define NDEBUG" << endl;
 #endif
     
 
     cout << "    This is static lib test" << endl;
     cout << "    File = " << __FILE__ << endl 
-         << "    Function = " << __FUNCTION__ << endl 
+         << "    Function = " << __func__ << endl 
          << "    line = " << __LINE__ << endl;
     cout << "    " << debug_release << " build, OS = " << platform << endl;
     cout << "    STATIC_LIB = " << STATIC_LIB << endl;

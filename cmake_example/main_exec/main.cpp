@@ -23,9 +23,9 @@ int main()
 
     dynamic_test();
 
-    //explicit_load_func();
+    explicit_load_func();
 
-    printf("    MAIN_EXEC = %d\n", MAIN_EXEC );
+    printf("\n\nMAIN_EXEC = %d\n", MAIN_EXEC );
 
 #ifdef UNIX
 /*
@@ -40,7 +40,23 @@ int main()
     //assert(0);
 #endif
 
-
+    
+    printf( "\n\nversion = %s\n\n", __VERSION__ );
+/*
+    參考 https://jyhshin.pixnet.net/blog/post/26588145
+ #if __STDC_VERSION__ < 199901L  
+ # if __GNUC__ >= 2  
+ #  define __func__ __FUNCTION__  
+ # else  
+ #  define __func__ ""  
+ # endif  
+ #endif
+*/
+    
+    
+#ifdef TEST_RELEASE
+    printf("\n\n define TEST_RELEASE\n\n" );
+#endif
 
 
 #ifdef _WIN32

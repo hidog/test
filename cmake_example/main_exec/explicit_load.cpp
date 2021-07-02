@@ -92,11 +92,18 @@ void explicit_load_func()
     //
     void *handle;
 
+#ifdef UNIX
     handle = dlopen( "libdynamic_lib.so", RTLD_LAZY );
+#elif defined(MACOS)
+    handle = dlopen( "libdynamic_lib.dylib", RTLD_LAZY );
+#else
+#error undefined.
+#endif
+    
     if( handle )
-        cout << "open .so success\n";
+        cout << "open .so or .dylib success\n";
     else
-        cout << "open .so fail\n";
+        cout << "open .so or .dylib fail\n";
 
     //
     DllFunc_4 func_4;

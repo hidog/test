@@ -22,7 +22,7 @@ int static_lib_func_2()
 
     printf( "    test for pure C.\n" );   
     printf( "    build type = %s, platform = %s\n", debug_release, platform );
-    printf( "    file = %s\n    function = %s\n    line = %d\n", __FILE__, __FUNCTION__, __LINE__ );
+    printf( "    file = %s\n    function = %s\n    line = %d\n", __FILE__, __func__, __LINE__ );
 
     return 2;
 }

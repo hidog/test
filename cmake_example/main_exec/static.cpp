@@ -11,21 +11,26 @@ extern "C" {
 #include <iostream>
 
 
+using namespace std;
+
+
+
+
 void static_test()
 {
     int ret;
 
     // static lib test.
     ret = static_lib_func_1();
-    std::cout << "ret = " << ret << "\n\n";
+    cout << "ret = " << ret << endl;
 
     static_lib_func_2();
-    std::cout << std::endl;
+    cout << endl;
 
     static_lib_func_3();
-    std::cout << std::endl;
+    cout << endl;
 
     StaticObj s_obj;
     s_obj.test_func();
-    std::cout << std::endl;
+    cout << endl;
 }
