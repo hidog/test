@@ -22,7 +22,11 @@ void DynamicObj::test_func()
     // 推薦使用 __func__
     cout << "\n\n* test_func" << endl;
     cout << "    file = " << __FILE__ << endl 
-         << "    name = " << __PRETTY_FUNCTION__ << endl
+#ifdef WIN32
+        << "    name = " << __FUNCSIG__ << endl
+#else
+        << "    name = " << __PRETTY_FUNCTION__ << endl
+#endif
          << "    function = " << __FUNCTION__ << endl 
          << "    func = " << __func__ << endl
          << "    line = " << __LINE__ << endl;

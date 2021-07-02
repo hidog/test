@@ -22,6 +22,8 @@ __declspec(dllimport)
 
 https://www.coder.work/article/12702  可以參考這個
 
+__cdecl  有空看一下這個
+
 */
 
 

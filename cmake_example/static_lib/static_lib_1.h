@@ -1,9 +1,6 @@
 ﻿#ifndef STATIC_LIB_1_H
 #define STATIC_LIB_1_H
 
-/*
-    各種macro應用
-*/
 
 
 class StaticObj

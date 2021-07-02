@@ -26,8 +26,8 @@ if( UNIX )
 endif( UNIX )
 
 
-# linux, mac沒設定的情況下會自動增加 NDEBUG 到 Releae build底下. 
-# linux, mac 的 Debug build 不會增加 DEBUG _DEBUG flag.
+# 沒設定的情況下會自動增加 NDEBUG 到 Releae build底下. 
+# Debug 不會增加 DEBUG _DEBUG macro
 # mac環境下進行底下測試 
 # 1. 沒設置 CMAKE_C_FLAGS_DEBUG, CMAKE_CXX_FLAGS_DEBUG, 能用中斷點debug
 # 2. 設置 set( CMAKE_C_FLAGS_DEBUG "-DDEBUG -D_DEBUG -DTEST_DEBUG" ), 無法用中斷點debug

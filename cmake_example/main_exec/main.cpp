@@ -40,8 +40,14 @@ int main()
     //assert(0);
 #endif
 
-    
+#ifdef WIN32
+    printf( "\n\nversion = %d\n\n", _MSC_FULL_VER );
+#else
     printf( "\n\nversion = %s\n\n", __VERSION__ );
+#endif
+
+
+
 /*
     參考 https://jyhshin.pixnet.net/blog/post/26588145
  #if __STDC_VERSION__ < 199901L  

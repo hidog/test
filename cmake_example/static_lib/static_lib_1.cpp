@@ -19,7 +19,11 @@ int StaticObj::test_func()
     // 推薦使用 __func__
     std::cout << "\n\n* StaticObj::test_func" << endl;
     std::cout << "    File = " << __FILE__ << endl
+#ifdef WIN32
+              << "    name = " << __FUNCSIG__ << endl
+#else
               << "    name = " << __PRETTY_FUNCTION__ << endl
+#endif
               << "    Function = " << __FUNCTION__ << endl
               << "    func = " << __func__ << endl
               << "    line = " << __LINE__ << endl;

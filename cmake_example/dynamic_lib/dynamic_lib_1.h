@@ -3,12 +3,6 @@
 
 #include "def.h"
 
-/*
-    測試macro
-    測試動態載入dll func
-    導入其他library
-*/
-
 
 /* 
     windows平台不加 dll export, 會造成編譯錯誤.
