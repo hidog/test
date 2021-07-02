@@ -43,3 +43,11 @@ https://ithelp.ithome.com.tw/articles/10221101
 參考教學
 
 
+
+
+# https://www.796t.com/article.php?id=49714
+# 參考這篇網誌的cmake設置	
+
+
+
+

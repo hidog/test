@@ -11,25 +11,9 @@ set( PROJECT_NAME cmake_exec )
 project(${PROJECT_NAME})
 
 
-
-
-# 參考這個網址  設置一些flag的作法
-# https://stackoverflow.com/questions/10085945/set-cflags-and-cxxflags-options-using-cmake/41843596   
-# set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -O0 -ggdb")
-# set(CMAKE_BUILD_TYPE DEBUG)
-# set(CMAKE_C_FLAGS "-O0 -ggdb")
-# set(CMAKE_C_FLAGS_DEBUG "-O0 -ggdb")
-# set(CMAKE_C_FLAGS_RELEASE "-O0 -ggdb")
-# set(CMAKE_CXX_FLAGS "-O0 -ggdb")
-# set(CMAKE_CXX_FLAGS_DEBUG "-O0 -ggdb")
-# set(CMAKE_CXX_FLAGS_RELEASE "-O0 -ggdb")
-
-# 看到但沒測過
+# 看到但沒測過, warning的設置.
 # set(CMAKE_CXX_FLAGS_DEBUG_INIT "-Wall")
 # set(CMAKE_CXX_FLAGS_RELEASE_INIT "-Wall")
-
-# https://www.796t.com/article.php?id=49714
-# 參考這篇網誌的cmake設置	
 
 
 
@@ -42,18 +26,19 @@ if( UNIX )
 endif( UNIX )
 
 
-# 切換到windows, unix的時候側一下這段效果
-# mac有效,會增加macro進去. mac沒設定的情況下會自動增加 NDEBUG到Releae build底下.
+# linux, mac沒設定的情況下會自動增加 NDEBUG 到 Releae build底下. 
+# linux, mac 的 Debug build 不會增加 DEBUG _DEBUG flag.
 # mac環境下進行底下測試 
 # 1. 沒設置 CMAKE_C_FLAGS_DEBUG, CMAKE_CXX_FLAGS_DEBUG, 能用中斷點debug
 # 2. 設置 set( CMAKE_C_FLAGS_DEBUG "-DDEBUG -D_DEBUG -DTEST_DEBUG" ), 無法用中斷點debug
-# 3. 增加 -ggdb, 可進行debug.
-set( CMAKE_C_FLAGS_DEBUG "-DDEBUG -D_DEBUG -DTEST_DEBUG -O0 -ggdb" )
-set( CMAKE_CXX_FLAGS_DEBUG "-DDEBUG -D_DEBUG -DTEST_DEBUG -O0 -ggdb" )
+# 3. 增加 -ggdb, 可進行debug. set( CMAKE_C_FLAGS_DEBUG "-DDEBUG -D_DEBUG -DTEST_DEBUG -O0 -ggdb" )
+# 最後找到可用的語法  set( CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} -DDEBUG -D_DEBUG -DTEST_DEBUG" )
+set( CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} -DDEBUG -D_DEBUG -DTEST_DEBUG" )
+set( CMAKE_CXX_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} -DDEBUG -D_DEBUG -DTEST_DEBUG" )
 
 
-# Release build可以用底下的方式啟動debug模式
-# 這個出錯,跑出多餘的 ';'    set( CMAKE_C_FLAGS_RELEASE ${CMAKE_C_FLAGS_RELEASE} "-DNDEBUG -DTEST_RELEASE -ggdb" )
+# Release build可以用底下的方式啟動ggdb.
+# 這個指令出錯,跑出多餘的 ';'    =>   set( CMAKE_C_FLAGS_RELEASE ${CMAKE_C_FLAGS_RELEASE} "-DNDEBUG -DTEST_RELEASE -ggdb" )
 #set( CMAKE_C_FLAGS_RELEASE "-DNDEBUG -DTEST_RELEASE -ggdb" )
 #set( CMAKE_CXX_FLAGS_RELEASE "-DNDEBUG -DTEST_RELEASE -ggdb" )
 
@@ -140,6 +125,7 @@ if( UNIX )
     # dl use for explicit load so.
     # 測試結果, mac 自動增加 dl 進去專案.
     # mac 環境下需要複製dylib到執行檔目錄
+    # UNIX環境不用copy .so 檔案
 else()
     target_link_libraries( ${PROJECT_NAME} dynamic_lib static_lib )
 endif()
