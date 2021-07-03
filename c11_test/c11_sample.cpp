@@ -6,6 +6,7 @@
 #include <cstdlib>
 #include <map>
 #include <utility>
+#include <algorithm>
 
 
 using namespace std;
