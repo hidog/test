@@ -45,8 +45,16 @@ https://ithelp.ithome.com.tw/articles/10221101
 
 
 
-# https://www.796t.com/article.php?id=49714
-# 參考這篇網誌的cmake設置	
+https://www.796t.com/article.php?id=49714
+參考這篇網誌的cmake設置	
+
+
+
+cmake -G   指定編譯環境. 例如Unix Makefiles, ninja
+cmake -G "Unix Makefiles" .
+
+
+
 
 
 
