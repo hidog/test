@@ -2,9 +2,15 @@
 #include <iostream>
 #include "file.h"
 #include "timer.h"
+#include "smart_point.h"
+#include "test.h"
 
 int main()
 {
+    test_unique_point();
+    Test test;
+    test.print();
+
     std::cout << "file size example : " << get_file_size() << "\n";
 
     Timer timer;

@@ -27,12 +27,24 @@
     <ClCompile Include="..\..\timer.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\smart_point.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\test.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\file.h">
       <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="..\..\timer.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\smart_point.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\test.h">
       <Filter>src</Filter>
     </ClInclude>
   </ItemGroup>
