@@ -1,13 +1,17 @@
 ﻿
-#include "../../src/CPU.h"
+#include "CPU.h"
 
 #include <iostream>
 
+using namespace std;
+
 int main()
 {
-    std::cout << "get core = " << get_real_cpu_core() << std::endl;
-    std::cout << "get core = " << get_logical_cpu_core() << std::endl;
+    cout << "get core = " << get_real_cpu_core() << "\n\n";
+    cout << "get core = " << get_logical_cpu_core() << "\n\n";
 
+    cout << "vendor = " << cpu_get_vender() << "\n\n";
+    cout << "cpu id = " << cpu_get_serial() << "\n\n";
 
     system("PAUSE");
 }
