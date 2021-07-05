@@ -1,0 +1,3 @@
+[submodule "QT_test/libqrencode"]
+	path = QT_test/libqrencode
+	url = https://github.com/fukuchi/libqrencode
