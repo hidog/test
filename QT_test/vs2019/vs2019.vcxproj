@@ -68,6 +68,7 @@
     <NMakeCleanCommandLine>vsmkfd_clean.bat</NMakeCleanCommandLine>
     <NMakeReBuildCommandLine>vsmkfd_rebuild.bat</NMakeReBuildCommandLine>
     <NMakePreprocessorDefinitions>WIN32;_DEBUG;$(NMakePreprocessorDefinitions)</NMakePreprocessorDefinitions>
+    <IncludePath>D:\code\qt5-build\qtbase\include\QtWidgets;D:\code\test\QT_test\src;D:\code\test\QT_test\qt;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <NMakeBuildCommandLine>vsmkfd.bat</NMakeBuildCommandLine>
@@ -75,6 +76,7 @@
     <NMakeCleanCommandLine>vsmkfd_clean.bat</NMakeCleanCommandLine>
     <NMakeReBuildCommandLine>vsmkfd_rebuild.bat</NMakeReBuildCommandLine>
     <NMakePreprocessorDefinitions>_DEBUG;$(NMakePreprocessorDefinitions)</NMakePreprocessorDefinitions>
+    <IncludePath>D:\code\qt5-build\qtbase\include\QtWidgets;D:\code\test\QT_test\src;D:\code\test\QT_test\qt;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <NMakeBuildCommandLine>vsmkf.bat</NMakeBuildCommandLine>
@@ -93,6 +95,11 @@
   <ItemDefinitionGroup>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\qt\mainwindow.cpp" />
+    <ClCompile Include="..\src\main.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\qt\mainwindow.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
