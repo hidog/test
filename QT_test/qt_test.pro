@@ -16,15 +16,16 @@ TARGET	= qt_test
 
 
 # use for command line version.
-#QT -= gui
-#CONFIG += console
-#CONFIG -= app_bundle
+QT -= gui
+CONFIG += console
+CONFIG -= app_bundle
+
 TEMPLATE = app
 
 
 
-# win32:Debug:DESTDIR		=	../debug/
-# win32:Release:DESTDIR	=	../release/
+win32:Debug:DESTDIR		=	../debug/
+win32:Release:DESTDIR	=	../release/
 
 
 
