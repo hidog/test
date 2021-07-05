@@ -117,10 +117,11 @@ set( HEAD static.h
 add_executable( ${PROJECT_NAME} ${SOURCE} ${HEAD} )
 
 
-# 底下是指定路徑連結so的範例, linux環境下可以用這個方式讀取指定路徑的 .so 檔案. 
-# windows無法用這個方式載入dll
-# target_link_libraries( ${PROJECT_NAME} static_lib /home/hidog/code/test/cmake_example/dynamic_lib/lib/libdynamic_lib.so )
+
 if( UNIX )
+    # 底下是指定路徑連結so的範例, linux環境下可以用這個方式讀取指定路徑的 .so 檔案. 
+    # windows無法用這個方式載入dll
+    #target_link_libraries( ${PROJECT_NAME} static_lib dl /home/hidog/code/test/cmake_example/dynamic_lib/lib/libdynamic_lib.so )
     target_link_libraries( ${PROJECT_NAME} dynamic_lib static_lib dl )
     # dl use for explicit load so.
     # 測試結果, mac 自動增加 dl 進去專案.
