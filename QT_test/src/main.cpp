@@ -10,6 +10,10 @@ int main(int argc, char *argv[])
     printf("define _CRT_SECURE_NO_WARNINGS\n");
 #endif
 
+#ifdef DEBUG | _DEBUG
+    printf("defined debug.\n");
+#endif
+
 #ifdef NDEBUG
     printf("define NDEBUG\n");
 #endif

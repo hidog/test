@@ -34,6 +34,8 @@ win32 {
 				_SCL_SECURE_NO_WARNINGS \
 				_CONSOLE \
 				WIN32
+	Debug:DEFINES += _DEBUG \
+	                 DEBUG 
 }
 
 win32:Release:DEFINES	+=	NDEBUG 
@@ -50,8 +52,9 @@ DEFINES		+=	QT_TEST
 
 
 
-INCLUDEPATH +=	./src/ \
-                ./qt/ 
+INCLUDEPATH +=	./src \
+                ./qt \
+				./3rd/QRencode/include
 				
 win32 {
 	# INCLUDEPATH	+= ..\src
@@ -61,17 +64,12 @@ win32 {
 
 
 
-# win32:Debug:LIBPATH	+=
-
-# win32:Release:LIBPATH	+=	
-
-# LIBPATH       +=  /Users/hidog/code/boost/stage/lib
-
-
-
-# win32:Debug:LIBS	+=	
+# 這邊必須使用 .. 
+win32:Debug:LIBS +=	-L../3rd/QRencode/lib/debug -lqrencoded
 
 # win32:Release:LIBS	+=	
+
+# LIBS += -L"3rdparty/CatWhisperer/lib" -lCatWhisperer
 
 
 
