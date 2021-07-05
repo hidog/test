@@ -183,6 +183,7 @@ ffmpeg.exe -i test.mp4 -acodec mp3 -ab 256k -ac 2 -ar 48000  -g 150 -bf 20 -c:v 
 16.
 ffmpeg.exe -i test.mp4 -vf "drawtext=fontcolor=black:fontsize=100:fontfile="/Windows/Fonts/arial.ttf":box=1:boxcolor=yellow@0.3:x=(w-text_w-10):y=(h-text_h-5):timecode='00\:00\:00\:00':rate=24000/1001" -f mp4 output.mp4
 打上time code
+ffmpeg -i input.mp4  -filter_complex "drawtext=fontfile=/Windows/Fonts/arial.ttf:x=320:y=main_h-50:fontsize=32:fontcolor='white':timecode='00\:00\:00\:00':rate=29.97" -y output.mp4
 
 
 
@@ -225,7 +226,8 @@ ffmpeg -f concat -i filelist.txt -c copy rtsp-server-0.mp4
 
 
 
-
+21. 增加字幕
+ffmpeg -i input.mp4 -vf subtitles=subs.srt out.mp4
 
 
 
