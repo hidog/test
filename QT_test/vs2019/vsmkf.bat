@@ -2,8 +2,8 @@
 if not exist ..\release\ (
 	mkdir ..\release\
 )
-:if not exist ..\release\*.dll (
-:	copy ..\lib\win32\libcurl\lib\*.dll 			..\release
-:)
-qmake ../qt_test.pro -r -spec win32-msvc2019
+if not exist ..\release\*.dll (
+copy ..\3rd\QRencode\lib\release\*.dll ..\release
+)
+qmake ../qt_test.pro -r -spec win32-msvc
 nmake release

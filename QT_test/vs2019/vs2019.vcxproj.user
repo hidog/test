@@ -5,4 +5,9 @@
     <LocalDebuggerWorkingDirectory>..\debug</LocalDebuggerWorkingDirectory>
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <LocalDebuggerCommand>D:\code\test\QT_test\release\qt_test.exe</LocalDebuggerCommand>
+    <LocalDebuggerWorkingDirectory>D:\code\test\QT_test\release\</LocalDebuggerWorkingDirectory>
+    <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
+  </PropertyGroup>
 </Project>

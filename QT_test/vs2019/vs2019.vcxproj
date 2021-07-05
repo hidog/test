@@ -76,7 +76,7 @@
     <NMakeCleanCommandLine>vsmkfd_clean.bat</NMakeCleanCommandLine>
     <NMakeReBuildCommandLine>vsmkfd_rebuild.bat</NMakeReBuildCommandLine>
     <NMakePreprocessorDefinitions>_DEBUG;$(NMakePreprocessorDefinitions)</NMakePreprocessorDefinitions>
-    <IncludePath>D:\code\test\QT_test\vs2019;D:\code\qt5-build\qtbase\include;D:\code\QT5\qtbase\src\corelib\global;D:\code\QT5\qtbase\src\widgets\widgets;D:\code\qt5-build\qtbase\include\QtCore;D:\code\qt5-build\qtbase\include\QtWidgets;D:\code\test\QT_test\src;D:\code\test\QT_test\qt;$(IncludePath)</IncludePath>
+    <IncludePath>D:\code\test\QT_test\3rd\QRencode\include;D:\code\test\QT_test\vs2019;D:\code\qt5-build\qtbase\include;D:\code\QT5\qtbase\src\corelib\global;D:\code\QT5\qtbase\src\widgets\widgets;D:\code\qt5-build\qtbase\include\QtCore;D:\code\qt5-build\qtbase\include\QtWidgets;D:\code\test\QT_test\src;D:\code\test\QT_test\qt;D:\code\qt5-build\qtbase\include\QtGui;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <NMakeBuildCommandLine>vsmkf.bat</NMakeBuildCommandLine>
@@ -91,6 +91,7 @@
     <NMakeCleanCommandLine>vsmkf_clean.bat</NMakeCleanCommandLine>
     <NMakeReBuildCommandLine>vsmkf_rebuild.bat</NMakeReBuildCommandLine>
     <NMakePreprocessorDefinitions>NDEBUG;$(NMakePreprocessorDefinitions)</NMakePreprocessorDefinitions>
+    <IncludePath>D:\code\test\QT_test\3rd\QRencode\include;D:\code\test\QT_test\vs2019;D:\code\qt5-build\qtbase\include;D:\code\QT5\qtbase\src\corelib\global;D:\code\QT5\qtbase\src\widgets\widgets;D:\code\qt5-build\qtbase\include\QtCore;D:\code\qt5-build\qtbase\include\QtWidgets;D:\code\test\QT_test\src;D:\code\test\QT_test\qt;D:\code\qt5-build\qtbase\include\QtGui;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup>
   </ItemDefinitionGroup>

@@ -16,10 +16,11 @@ TARGET	= qt_test
 
 
 # use for command line version.
-QT -= gui
-CONFIG += console
-CONFIG -= app_bundle
-
+win32:Debug {
+	QT -= gui
+	CONFIG += console
+	CONFIG -= app_bundle
+}
 TEMPLATE = app
 
 
@@ -38,7 +39,7 @@ win32 {
 	                 DEBUG 
 }
 
-win32:Release:DEFINES	+=	NDEBUG 
+win32:Release:DEFINES += NDEBUG 
 
 unix:!macos {
 	DEFINES 	+=	UNIX 
@@ -65,9 +66,11 @@ win32 {
 
 
 # 這邊必須使用 .. 
-win32:Debug:LIBS +=	-L../3rd/QRencode/lib/debug -lqrencoded
+# 其他範例 win32:Debug:LIBS +=	-L../3rd/QRencode/lib/debug -lqrencoded
+# win32:Release:LIBS += -L../3rd/QRencode/lib/release -lqrencoded
+win32:Debug:LIBS +=	-L../3rd/QRencode/lib/debug
 
-# win32:Release:LIBS	+=	
+win32:Release:LIBS += -L../3rd/QRencode/lib/release -lqrencode
 
 # LIBS += -L"3rdparty/CatWhisperer/lib" -lCatWhisperer
 
