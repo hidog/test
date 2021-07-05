@@ -66,9 +66,7 @@ win32 {
 
 
 # 這邊必須使用 .. 
-# 其他範例 win32:Debug:LIBS +=	-L../3rd/QRencode/lib/debug -lqrencoded
-# win32:Release:LIBS += -L../3rd/QRencode/lib/release -lqrencoded
-win32:Debug:LIBS +=	-L../3rd/QRencode/lib/debug
+win32:Debug:LIBS +=	-L../3rd/QRencode/lib/debug -lqrencoded
 
 win32:Release:LIBS += -L../3rd/QRencode/lib/release -lqrencode
 

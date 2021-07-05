@@ -4,6 +4,9 @@
 #include <QLocale>
 #include <QTranslator>
 
+
+
+
 int main(int argc, char *argv[])
 {
 #ifdef _CRT_SECURE_NO_WARNINGS
