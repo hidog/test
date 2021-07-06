@@ -11,6 +11,8 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 
 
+# QTCreator, Unix環境下, 沒特別設置,IDE的Debug, Release build, assert均有作用. Profile build, assert無作用. 看起來要最佳優化要選Profile
+# UNIX, 終端機模式下正常.
 CONFIG += c++11 warn_on
 TARGET	= qt_run
 # 測試改名, 所以執行檔用qt_run

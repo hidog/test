@@ -21,7 +21,7 @@ int main(int argc, char *argv[])
     printf("define NDEBUG\n");
 #endif
 
-    assert(0);
+    //assert(0);
     printf("test\n");
 
     QApplication a(argc, argv);
