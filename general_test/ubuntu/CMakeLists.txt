@@ -2,11 +2,11 @@ cmake_minimum_required(VERSION 2.6)
 
 
 # print message
-message("c11 example")
+message("general example")
 message("root path =" ${CMAKE_SOURCE_DIR} )
 
 # Project Name
-set( PROJECT_NAME c11_test )
+set( PROJECT_NAME test_anything )
 project(${PROJECT_NAME})
 
 
