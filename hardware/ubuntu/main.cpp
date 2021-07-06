@@ -14,6 +14,6 @@ int main()
     cout << "cpu id = " << cpu::get_cpu_serial() << "\n\n";
     cout << "cpu id = " << cpu::cpu_get_serial_asm() << "\n\n";
 
-    system("PAUSE");
+    return 0;
 }
 

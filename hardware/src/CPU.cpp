@@ -20,6 +20,7 @@ namespace cpu
 // https://docs.microsoft.com/en-us/windows/win32/api/sysinfoapi/nf-sysinfoapi-getlogicalprocessorinformation
 int get_real_cpu_core()
 {
+#ifdef WIN32
 	PSYSTEM_LOGICAL_PROCESSOR_INFORMATION buffer = NULL;
 	PSYSTEM_LOGICAL_PROCESSOR_INFORMATION ptr = NULL;
 	DWORD returnLength = 0;
@@ -72,6 +73,10 @@ int get_real_cpu_core()
 	printf( "physical core = %d\n", processorCoreCount );
 
 	return processorCoreCount;
+#elif defined(UNIX)
+    printf("need maintain\n");
+    return -1;
+#endif
 }
 
 
@@ -80,12 +85,17 @@ int get_real_cpu_core()
 
 int get_logical_cpu_core()
 {
+#ifdef WIN32
 	SYSTEM_INFO si;
 	GetSystemInfo(&si);
 
     printf( "logical cpu core = %d\n", si.dwNumberOfProcessors );
 
     return si.dwNumberOfProcessors;
+#elif defined(UNIX)
+    printf("need maintain\n");
+    return -1;
+#endif
 }
 
 
