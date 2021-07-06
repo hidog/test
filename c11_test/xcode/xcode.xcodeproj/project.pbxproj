@@ -8,7 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		6D97B77026947F2C00BD2F7A /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6D97B76F26947F2C00BD2F7A /* main.cpp */; };
-		6D97B7792694802800BD2F7A /* c11_sample.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6D97B7772694802800BD2F7A /* c11_sample.cpp */; };
+		6D97B77D2694812C00BD2F7A /* c11_sample.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6D97B77B2694812C00BD2F7A /* c11_sample.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -26,8 +26,8 @@
 /* Begin PBXFileReference section */
 		6D97B76C26947F2C00BD2F7A /* xcode */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = xcode; sourceTree = BUILT_PRODUCTS_DIR; };
 		6D97B76F26947F2C00BD2F7A /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
-		6D97B7772694802800BD2F7A /* c11_sample.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = c11_sample.cpp; path = ../../c11_sample.cpp; sourceTree = "<group>"; };
-		6D97B7782694802800BD2F7A /* c11_sample.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = c11_sample.h; path = ../../c11_sample.h; sourceTree = "<group>"; };
+		6D97B77B2694812C00BD2F7A /* c11_sample.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = c11_sample.cpp; path = ../../c11_sample.cpp; sourceTree = "<group>"; };
+		6D97B77C2694812C00BD2F7A /* c11_sample.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = c11_sample.h; path = ../../c11_sample.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -44,7 +44,7 @@
 		6D97B76326947F2C00BD2F7A = {
 			isa = PBXGroup;
 			children = (
-				6D97B7762694801E00BD2F7A /* src */,
+				6D97B77A2694812100BD2F7A /* src */,
 				6D97B76E26947F2C00BD2F7A /* xcode */,
 				6D97B76D26947F2C00BD2F7A /* Products */,
 			);
@@ -66,11 +66,11 @@
 			path = xcode;
 			sourceTree = "<group>";
 		};
-		6D97B7762694801E00BD2F7A /* src */ = {
+		6D97B77A2694812100BD2F7A /* src */ = {
 			isa = PBXGroup;
 			children = (
-				6D97B7772694802800BD2F7A /* c11_sample.cpp */,
-				6D97B7782694802800BD2F7A /* c11_sample.h */,
+				6D97B77B2694812C00BD2F7A /* c11_sample.cpp */,
+				6D97B77C2694812C00BD2F7A /* c11_sample.h */,
 			);
 			path = src;
 			sourceTree = "<group>";
@@ -132,7 +132,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				6D97B77026947F2C00BD2F7A /* main.cpp in Sources */,
-				6D97B7792694802800BD2F7A /* c11_sample.cpp in Sources */,
+				6D97B77D2694812C00BD2F7A /* c11_sample.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
