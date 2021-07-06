@@ -4,7 +4,7 @@ sudo apt-get install libclang-common-8-dev
 
 
 
-linux環境下
+linux, 終端機環境下
 qmake CONFIG+=Debug 
 assert有作用,會定義_DEBUG
 
@@ -13,3 +13,10 @@ assert無作用,會定義NDEBUG
 
 qmake
 assert有作用,不定義_DEBUG, NDEBUG
+
+上述行為跟QTCreator不同
+Debug, Release都會跳assert
+Profile不會跳assert.
+
+
+
