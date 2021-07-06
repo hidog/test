@@ -7,7 +7,8 @@
 #include <map>
 #include <utility>
 #include <algorithm>
-
+#include <memory>
+#include <cstring>
 
 using namespace std;
 
