@@ -11,6 +11,7 @@ project(${PROJECT_NAME})
 
 # 不設定C FLAG, 使用qtcreator的時候,會在 NULL的地方報錯
 # 幾個c++11的設定方式
+# 使用 set (CMAKE_CXX_STANDARD 98), 會造成編譯錯誤
 set (CMAKE_CXX_STANDARD 11)
 #set( CMAKE_C_FLAGS ${CMAKE_C_FLAGS} "-std=gnu11" )
 #set( CMAKE_C_FLAGS ${CMAKE_C_FLAGS} "-std=c11" )
