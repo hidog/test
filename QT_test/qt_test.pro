@@ -3,6 +3,7 @@ win64{ message("this is win64 test...") }
 macos{ message("this is macos test...") }
 unix:!macos{ message("this is unix test...") }
 
+message( "PWD = $$PWD" )
 
 
 QT       += core gui
@@ -17,10 +18,11 @@ TARGET	= qt_run
 
 
 # use for command line version.
-Debug {
-	QT -= gui
-	CONFIG += console
-	CONFIG -= app_bundle
+# unix的時候沒成功,正確講法是行為很怪,偶而成功,偶而跳終端機畫面但會當機
+win32:Debug {
+    QT -= gui
+    CONFIG += console
+    CONFIG -= app_bundle
 }
 TEMPLATE = app
 
@@ -76,7 +78,9 @@ win32 {
 # 這邊必須使用 .. 
 win32:Debug:LIBS    +=  -L../3rd/QRencode/lib/debug -lqrencoded
 win32:Release:LIBS  +=  -L../3rd/QRencode/lib/release -lqrencode
-unix:!macos:LIBS    +=  -L./3rd/QRencode/lib/linux/ -lqrencode
+# 用cmd環境下可以用相對路徑, 用QTCreator的時候必須設定絕對路徑.
+#unix:!macos:LIBS    +=  -L./3rd/QRencode/lib/linux/ -lqrencode
+unix:!macos:LIBS    +=  -L/home/hidog/code/test/QT_test/3rd/QRencode/lib/linux/ -lqrencode
 # LIBS +=
 
 

@@ -1,3 +1,15 @@
 https://www.coder.work/article/7126960
 unix環境下, 出現找不到QApplication的錯誤
 sudo apt-get install libclang-common-8-dev
+
+
+
+linux環境下
+qmake CONFIG+=Debug 
+assert有作用,會定義_DEBUG
+
+qmake CONFIG+=Release
+assert無作用,會定義NDEBUG
+
+qmake
+assert有作用,不定義_DEBUG, NDEBUG
