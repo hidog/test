@@ -1,0 +1,3 @@
+https://www.coder.work/article/7126960
+unix環境下, 出現找不到QApplication的錯誤
+sudo apt-get install libclang-common-8-dev
