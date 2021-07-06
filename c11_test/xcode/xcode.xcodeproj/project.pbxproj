@@ -8,7 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		6D90FD66269481A7006578CB /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6D90FD65269481A7006578CB /* main.cpp */; };
-		6D90FD6F269481BA006578CB /* c11_sample.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6D90FD6E269481B9006578CB /* c11_sample.cpp */; };
+		6D90FD7326948213006578CB /* c11_sample.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6D90FD7226948213006578CB /* c11_sample.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -26,8 +26,8 @@
 /* Begin PBXFileReference section */
 		6D90FD62269481A7006578CB /* xcode */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = xcode; sourceTree = BUILT_PRODUCTS_DIR; };
 		6D90FD65269481A7006578CB /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
-		6D90FD6D269481B9006578CB /* c11_sample.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = c11_sample.h; path = ../../c11_sample.h; sourceTree = "<group>"; };
-		6D90FD6E269481B9006578CB /* c11_sample.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = c11_sample.cpp; path = ../../c11_sample.cpp; sourceTree = "<group>"; };
+		6D90FD7126948213006578CB /* c11_sample.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = c11_sample.h; path = ../c11_sample.h; sourceTree = "<group>"; };
+		6D90FD7226948213006578CB /* c11_sample.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = c11_sample.cpp; path = ../c11_sample.cpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -44,7 +44,7 @@
 		6D90FD59269481A7006578CB = {
 			isa = PBXGroup;
 			children = (
-				6D90FD6C269481AD006578CB /* src */,
+				6D90FD7026948206006578CB /* src */,
 				6D90FD64269481A7006578CB /* xcode */,
 				6D90FD63269481A7006578CB /* Products */,
 			);
@@ -66,13 +66,13 @@
 			path = xcode;
 			sourceTree = "<group>";
 		};
-		6D90FD6C269481AD006578CB /* src */ = {
+		6D90FD7026948206006578CB /* src */ = {
 			isa = PBXGroup;
 			children = (
-				6D90FD6E269481B9006578CB /* c11_sample.cpp */,
-				6D90FD6D269481B9006578CB /* c11_sample.h */,
+				6D90FD7226948213006578CB /* c11_sample.cpp */,
+				6D90FD7126948213006578CB /* c11_sample.h */,
 			);
-			path = src;
+			name = src;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -132,7 +132,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				6D90FD66269481A7006578CB /* main.cpp in Sources */,
-				6D90FD6F269481BA006578CB /* c11_sample.cpp in Sources */,
+				6D90FD7326948213006578CB /* c11_sample.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
