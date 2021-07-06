@@ -10,13 +10,14 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 
 
-CONFIG += c++11
-TARGET	= qt_test
+CONFIG += c++11 warn_on
+TARGET	= qt_run
+# 測試改名, 所以執行檔用qt_run
 
 
 
 # use for command line version.
-win32:Debug {
+Debug {
 	QT -= gui
 	CONFIG += console
 	CONFIG -= app_bundle
@@ -27,6 +28,7 @@ TEMPLATE = app
 
 win32:Debug:DESTDIR		=	../debug/
 win32:Release:DESTDIR	=	../release/
+unix:!macos:DESTDIR     =   ./bin/
 
 
 
@@ -35,11 +37,12 @@ win32 {
 				_SCL_SECURE_NO_WARNINGS \
 				_CONSOLE \
 				WIN32
-	Debug:DEFINES += _DEBUG \
-	                 DEBUG 
 }
 
-win32:Release:DEFINES += NDEBUG 
+Debug:DEFINES += _DEBUG \
+	             DEBUG 
+
+Release:DEFINES += NDEBUG 
 
 unix:!macos {
 	DEFINES 	+=	UNIX 
@@ -65,18 +68,34 @@ win32 {
 
 
 
+# 看文件過去應該支援這個方式搜尋 .so, 但目前測試失敗.
+# unix:!macos:DEPENDPATH += -L/home/hidog/code/test/QT_test/3rd/QRencode/lib/linux/
+
+
+
 # 這邊必須使用 .. 
-win32:Debug:LIBS +=	-L../3rd/QRencode/lib/debug -lqrencoded
+win32:Debug:LIBS    +=  -L../3rd/QRencode/lib/debug -lqrencoded
+win32:Release:LIBS  +=  -L../3rd/QRencode/lib/release -lqrencode
+unix:!macos:LIBS    +=  -L./3rd/QRencode/lib/linux/ -lqrencode
+# LIBS +=
 
-win32:Release:LIBS += -L../3rd/QRencode/lib/release -lqrencode
 
-# LIBS += -L"3rdparty/CatWhisperer/lib" -lCatWhisperer
+
+# 設定runtime, so的路徑.
+unix:!macos:QMAKE_RPATHDIR += /home/hidog/code/test/QT_test/3rd/QRencode/lib/linux/
+
+
+
+# 這兩個作用不確定,有空研究
+# QMAKE_LFLAGS += 
+# QMAKE_LFLAGS_RPATH = 
+ 
 
 
 
 # You can make your code fail to compile if it uses deprecated APIs.
 # In order to do so, uncomment the following line.
-#DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
+# DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 
 
