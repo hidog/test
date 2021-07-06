@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 2.6)
 
 # Project Name
-set( PROJECT_NAME std_test )
+set( PROJECT_NAME STL_example )
 project(${PROJECT_NAME})
 
 if( "${CMAKE_BUILD_TYPE}" STREQUAL "")
@@ -16,8 +16,12 @@ endif( UNIX )
 add_definitions( ${DEFINE} ) 
 
 # include path
-set( INCLUDE_PATH /home/hidog/code/test/std )
+set( INCLUDE_PATH ${CMAKE_SOURCE_DIR}/../ )
 include_directories( ${INCLUDE_PATH} )
+
+# head
+set( HEAD ../thread.h
+          ../macro.h )
 
 # source 
 set( SOURCE main.cpp
