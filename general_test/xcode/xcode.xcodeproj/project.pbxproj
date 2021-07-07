@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		6D4C5F732695992B0055FE02 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6D4C5F722695992B0055FE02 /* main.cpp */; };
+		6D8E4EE7269599F6008F49B7 /* linklist.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6D8E4EE6269599F6008F49B7 /* linklist.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -25,6 +26,8 @@
 /* Begin PBXFileReference section */
 		6D4C5F6F2695992B0055FE02 /* xcode */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = xcode; sourceTree = BUILT_PRODUCTS_DIR; };
 		6D4C5F722695992B0055FE02 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
+		6D8E4EE5269599F6008F49B7 /* linklist.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = linklist.h; path = ../src/linklist.h; sourceTree = "<group>"; };
+		6D8E4EE6269599F6008F49B7 /* linklist.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = linklist.cpp; path = ../src/linklist.cpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -41,6 +44,7 @@
 		6D4C5F662695992B0055FE02 = {
 			isa = PBXGroup;
 			children = (
+				6D8E4EE4269599E7008F49B7 /* src */,
 				6D4C5F712695992B0055FE02 /* xcode */,
 				6D4C5F702695992B0055FE02 /* Products */,
 			);
@@ -60,6 +64,15 @@
 				6D4C5F722695992B0055FE02 /* main.cpp */,
 			);
 			path = xcode;
+			sourceTree = "<group>";
+		};
+		6D8E4EE4269599E7008F49B7 /* src */ = {
+			isa = PBXGroup;
+			children = (
+				6D8E4EE6269599F6008F49B7 /* linklist.cpp */,
+				6D8E4EE5269599F6008F49B7 /* linklist.h */,
+			);
+			name = src;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -119,6 +132,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				6D4C5F732695992B0055FE02 /* main.cpp in Sources */,
+				6D8E4EE7269599F6008F49B7 /* linklist.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
