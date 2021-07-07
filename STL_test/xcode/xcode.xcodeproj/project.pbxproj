@@ -7,6 +7,12 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		6DB1351B2695A33C00AAF1B4 /* timer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6DB135112695A33C00AAF1B4 /* timer.cpp */; };
+		6DB1351C2695A33C00AAF1B4 /* macro.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6DB135132695A33C00AAF1B4 /* macro.cpp */; };
+		6DB1351D2695A33C00AAF1B4 /* file.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6DB135142695A33C00AAF1B4 /* file.cpp */; };
+		6DB1351E2695A33C00AAF1B4 /* smart_point.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6DB135152695A33C00AAF1B4 /* smart_point.cpp */; };
+		6DB1351F2695A33C00AAF1B4 /* test.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6DB135162695A33C00AAF1B4 /* test.cpp */; };
+		6DB135202695A33C00AAF1B4 /* thread.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6DB135182695A33C00AAF1B4 /* thread.cpp */; };
 		6DF8BD902695A2D200C41E17 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6DF8BD8F2695A2D200C41E17 /* main.cpp */; };
 /* End PBXBuildFile section */
 
@@ -23,6 +29,18 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		6DB1350F2695A33C00AAF1B4 /* test.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = test.h; path = ../test.h; sourceTree = "<group>"; };
+		6DB135102695A33C00AAF1B4 /* thread.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = thread.h; path = ../thread.h; sourceTree = "<group>"; };
+		6DB135112695A33C00AAF1B4 /* timer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = timer.cpp; path = ../timer.cpp; sourceTree = "<group>"; };
+		6DB135122695A33C00AAF1B4 /* file.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = file.h; path = ../file.h; sourceTree = "<group>"; };
+		6DB135132695A33C00AAF1B4 /* macro.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = macro.cpp; path = ../macro.cpp; sourceTree = "<group>"; };
+		6DB135142695A33C00AAF1B4 /* file.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = file.cpp; path = ../file.cpp; sourceTree = "<group>"; };
+		6DB135152695A33C00AAF1B4 /* smart_point.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = smart_point.cpp; path = ../smart_point.cpp; sourceTree = "<group>"; };
+		6DB135162695A33C00AAF1B4 /* test.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = test.cpp; path = ../test.cpp; sourceTree = "<group>"; };
+		6DB135172695A33C00AAF1B4 /* smart_point.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = smart_point.h; path = ../smart_point.h; sourceTree = "<group>"; };
+		6DB135182695A33C00AAF1B4 /* thread.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = thread.cpp; path = ../thread.cpp; sourceTree = "<group>"; };
+		6DB135192695A33C00AAF1B4 /* timer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = timer.h; path = ../timer.h; sourceTree = "<group>"; };
+		6DB1351A2695A33C00AAF1B4 /* macro.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = macro.h; path = ../macro.h; sourceTree = "<group>"; };
 		6DF8BD8C2695A2D200C41E17 /* xcode */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = xcode; sourceTree = BUILT_PRODUCTS_DIR; };
 		6DF8BD8F2695A2D200C41E17 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -38,9 +56,29 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		6DB1350E2695A32800AAF1B4 /* src */ = {
+			isa = PBXGroup;
+			children = (
+				6DB135142695A33C00AAF1B4 /* file.cpp */,
+				6DB135122695A33C00AAF1B4 /* file.h */,
+				6DB135132695A33C00AAF1B4 /* macro.cpp */,
+				6DB1351A2695A33C00AAF1B4 /* macro.h */,
+				6DB135152695A33C00AAF1B4 /* smart_point.cpp */,
+				6DB135172695A33C00AAF1B4 /* smart_point.h */,
+				6DB135162695A33C00AAF1B4 /* test.cpp */,
+				6DB1350F2695A33C00AAF1B4 /* test.h */,
+				6DB135182695A33C00AAF1B4 /* thread.cpp */,
+				6DB135102695A33C00AAF1B4 /* thread.h */,
+				6DB135112695A33C00AAF1B4 /* timer.cpp */,
+				6DB135192695A33C00AAF1B4 /* timer.h */,
+			);
+			name = src;
+			sourceTree = "<group>";
+		};
 		6DF8BD832695A2D200C41E17 = {
 			isa = PBXGroup;
 			children = (
+				6DB1350E2695A32800AAF1B4 /* src */,
 				6DF8BD8E2695A2D200C41E17 /* xcode */,
 				6DF8BD8D2695A2D200C41E17 /* Products */,
 			);
@@ -118,7 +156,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6DB1351C2695A33C00AAF1B4 /* macro.cpp in Sources */,
+				6DB1351D2695A33C00AAF1B4 /* file.cpp in Sources */,
+				6DB1351E2695A33C00AAF1B4 /* smart_point.cpp in Sources */,
 				6DF8BD902695A2D200C41E17 /* main.cpp in Sources */,
+				6DB1351B2695A33C00AAF1B4 /* timer.cpp in Sources */,
+				6DB135202695A33C00AAF1B4 /* thread.cpp in Sources */,
+				6DB1351F2695A33C00AAF1B4 /* test.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
