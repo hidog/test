@@ -20,6 +20,10 @@ int main(int argc, char *argv[])
 #ifdef NDEBUG
     printf("define NDEBUG\n");
 #endif
+    
+#ifdef MACOS
+    printf("defined MACOS\n");
+#endif
 
     //assert(0);
     printf("test\n");

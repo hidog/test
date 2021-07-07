@@ -2,10 +2,11 @@
 #include "ui_mainwindow.h"
 
 #include <QMessageBox>
-#include "qrencode.h"
 #include <QString>
 #include <QImage>
 #include <QPainter>
+
+#include "qrencode.h"
 
 
 

@@ -20,3 +20,22 @@ Profile不會跳assert.
 
 
 
+mac環境下
+framework沒自動copy過去
+目前看到手動的方式
+QT_run.app/Contents/
+建立Frameworks
+copy dylib  (目前來講是QR code的lib)
+此時可以run
+
+進階用法看起來需要使用qt打包工具
+https://doc.qt.io/qt-5/macos-deployment.html
+參考搜尋關鍵字 otool
+
+其他網頁資料參考
+https://www.twblogs.net/a/5c573f9fbd9eee06ee21dc7e
+https://blog.csdn.net/mydad353193052/article/details/114977848
+http://www.cxyzjd.com/article/robert_cysy/93979746
+https://jamesdouble.github.io/blog/2018/11/19/frameworkEasy/
+
+

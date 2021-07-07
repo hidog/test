@@ -3,10 +3,10 @@ win64{ message("this is win64 test...") }
 macos{ message("this is macos test...") }
 unix:!macos{ message("this is unix test...") }
 
-message( "PWD = $$PWD" )
+# message( "PWD = $$PWD" )
 
 
-QT       += core gui
+QT  	+= core gui
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 
@@ -21,6 +21,7 @@ TARGET	= qt_run
 
 # use for command line version.
 # unix的時候沒成功,正確講法是行為很怪,偶而成功,偶而跳終端機畫面但會當機
+# macos也失敗
 win32:Debug {
     QT -= gui
     CONFIG += console
@@ -33,7 +34,7 @@ TEMPLATE = app
 win32:Debug:DESTDIR		=	../debug/
 win32:Release:DESTDIR	=	../release/
 unix:!macos:DESTDIR     =   ./bin/
-
+macos:DESTDIR           =   ./bin/
 
 
 win32 {
@@ -83,12 +84,16 @@ win32:Release:LIBS  +=  -L../3rd/QRencode/lib/release -lqrencode
 # 用cmd環境下可以用相對路徑, 用QTCreator的時候必須設定絕對路徑.
 #unix:!macos:LIBS    +=  -L./3rd/QRencode/lib/linux/ -lqrencode
 unix:!macos:LIBS    +=  -L/home/hidog/code/test/QT_test/3rd/QRencode/lib/linux/ -lqrencode
+macos:LIBS			+=	-L/Users/hidog/code/test/QT_test/3rd/QRencode/lib/xcode/ -lqrencode
 # LIBS +=
 
 
 
 # 設定runtime, so的路徑.
 unix:!macos:QMAKE_RPATHDIR += /home/hidog/code/test/QT_test/3rd/QRencode/lib/linux/
+# macos底下有效, 也可以手動建立 Frameworks 資料夾並且把dylib複製過去
+# QT_run.app/Contents/Frameworks
+macos:QMAKE_RPATHDIR += /Users/hidog/code/test/QT_test/3rd/QRencode/lib/xcode/
 
 
 
