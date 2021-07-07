@@ -73,7 +73,7 @@ int get_real_cpu_core()
 	printf( "physical core = %d\n", processorCoreCount );
 
 	return processorCoreCount;
-#elif defined(UNIX)
+#elif defined(UNIX) | defined(MACOS)
     printf("need maintain\n");
     return -1;
 #endif
@@ -92,7 +92,7 @@ int get_logical_cpu_core()
     printf( "logical cpu core = %d\n", si.dwNumberOfProcessors );
 
     return si.dwNumberOfProcessors;
-#elif defined(UNIX)
+#elif defined(UNIX) | defined(MACOS)
     printf("need maintain\n");
     return -1;
 #endif
