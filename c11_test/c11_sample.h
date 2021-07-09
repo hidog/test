@@ -67,8 +67,6 @@
  */
 
 
-void c11_sample_1();
-void c11_sample_2();
 void c11_sample_3();
 void c11_sample_4();
 void c11_sample_5();

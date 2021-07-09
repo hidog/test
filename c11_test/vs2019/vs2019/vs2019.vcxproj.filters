@@ -24,9 +24,21 @@
     <ClCompile Include="..\..\c11_sample.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\c11_initial.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\c11_for_each.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\c11_sample.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\c11_initial.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\c11_for_each.h">
       <Filter>src</Filter>
     </ClInclude>
   </ItemGroup>
