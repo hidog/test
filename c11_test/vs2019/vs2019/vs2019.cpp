@@ -4,7 +4,9 @@
 #include "c11_initial.h"
 #include "c11_LR_value.h"
 #include "rule_three.h"
-#include "c11_move.h"
+#include "enum_class.h"
+
+#include "move/c11_move.h"
 
 
 int main()
@@ -18,19 +20,17 @@ int main()
     //c11::move_test_1();
     //c11::move_test_2();
     //c11::move_test_3();
-    c11::move_test_4();
+    //c11::move_test_4();
+    //c11_enum_class_test();
 
 
-    //c11_sample_9();
-
-
-
-
-    c11_sample_11();
-    c11_sample_12();
-    c11_sample_13();
-    c11_swap();
+    //c11_sample_9(); // 這個執行會造成crash,有時間在修
+    //c11_sample_11();
+    //c11_sample_12();
+    //c11_sample_13();
+    //c11_swap();
 
     system("PAUSE");
+    return 0;
 }
 

@@ -16,42 +16,56 @@
     <Filter Include="src">
       <UniqueIdentifier>{0765ef77-8c38-4aa7-9da8-8731e27f9f48}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\move">
+      <UniqueIdentifier>{9579debe-469b-486e-a5ed-85fd2f84cc02}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="vs2019.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\c11_sample.cpp">
+    <ClCompile Include="..\..\src\c11_LR_value.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\c11_initial.cpp">
+    <ClCompile Include="..\..\src\c11_sample.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\c11_LR_value.cpp">
+    <ClCompile Include="..\..\src\enum_class.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\rule_three.cpp">
+    <ClCompile Include="..\..\src\rule_three.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\c11_move.cpp">
+    <ClCompile Include="..\..\src\c11_initial.cpp">
       <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\move\c11_move.cpp">
+      <Filter>src\move</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\c11_sample.h">
+    <ClInclude Include="..\..\src\c11_initial.h">
       <Filter>src</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\c11_initial.h">
+    <ClInclude Include="..\..\src\c11_LR_value.h">
       <Filter>src</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\c11_LR_value.h">
+    <ClInclude Include="..\..\src\c11_sample.h">
       <Filter>src</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\rule_three.h">
+    <ClInclude Include="..\..\src\enum_class.h">
       <Filter>src</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\c11_move.h">
+    <ClInclude Include="..\..\src\rule_three.h">
       <Filter>src</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\move\c11_move.h">
+      <Filter>src\move</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="..\..\src\note.txt">
+      <Filter>src</Filter>
+    </Text>
   </ItemGroup>
 </Project>
