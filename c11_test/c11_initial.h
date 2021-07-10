@@ -4,7 +4,7 @@
 namespace c11 {
 
 void uniform_initial_test();
-
+void initial_list_test();
 
 
 } // end namespace c11

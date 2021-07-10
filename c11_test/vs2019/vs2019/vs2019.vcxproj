@@ -142,12 +142,18 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\..\c11_initial.cpp" />
+    <ClCompile Include="..\..\c11_LR_value.cpp" />
+    <ClCompile Include="..\..\c11_move.cpp" />
     <ClCompile Include="..\..\c11_sample.cpp" />
+    <ClCompile Include="..\..\rule_three.cpp" />
     <ClCompile Include="vs2019.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\c11_initial.h" />
+    <ClInclude Include="..\..\c11_LR_value.h" />
+    <ClInclude Include="..\..\c11_move.h" />
     <ClInclude Include="..\..\c11_sample.h" />
+    <ClInclude Include="..\..\rule_three.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

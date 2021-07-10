@@ -27,12 +27,30 @@
     <ClCompile Include="..\..\c11_initial.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\c11_LR_value.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\rule_three.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\c11_move.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\c11_sample.h">
       <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="..\..\c11_initial.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\c11_LR_value.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\rule_three.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\c11_move.h">
       <Filter>src</Filter>
     </ClInclude>
   </ItemGroup>

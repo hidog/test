@@ -67,14 +67,15 @@
  */
 
 
-void c11_sample_3();
-void c11_sample_4();
-void c11_sample_5();
-void c11_sample_6();
-void c11_sample_7();
-void c11_sample_8();
+
+/*
+    執行會造成crash, 有空研究怎麼回事並且修復.
+*/
 void c11_sample_9();
-void c11_sample_10();
+
+
+
+
 void c11_sample_11();
 void c11_sample_12();
 void c11_sample_13();
