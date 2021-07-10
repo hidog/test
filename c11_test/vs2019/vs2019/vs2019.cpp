@@ -5,8 +5,11 @@
 #include "c11_LR_value.h"
 #include "rule_three.h"
 #include "enum_class.h"
+#include "c11_supressing.h"
+#include "rule_five.h"
 
 #include "move/c11_move.h"
+
 
 
 int main()
@@ -22,6 +25,8 @@ int main()
     //c11::move_test_3();
     //c11::move_test_4();
     //c11_enum_class_test();
+    //c11::supressing_operator_test();
+    c11::test_rule_five();
 
 
     //c11_sample_9(); // 這個執行會造成crash,有時間在修

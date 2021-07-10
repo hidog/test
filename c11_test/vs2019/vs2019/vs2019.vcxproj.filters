@@ -42,6 +42,12 @@
     <ClCompile Include="..\..\src\move\c11_move.cpp">
       <Filter>src\move</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\c11_supressing.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\rule_five.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\c11_initial.h">
@@ -70,6 +76,12 @@
     </ClInclude>
     <ClInclude Include="..\..\src\move\test_class_4.h">
       <Filter>src\move</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\c11_supressing.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\rule_five.h">
+      <Filter>src</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

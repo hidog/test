@@ -116,7 +116,7 @@ public:
 };
 
 
-/*E operator + ( const E& e1, const E& e2 )
+E operator + ( const E& e1, const E& e2 )
 {
     cout << "+" << endl;
     E tmp;
@@ -127,13 +127,13 @@ public:
         tmp.ptr[i] = e1.ptr[i] + e2.ptr[i];
     
     return tmp;
-}*/
+}
 
 
 /*
     it will cause e1's real memory size is not equal e1.size.
  */
-E&& operator + ( E e1, const E& e2 )
+/*E&& operator + ( E e1, const E& e2 )
 {
     cout << "+" << endl;
 
@@ -143,7 +143,7 @@ E&& operator + ( E e1, const E& e2 )
         e1.ptr[i] += e2.ptr[i];
     
     return std::move(e1);
-}
+}*/
 
 
 
