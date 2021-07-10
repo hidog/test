@@ -1,4 +1,4 @@
-#include "c11_for_each.h"
+#include "for_each.h"
 #include <deque>
 #include <iostream>
 #include <algorithm>
@@ -8,7 +8,6 @@
 
 
 using namespace std;
-
 
 
 
@@ -63,8 +62,6 @@ void print_deque( T a )
 
 
 
-namespace c11 {
-
 void for_each_example()
 {
     //
@@ -113,6 +110,3 @@ void for_each_example()
     cout << aaa << endl;
 }
 
-
-
-} // end namespace c11

@@ -142,6 +142,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\..\file.cpp" />
+    <ClCompile Include="..\..\for_each.cpp" />
     <ClCompile Include="..\..\smart_point.cpp" />
     <ClCompile Include="..\..\test.cpp" />
     <ClCompile Include="..\..\timer.cpp" />
@@ -149,6 +150,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\file.h" />
+    <ClInclude Include="..\..\for_each.h" />
     <ClInclude Include="..\..\smart_point.h" />
     <ClInclude Include="..\..\test.h" />
     <ClInclude Include="..\..\timer.h" />

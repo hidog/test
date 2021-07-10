@@ -33,6 +33,9 @@
     <ClCompile Include="..\..\test.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\for_each.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\file.h">
@@ -45,6 +48,9 @@
       <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="..\..\test.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\for_each.h">
       <Filter>src</Filter>
     </ClInclude>
   </ItemGroup>

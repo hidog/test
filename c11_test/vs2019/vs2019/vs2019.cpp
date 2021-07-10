@@ -2,14 +2,14 @@
 #include <cstdlib>
 #include "c11_sample.h"
 #include "c11_initial.h"
-#include "c11_for_each.h"
+
 
 int main()
 {
     std::cout << "This is test.\n";
 
     c11::uniform_initial_test();
-    c11::for_each_example();
+
 
     c11_sample_3();
     c11_sample_4();

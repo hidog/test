@@ -4,9 +4,13 @@
 #include "timer.h"
 #include "smart_point.h"
 #include "test.h"
+#include "for_each.h"
+
 
 int main()
 {
+    for_each_example();
+
     test_unique_point();
     Test test;
     test.print();

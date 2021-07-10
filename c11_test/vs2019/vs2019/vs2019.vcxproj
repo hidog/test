@@ -143,13 +143,11 @@
   <ItemGroup>
     <ClCompile Include="..\..\c11_initial.cpp" />
     <ClCompile Include="..\..\c11_sample.cpp" />
-    <ClCompile Include="..\..\c11_for_each.cpp" />
     <ClCompile Include="vs2019.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\c11_initial.h" />
     <ClInclude Include="..\..\c11_sample.h" />
-    <ClInclude Include="..\..\c11_for_each.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
