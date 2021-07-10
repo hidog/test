@@ -62,6 +62,15 @@
     <ClInclude Include="..\..\src\move\c11_move.h">
       <Filter>src\move</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\move\test_class_2.h">
+      <Filter>src\move</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\move\test_class_3.h">
+      <Filter>src\move</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\move\test_class_4.h">
+      <Filter>src\move</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="..\..\src\note.txt">

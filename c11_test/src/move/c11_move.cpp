@@ -3,6 +3,11 @@
 #include <vector>
 #include <iostream>
 
+#include "test_class_2.h"
+#include "test_class_3.h"
+#include "test_class_4.h"
+
+
 using namespace std;
 
 
@@ -10,91 +15,6 @@ using namespace std;
 namespace {
 
 
-
-
-
-class C2
-{
-public:
-    C2() : ptr(NULL), size(0)
-    {
-        //cout << "C2(), addr = " << this << endl;
-        cout << "constructor C2()" << endl;
-    }
-
-    C2( int _s )
-    {
-        cout << "constructor C2(int)" << endl;
-        //cout << "C2(int), addr = " << this << endl;
-        size = _s;
-        ptr = new int[size];
-        for( int i = 0; i < size; i++ )
-            ptr[i]  =   rand() % 10000;
-    }
-
-    C2( const C2& _c )
-    {
-        cout << "copy constructor" << endl;
-        //cout << "C2(const C2&), addr = " << this << endl;
-        size = _c.size;
-        ptr = new int[size];
-        for( int i = 0; i < size; i++ )
-            ptr[i]  =   _c.ptr[i];
-    }
-
-    C2( C2&& _c )
-    {
-        cout << "move constructor\n";
-
-        ptr     =   _c.ptr;
-        size    =   _c.size;
-
-        _c.ptr  =   nullptr;
-        _c.size =   0;
-    }
-
-
-    ~C2()
-    {
-        //cout << "~C2(), addr = " << this << endl;
-        delete [] ptr;
-    }
-
-    C2& operator = ( const C2& _c )
-        //C2& operator = ( C2& _c )
-    {
-        cout << "copy operator = , addr = " << this << " , _c addr = " << &_c << endl;
-
-        if( size != 0 && ptr != NULL )
-            delete [] ptr;
-
-        size = _c.size;
-        ptr = new int[size];
-        for( int i = 0; i < size; i++ )
-            ptr[i] = _c.ptr[i];
-
-        return *this;
-    }
-
-
-    // move assignment
-    C2& operator = ( C2&& _c )
-    {
-        cout << "C2 move operator = , addr = " << this << endl;
-
-        ptr = _c.ptr;
-        size = _c.size;
-
-        _c.ptr = nullptr;
-        _c.size = 0;
-
-        return *this;
-    }
-
-
-    int size;
-    int *ptr;
-};
 
 
 
@@ -108,63 +28,6 @@ C2 C2_test_1( C2 c )
 
 
 
-
-
-
-class D1
-{
-public:
-    D1() : ptr(NULL), size(0) { cout << "constructor" << endl; }
-
-    D1( int _s )
-    {
-        //cout << "D1(int), addr = " << this << endl;
-        // note: need check _s > 0
-        cout << "constructor" << endl;
-        size = _s;
-        ptr = new int[size];
-        for( int i = 0; i < size; i++ )
-            ptr[i]  =   rand() % 10000;
-    }
-
-    D1( const D1& _d )
-    {
-        cout << "copy constructor D1(const D1&), addr = " << this << endl;
-        size = _d.size;
-        ptr = new int[size];
-        for( int i = 0; i < size; i++ )
-            ptr[i]  =   _d.ptr[i];
-    }
-
-    // move constructor
-    D1( D1&& _d )
-    {
-        cout << "move constructor D1(D1&&), addr = " << this << endl;
-        size = _d.size;
-        ptr = _d.ptr;
-
-        _d.ptr = nullptr;
-        _d.size = 0;
-    }
-
-    ~D1()
-    {
-        //cout << "~D1(), addr = " << this << endl;
-        delete [] ptr;
-    }
-
-
-    D1 operator + ( const D1& _d )
-    {
-        D1 tmp( _d.size + size );
-        //return D1( _d.size + size );
-        return tmp;
-    }
-
-
-    int size;
-    int *ptr;
-};
 
 
 
@@ -229,38 +92,6 @@ D1 move_ct_test_4( int n )
 }
 
 
-
-
-
-class F
-{
-public:
-    F() : v{1,2,3,4,5,6,7,8,9}
-    {}
-
-    F( int n )
-    {
-        v.resize(n);
-        for( int i = 0; i < n; i++ )
-            v[i] = rand() * 100;
-    }
-
-    F( const F& f )
-    {
-        v   =   f.v;
-        v[0]++;
-    }
-
-    F( F&& f )
-    {
-        v   =   move(f.v);
-        v[0] = -v[0];
-    }
-
-    ~F(){}
-
-    vector<int> v;
-};
 
 
 
