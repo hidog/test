@@ -1,13 +1,14 @@
-#include "rule_five.h"
+#include "c11_template_test.h"
+
 #include <iostream>
+#include "template_func.h"
 
 using namespace std;
 
 
 namespace {
 
-
-
+template<typename T>
 class Array
 {
 public:
@@ -15,16 +16,16 @@ public:
     {
         cout << "Array()" << endl;
     }
-    
+
     Array( int _s ) : size{_s}
     {
         cout << "Array(int)" << endl;
-        data = new int[_s];
+        data = new T[_s];
         for( int i = 0; i < size; i++ )
-            data[i] = i;
+            data[i] = static_cast<T>(i);
     }
 
-    Array( const Array& _a ) : size{_a.size}, data{ new int [_a.size] }
+    Array( const Array& _a ) : size{_a.size}, data{ new T [_a.size] }
     {
         cout << "copy constructor" << endl;
         for( int i = 0; i < size; i++ )
@@ -42,7 +43,7 @@ public:
     {
         cout << "copy operator =" << endl;
         size = _a.size;
-        data = new int[size];
+        data = new T[size];
         for( int i = 0; i < size; i++ )
             data[i] = _a.data[i];
     }
@@ -71,28 +72,57 @@ public:
         return std::move(tmp);
     }
 
-    void print()
+    T& operator [] ( int index )
     {
-        for( int i = 0; i < size; i++ )
-            cout << i << " " << data[i] << endl;
+        if( index < size )
+            return data[index];
+        else 
+            return nullptr;
     }
 
-    friend Array add_5_func( Array a );
+    void print();
+
+    T* begin();
+    T* end();
+
+
+    T operator () (int index)
+    {
+        index = index < size ? index : size;
+        T sum = 0;
+        for( int i = 0; i < index; i++ )
+            sum += data[i];
+        return sum;
+    }
+
 
 private:
     int size = 0;
-    int *data = nullptr;
+    T *data = nullptr;
 
 };
 
 
-Array add_5_func( Array a )
+template<typename T>
+void Array<T>::print()
 {
-    for( int i = 0; i < a.size; i++ )
-        a.data[i] += 5;
-    return a;
+    for( int i = 0; i < size; i++ )
+        cout << i << " " << data[i] << endl;
 }
 
+
+template<typename T>
+T* Array<T>::begin()
+{
+    return size > 0 ? &(data[0]) : nullptr;
+}
+
+
+template<typename T>
+T* Array<T>::end()
+{
+    return size > 0 ? &(data[size]) : nullptr;
+}
 
 
 } // end namespace
@@ -100,31 +130,36 @@ Array add_5_func( Array a )
 
 
 
-namespace c11 {
 
 
-void test_rule_five_1()
+
+
+namespace c11{
+
+
+
+void test_template()
 {
-    Array a(10);
-    Array b{a};
-
+    Array<double> a{10};
     a.print();
-    b.print();
-
-    Array c = a + b;
-    c.print();
+    for( auto &itr : a )
+        cout << itr << " ";
 }
 
 
 
-void test_rule_five_2()
+void test_func_obj()
 {
-    Array a(10);
-    Array d = add_5_func(a);
-    d.print();
+    Array<int> a_func(5);
+    cout << a_func(3); // a_fun·Q¹³¦¨function
 }
 
 
+void test_variadic_template()
+{
+    cout << sum( 1, 1.2 );
+    v_func( 1, 3, 4.4, "abcde", 'Z' );
+}
 
 
 } // end namespace c11

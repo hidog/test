@@ -68,14 +68,7 @@
 
 
 
-/*
-    執行會造成crash, 有空研究怎麼回事並且修復.
-*/
 void c11_sample_9();
-
-
-
-
 void c11_sample_11();
 void c11_sample_12();
 void c11_sample_13();

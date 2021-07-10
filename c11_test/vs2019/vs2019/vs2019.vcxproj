@@ -149,6 +149,7 @@
     <ClCompile Include="..\..\src\move\c11_move.cpp" />
     <ClCompile Include="..\..\src\rule_five.cpp" />
     <ClCompile Include="..\..\src\rule_three.cpp" />
+    <ClCompile Include="..\..\src\template\c11_template_test.cpp" />
     <ClCompile Include="vs2019.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -163,6 +164,8 @@
     <ClInclude Include="..\..\src\move\test_class_4.h" />
     <ClInclude Include="..\..\src\rule_five.h" />
     <ClInclude Include="..\..\src\rule_three.h" />
+    <ClInclude Include="..\..\src\template\c11_template_test.h" />
+    <ClInclude Include="..\..\src\template\template_func.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="..\..\src\note.txt" />

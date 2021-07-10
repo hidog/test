@@ -19,6 +19,9 @@
     <Filter Include="src\move">
       <UniqueIdentifier>{9579debe-469b-486e-a5ed-85fd2f84cc02}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\template">
+      <UniqueIdentifier>{5d83b271-fd46-4bee-8b4b-a1484b3a0ab3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="vs2019.cpp">
@@ -47,6 +50,9 @@
     </ClCompile>
     <ClCompile Include="..\..\src\rule_five.cpp">
       <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\template\c11_template_test.cpp">
+      <Filter>src\template</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -82,6 +88,12 @@
     </ClInclude>
     <ClInclude Include="..\..\src\rule_five.h">
       <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\template\c11_template_test.h">
+      <Filter>src\template</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\template\template_func.h">
+      <Filter>src\template</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
