@@ -4,8 +4,10 @@
 #include "c11_initial.h"
 #include "c11_LR_value.h"
 #include "rule_three.h"
-#include "enum_class.h"
 #include "c11_supressing.h"
+#include "c11_using.h"
+
+#include "enum_class.h"
 #include "rule_five.h"
 
 #include "move/c11_move.h"
@@ -33,7 +35,10 @@ int main()
 
     //c11::test_template();
     //c11::test_func_obj();
-    c11::test_variadic_template();
+    //c11::test_variadic_template();
+    
+    c11::using_example();
+    c11::using_example_2();
 
     //c11_sample_9(); // 這個執行會造成crash,有時間在修
     //c11_sample_11();

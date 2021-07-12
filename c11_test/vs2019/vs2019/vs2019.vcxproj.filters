@@ -54,6 +54,9 @@
     <ClCompile Include="..\..\src\template\c11_template_test.cpp">
       <Filter>src\template</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\c11_using.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\c11_initial.h">
@@ -94,6 +97,9 @@
     </ClInclude>
     <ClInclude Include="..\..\src\template\template_func.h">
       <Filter>src\template</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\c11_using.h">
+      <Filter>src</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
