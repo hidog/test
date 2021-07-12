@@ -5,11 +5,13 @@
 #include "smart_point.h"
 #include "test.h"
 #include "for_each.h"
-
+#include "algorithm.h"
 
 int main()
 {
-    for_each_example();
+    find_if_test();
+
+    /*for_each_example();
 
     test_unique_point();
     Test test;
@@ -29,7 +31,7 @@ int main()
     int hour, min, sec, msec, totalms;
     timer.get_time( hour, min, sec, msec, totalms );
     std::cout << "timer = " << timer.get_time() << "ms\n";
-    std::cout << hour << " " << min << " " << sec << " " << msec << " " << totalms  << "\n";
+    std::cout << hour << " " << min << " " << sec << " " << msec << " " << totalms  << "\n";*/
 
 
     system("PAUSE");

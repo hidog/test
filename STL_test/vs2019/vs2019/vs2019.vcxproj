@@ -141,6 +141,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\algorithm.cpp" />
     <ClCompile Include="..\..\file.cpp" />
     <ClCompile Include="..\..\for_each.cpp" />
     <ClCompile Include="..\..\smart_point.cpp" />
@@ -149,6 +150,7 @@
     <ClCompile Include="vs2019.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\algorithm.h" />
     <ClInclude Include="..\..\file.h" />
     <ClInclude Include="..\..\for_each.h" />
     <ClInclude Include="..\..\smart_point.h" />

@@ -6,6 +6,7 @@ namespace c11 {
 
 
 void supressing_operator_test();
+void supressing_operator_test_2();
 
 
 } // end namespace c11

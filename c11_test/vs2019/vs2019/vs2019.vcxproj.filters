@@ -57,6 +57,9 @@
     <ClCompile Include="..\..\src\c11_using.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\other_test.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\c11_initial.h">
@@ -101,10 +104,8 @@
     <ClInclude Include="..\..\src\c11_using.h">
       <Filter>src</Filter>
     </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <Text Include="..\..\src\note.txt">
+    <ClInclude Include="..\..\src\other_test.h">
       <Filter>src</Filter>
-    </Text>
+    </ClInclude>
   </ItemGroup>
 </Project>

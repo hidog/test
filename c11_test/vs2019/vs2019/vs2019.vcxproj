@@ -148,6 +148,7 @@
     <ClCompile Include="..\..\src\c11_using.cpp" />
     <ClCompile Include="..\..\src\enum_class.cpp" />
     <ClCompile Include="..\..\src\move\c11_move.cpp" />
+    <ClCompile Include="..\..\src\other_test.cpp" />
     <ClCompile Include="..\..\src\rule_five.cpp" />
     <ClCompile Include="..\..\src\rule_three.cpp" />
     <ClCompile Include="..\..\src\template\c11_template_test.cpp" />
@@ -164,13 +165,11 @@
     <ClInclude Include="..\..\src\move\test_class_2.h" />
     <ClInclude Include="..\..\src\move\test_class_3.h" />
     <ClInclude Include="..\..\src\move\test_class_4.h" />
+    <ClInclude Include="..\..\src\other_test.h" />
     <ClInclude Include="..\..\src\rule_five.h" />
     <ClInclude Include="..\..\src\rule_three.h" />
     <ClInclude Include="..\..\src\template\c11_template_test.h" />
     <ClInclude Include="..\..\src\template\template_func.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <Text Include="..\..\src\note.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
