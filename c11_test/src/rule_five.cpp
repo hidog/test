@@ -1,8 +1,9 @@
 #include "rule_five.h"
 #include <iostream>
 
-using namespace std;
 
+using namespace std;
+static int cc = 0;
 
 namespace {
 
@@ -11,12 +12,13 @@ namespace {
 class Array
 {
 public:
-    Array() : size{0}, data{nullptr} 
+    
+    Array() : size{0}, data{nullptr}, index{cc++}
     {
         cout << "Array()" << endl;
     }
     
-    Array( int _s ) : size{_s}
+    Array( int _s ) : size{_s}, index{cc++}
     {
         cout << "Array(int)" << endl;
         data = new int[_s];
@@ -24,15 +26,20 @@ public:
             data[i] = i;
     }
 
-    Array( const Array& _a ) : size{_a.size}, data{ new int [_a.size] }
+    Array( const Array& _a ) : size{_a.size}, data{ new int [_a.size] }, index{cc++}
     {
         cout << "copy constructor" << endl;
         for( int i = 0; i < size; i++ )
             data[i] = _a.data[i];
     }
 
-    Array( Array&& _a ) noexcept : size{_a.size}, data{_a.data} 
+    Array( Array&& _a ) 
     {
+        cout << _a.index << endl;
+        
+        size = _a.size;
+        data = _a.data;
+        
         _a.size = 0;
         _a.data = nullptr;
         cout << "move constructor" << endl;
@@ -42,9 +49,11 @@ public:
     {
         cout << "copy operator =" << endl;
         size = _a.size;
+        index = _a.index;
         data = new int[size];
         for( int i = 0; i < size; i++ )
             data[i] = _a.data[i];
+        return *this;
     }
 
     Array& operator = ( Array&& _a ) noexcept
@@ -52,23 +61,26 @@ public:
         cout << "move operator =" << endl;
         size = _a.size;
         data = _a.data;
+        index = _a.index;
         _a.size = 0;
         _a.data = nullptr;
+        return *this;
     }
 
     ~Array()
     {
+        cout << index << endl;
         delete [] data;
         data = nullptr;
         size = 0;
     }
 
-    Array&& operator + ( const Array& _a )
+    Array operator + ( const Array& _a )
     {
-        Array tmp = *this;
+        Array tmp{_a.size};
         for( int i = 0; i < size; i++ )
             tmp.data[i] = data[i] + _a.data[i];
-        return std::move(tmp);
+        return tmp;
     }
 
     void print()
@@ -82,7 +94,7 @@ public:
 private:
     int size = 0;
     int *data = nullptr;
-
+    int index;
 };
 
 
@@ -111,7 +123,8 @@ void test_rule_five_1()
     a.print();
     b.print();
 
-    Array c = a + b;
+    Array c;
+    c = a + b;
     c.print();
 }
 
