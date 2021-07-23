@@ -40,6 +40,7 @@ int main()
     //c11::test_template();
     //c11::test_func_obj();
     //c11::test_variadic_template();
+    c11::test_decltype_template();
     
     //c11::using_example();
     //c11::using_example_2();

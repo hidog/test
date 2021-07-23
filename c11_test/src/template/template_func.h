@@ -1,9 +1,24 @@
-#ifndef TEMPLATE_FUNC_H
+﻿#ifndef TEMPLATE_FUNC_H
 #define TEMPLATE_FUNC_H
 
 #include <iostream>
+#include <vector>
 
 using namespace std;
+
+
+// 可以自動決定回傳型別
+template<typename T1, typename T2>
+auto operator + ( vector<T1> t1, vector<T2> t2 ) -> vector<decltype(T1{}+T2{})>
+{
+    int min_size = t1.size() < t2.size() ? t1.size() : t2.size();
+    vector<decltype(T1{}+T2{})> sum(min_size);
+
+    for( int i = 0; i < min_size; i++ )
+        sum[i] = t1[i] + t2[i];
+
+    return sum;
+}
 
 
 

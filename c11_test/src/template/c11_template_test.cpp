@@ -8,6 +8,7 @@ using namespace std;
 
 namespace {
 
+
 template<typename T>
 class Array
 {
@@ -135,6 +136,26 @@ T* Array<T>::end()
 
 
 namespace c11{
+
+
+void test_decltype_template()
+{
+    vector<int> a = { 1, 2, 3, 4, 5 };
+    vector<double> b = { 1.3, 6.2, 661.52223 };
+
+    auto c = a + b;
+    auto d = b + a;
+
+    cout << "vector c = " << endl;
+    for( int i = 0; i < c.size(); i++ )
+        cout << c[i] << " ";
+    cout << "\n\n";
+
+    cout << "vector d = " << endl;
+    for( int i = 0; i < d.size(); i++ )
+        cout << d[i] << " ";
+    cout << "\n\n";
+}
 
 
 

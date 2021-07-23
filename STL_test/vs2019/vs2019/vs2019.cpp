@@ -9,7 +9,11 @@
 
 int main()
 {
-    find_if_test();
+    int a{};
+    printf("a = %d\n", a);
+
+
+    //find_if_test();
 
     /*for_each_example();
 

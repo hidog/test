@@ -7,7 +7,7 @@ namespace c11 {
 void test_template();
 void test_func_obj();
 void test_variadic_template();
-
+void test_decltype_template();
 
 } // end namespace c11
 
