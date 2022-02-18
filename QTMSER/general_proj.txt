@@ -1,0 +1,27 @@
+https://doc.qt.io/qt-5/qmake-platform-notes.html
+
+
+qmake -spec macx-xcode QTMSER.pro
+
+使用上面的指令產生xcode proj, 可以直接編譯QT
+QTMSER.pro 置換成指定的專案名稱
+
+
+
+
+visual studio 2019
+延伸模組 搜尋 Qt  安裝
+
+編譯QT
+..\\QT5\\configure -opensource -nomake examples -nomake tests -prefix C:\Qt
+
+必須安裝在 C:\ 底下,不然會發生錯誤
+Qt Version本身容易造成問題, 曾經發生不明的錯誤訊息
+出問題的時候檢查是不是Qt Version故障
+
+利用延伸模組 load QTMSER.pro, 以及匯出QTMSER.pro的方式同步QT專案.
+
+
+用vs cmd
+qmake -tp vc
+產生空的sln

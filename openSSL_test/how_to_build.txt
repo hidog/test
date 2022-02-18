@@ -1,0 +1,104 @@
+http://slproweb.com/products/Win32OpenSSL.html
+windows下載連結
+
+
+
+https://www.openssl.org/source/gitrepo.html
+
+git clone git://git.openssl.org/openssl.git
+
+for windows , use 
+$ cd openssl
+$ git config core.autocrlf false
+$ git config core.eol lf
+$ git checkout .
+感覺跟ffmpeg一樣,不這樣做會出現linux平台檔案結尾的問題
+
+
+
+
+windows編譯過程
+
+1.1.0版之前跟之後有所不同. 目前最新的openssl安裝包已經移除了libeay.dll等檔案
+
+https://zhuanlan.zhihu.com/p/141273949
+* https://www.itread01.com/content/1546780515.html 舊版主要參考這個
+
+
+
+1. 安裝perl
+2. 安裝nasm  (曾經看到討論可以不安裝,這邊選擇安裝nasm)
+   https://www.nasm.us/
+   這邊選擇非安裝版本,手動設置環境變數
+   https://www.nasm.us/pub/nasm/releasebuilds/2.15.04/win32/
+3. 移動到openssl路徑
+4. perl Configure VC-WIN32 --prefix=c:\openssl
+5. ms\do_nasm
+6. nmake -f ms\ntdll.mak
+7. nmake -f ms\ntdll.mak test  檢查編譯結果s
+8. nmake -f ms\ntdll.mak install
+
+以上是舊版 (1.1.0之前), win32, dll的測試
+
+
+
+編譯debug
+4. 改成 perl Configure debug-VC-WIN32 --prefix=c:\openssl-debug
+做完 5. ms\do_nasm 後
+* 編輯 ms\ntdll.mak, 移除 CFLAG裡面的 -WX  (不然會導致編譯錯誤)
+
+
+編譯 x64
+4. 改成 perl Configure VC-WIN64A --prefix=c:\openssl
+5. ms\do_win64a
+
+
+
+
+
+note:  (直接copy paste)
+
+    以上編譯的是 release 版本，若要編譯 debug 版，將上述第 2 步中的 VC-WIN32 改成 debug-VC-WIN32即可。
+    若要編譯靜態庫，則用 ms\nt.mak 替換掉上面用到的 ms\ntdll.mak 即可。
+    若要生成不帶彙編支援的庫，則需將上述第 2、3 步用 perl Configure VC-WIN32 no-asm --prefix=E:\OpenSSL 和 ms\do_ms 替換。
+    在 E:\openssl-1.0.2m\tmp32dll 資料夾下包含相應的彙編檔案。
+
+提醒一下，有時候會報錯，不知道是否是安裝了per64位和32的原因，需要在path環境變數裡面修改所用的per順序！
+
+
+
+
+其他參考網址
+https://www.huaweicloud.com/articles/1369e955462030d3bbfdd9e9796c70b2.html
+https://www.itread01.com/p/882707.html
+https://wiki.openssl.org/index.php/Compilation_and_Installation#Windows
+https://www.itread01.com/content/1546174996.html
+https://slproweb.com/products/Win32OpenSSL.html
+
+
+
+
+新版的編譯方式 (1.1.0以後)
+
+卡在perl, 暫時先跳過. (不想安裝跟設定perl,暫時也用不到新版,直接抓編譯好的版本即可)
+
+
+
+
+build on mac os x
+
+https://www.jianshu.com/p/04b97c094980
+https://wiki.openssl.org/index.php/Compilation_and_Installation
+
+git clone https://github.com/openssl/openssl.git
+
+cd openssl
+mkdir out
+./Configure darwin64-x86_64-cc no-shared  --prefix=`pwd`/out
+make -j `nproc`
+make install
+
+
+
+
+

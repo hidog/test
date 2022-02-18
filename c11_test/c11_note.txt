@@ -1,0 +1,38 @@
+使用using取代typedef
+
+使用constexpr取代#define 
+
+lambda operator
+[&] ref
+[=] value
+
+mutable 能改值
+
+通常等號右邊的是右值,左邊是左值
+能用 & 取址的是左值,反之是右值
+
+右值參考不能傳左值,反之亦然
+使用樣板的話可以自動推導是左值還是右值
+
+用樣板的話再傳一層的時候,右值會變左值
+用std::forward可以保持左值或右值
+
+move constructor, assignment
+用複製指向位置的作法來操作,避免複製整個array的資料,處理速度較快
+因為原本傳入的是暫存資料,結合右值,可以提高效能
+實作可用std::swap.  (亦可避免 a = a造成的錯誤)
+
+
+the rule of three
+constructor
+copy constructor
+copy assignment
+destructor
+加上
+move constructor
+move assignment
+變成the rule of five.
+
+利用大括號初始化
+
+initial_list

@@ -1,0 +1,711 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+		5E618435888B9D49F8540165 = {
+			buildActionMask = 2147483647;
+			files = (
+				);
+			isa = PBXShellScriptBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+			name = "Qt Qmake";
+			shellPath = "/bin/sh";
+			shellScript = "make -C /Users/hidog/code/test/QTMSER -f QTMSER.xcodeproj/qt_makeqmake.mak";
+			showEnvVarsInLog = "0";
+		};
+		6AC73074F489332346F28C81 = {
+			isa = PBXFileReference;
+			path = "/Users/hidog/code/test/QTMSER/main.cpp";
+			name = "main.cpp";
+			sourceTree = "<absolute>";
+			lastKnownFileType = "sourcecode.cpp.cpp";
+		};
+		DD8A4A0AEA2C773C47F77DF4 = {
+			fileRef = "6AC73074F489332346F28C81";
+			isa = PBXBuildFile;
+			settings = {
+				ATTRIBUTES = (
+					);
+			};
+		};
+		A39727AA28A403D62C3D8295 = {
+			isa = PBXFileReference;
+			path = "/Users/hidog/code/test/QTMSER/mainwindow.cpp";
+			name = "mainwindow.cpp";
+			sourceTree = "<absolute>";
+			lastKnownFileType = "sourcecode.cpp.cpp";
+		};
+		838FED2A3AF9F995AF49C430 = {
+			fileRef = "A39727AA28A403D62C3D8295";
+			isa = PBXBuildFile;
+			settings = {
+				ATTRIBUTES = (
+					);
+			};
+		};
+		59F593CE6A47AE3E5807071C = {
+			isa = PBXFileReference;
+			path = "/Users/hidog/code/test/QTMSER/mser/mser.cpp";
+			name = "mser.cpp";
+			sourceTree = "<absolute>";
+			lastKnownFileType = "sourcecode.cpp.cpp";
+		};
+		EC79942E7CDE084F2CD69385 = {
+			fileRef = "59F593CE6A47AE3E5807071C";
+			isa = PBXBuildFile;
+			settings = {
+				ATTRIBUTES = (
+					);
+			};
+		};
+		EE41D8D3CD796FF7928A17FA = {
+			isa = PBXFileReference;
+			path = "/Users/hidog/code/test/QTMSER/mser/mser_process.cpp";
+			name = "mser_process.cpp";
+			sourceTree = "<absolute>";
+			lastKnownFileType = "sourcecode.cpp.cpp";
+		};
+		39584008BA31259D6F377649 = {
+			fileRef = "EE41D8D3CD796FF7928A17FA";
+			isa = PBXBuildFile;
+			settings = {
+				ATTRIBUTES = (
+					);
+			};
+		};
+		C5815116B9C3127C6B4AE505 = {
+			isa = PBXFileReference;
+			path = "/Users/hidog/code/test/QTMSER/draw_ellipse.cpp";
+			name = "draw_ellipse.cpp";
+			sourceTree = "<absolute>";
+			lastKnownFileType = "sourcecode.cpp.cpp";
+		};
+		998A954B0566764ECC28EC07 = {
+			fileRef = "C5815116B9C3127C6B4AE505";
+			isa = PBXBuildFile;
+			settings = {
+				ATTRIBUTES = (
+					);
+			};
+		};
+		801ADBBB5432EE730419F6DA = {
+			isa = PBXFileReference;
+			path = "/Users/hidog/code/test/QTMSER/moc_mainwindow.cpp";
+			name = "moc_mainwindow.cpp";
+			sourceTree = "<absolute>";
+			lastKnownFileType = "sourcecode.cpp.cpp";
+		};
+		68437B5B09A443479774DE22 = {
+			fileRef = "801ADBBB5432EE730419F6DA";
+			isa = PBXBuildFile;
+			settings = {
+				ATTRIBUTES = (
+					);
+			};
+		};
+		97A0BFBAF01543A4FD488F49 = {
+			isa = PBXFileReference;
+			path = "/Users/hidog/code/test/QTMSER/ui_mainwindow.h";
+			name = "ui_mainwindow.h";
+			sourceTree = "<absolute>";
+			lastKnownFileType = "sourcecode.c.h";
+		};
+		BEB66C178EB87C0D21081DE2 = {
+			isa = PBXFileReference;
+			path = "/Users/hidog/code/test/QTMSER/mainwindow.h";
+			name = "mainwindow.h";
+			sourceTree = "<absolute>";
+			lastKnownFileType = "sourcecode.c.h";
+		};
+		3B84DA0806D175B7DE94E452 = {
+			isa = PBXFileReference;
+			path = "/Users/hidog/code/test/QTMSER/mser/mser.h";
+			name = "mser.h";
+			sourceTree = "<absolute>";
+			lastKnownFileType = "sourcecode.c.h";
+		};
+		B0C6F9B109B4E04113B0DA91 = {
+			isa = PBXFileReference;
+			path = "/Users/hidog/code/test/QTMSER/mser/mser_process.h";
+			name = "mser_process.h";
+			sourceTree = "<absolute>";
+			lastKnownFileType = "sourcecode.c.h";
+		};
+		BBD44289E98B26AC13158CE5 = {
+			isa = PBXFileReference;
+			path = "/Users/hidog/code/test/QTMSER/draw_ellipse.h";
+			name = "draw_ellipse.h";
+			sourceTree = "<absolute>";
+			lastKnownFileType = "sourcecode.c.h";
+		};
+		50EF5D09E76FA77F3C9A8F4D = {
+			isa = PBXFileReference;
+			path = "/Users/hidog/code/QT5/qtbase/mkspecs/features/data/dummy.cpp";
+			name = "dummy.cpp";
+			sourceTree = "<absolute>";
+			lastKnownFileType = "sourcecode.cpp.cpp";
+		};
+		AFDB689469F4BA333F91ECE2 = {
+			fileRef = "50EF5D09E76FA77F3C9A8F4D";
+			isa = PBXBuildFile;
+			settings = {
+				ATTRIBUTES = (
+					);
+			};
+		};
+		220F8CD400F30CE4C85950C2 = {
+			isa = PBXFileReference;
+			path = "/Users/hidog/code/test/QTMSER/mainwindow.ui";
+			name = "mainwindow.ui";
+			sourceTree = "<absolute>";
+		};
+		1900BB694EF085042C16C7D7 = {
+			fileRef = "220F8CD400F30CE4C85950C2";
+			isa = PBXBuildFile;
+			settings = {
+				ATTRIBUTES = (
+					);
+			};
+		};
+		AAC72497EDFA0EA0D68B894A = {
+			isa = PBXFileReference;
+			path = "/Users/hidog/code/test/QTMSER/QTMSER.pro";
+			name = "QTMSER.pro";
+			sourceTree = "<absolute>";
+			lastKnownFileType = "text";
+		};
+		25B08E2869634E9BCBA333A2 = {
+			isa = PBXGroup;
+			children = (
+				"801ADBBB5432EE730419F6DA",
+				"97A0BFBAF01543A4FD488F49");
+			name = "Generated Sources";
+			sourceTree = "<group>";
+		};
+		2C061ADCCF47B196324A1522 = {
+			isa = PBXGroup;
+			children = (
+				"59F593CE6A47AE3E5807071C",
+				"EE41D8D3CD796FF7928A17FA",
+				"3B84DA0806D175B7DE94E452",
+				"B0C6F9B109B4E04113B0DA91");
+			name = "mser";
+			sourceTree = "<group>";
+		};
+		2EB56BE3C2D93CDAB0C52E67 = {
+			isa = PBXGroup;
+			children = (
+				"6AC73074F489332346F28C81",
+				"A39727AA28A403D62C3D8295",
+				"2C061ADCCF47B196324A1522",
+				"C5815116B9C3127C6B4AE505",
+				"BEB66C178EB87C0D21081DE2",
+				"BBD44289E98B26AC13158CE5");
+			name = "Sources";
+			sourceTree = "<group>";
+		};
+		B8254625CFD509ED2A24A166 = {
+			isa = PBXGroup;
+			children = (
+				"50EF5D09E76FA77F3C9A8F4D");
+			name = "Sources [moc_predefs]";
+			sourceTree = "<group>";
+		};
+		12E908B8A1C3C07C115504F5 = {
+			isa = PBXGroup;
+			children = (
+				"220F8CD400F30CE4C85950C2");
+			name = "Sources [uic]";
+			sourceTree = "<group>";
+		};
+		74B182DB50CB5611B5C1C297 = {
+			isa = PBXGroup;
+			children = (
+				"AAC72497EDFA0EA0D68B894A");
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		7EF0942E79C014DCEC8976BC = {
+			buildActionMask = 2147483647;
+			files = (
+				);
+			isa = PBXShellScriptBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+			name = "Qt Preprocessors";
+			shellPath = "/bin/sh";
+			shellScript = "make -C /Users/hidog/code/test/QTMSER -f QTMSER.xcodeproj/qt_preprocess.mak";
+			showEnvVarsInLog = "0";
+		};
+		F7E50F631C51CD5B5DC0BC43 = {
+			buildActionMask = 2147483647;
+			files = (
+				"DD8A4A0AEA2C773C47F77DF4",
+				"838FED2A3AF9F995AF49C430",
+				"EC79942E7CDE084F2CD69385",
+				"39584008BA31259D6F377649",
+				"998A954B0566764ECC28EC07",
+				"68437B5B09A443479774DE22",
+				"AFDB689469F4BA333F91ECE2");
+			isa = PBXSourcesBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+			name = "Compile Sources";
+		};
+		9A80DC9FA73D657C6EB1E06A = {
+			isa = PBXFileReference;
+			name = "QtWidgets.framework";
+			path = "/Users/hidog/code/qt5-build/qtbase/lib/QtWidgets.framework";
+			refType = 0;
+			sourceTree = "<absolute>";
+			lastKnownFileType = "wrapper.framework";
+		};
+		24E2F7010B7F5E71FC02C7A1 = {
+			fileRef = "9A80DC9FA73D657C6EB1E06A";
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1E64D8EB5C04311A44D248A9 = {
+			isa = PBXFileReference;
+			name = "QtGui.framework";
+			path = "/Users/hidog/code/qt5-build/qtbase/lib/QtGui.framework";
+			refType = 0;
+			sourceTree = "<absolute>";
+			lastKnownFileType = "wrapper.framework";
+		};
+		0551AFE34D91E0FE74132284 = {
+			fileRef = "1E64D8EB5C04311A44D248A9";
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		723F90793B2C195E2CCB2233 = {
+			isa = PBXFileReference;
+			name = "AppKit.framework";
+			path = "/System/Library/Frameworks/AppKit.framework";
+			refType = 0;
+			sourceTree = "<absolute>";
+			lastKnownFileType = "wrapper.framework";
+		};
+		F2A75ACAC9DF6A3F4E5711E7 = {
+			fileRef = "723F90793B2C195E2CCB2233";
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		1B2543FCC48E9436F21C4F63 = {
+			isa = PBXFileReference;
+			name = "Metal.framework";
+			path = "/System/Library/Frameworks/Metal.framework";
+			refType = 0;
+			sourceTree = "<absolute>";
+			lastKnownFileType = "wrapper.framework";
+		};
+		B3FE8FAC746D3D5BB24FA398 = {
+			fileRef = "1B2543FCC48E9436F21C4F63";
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		87A9B6A94B6270C974F2C37B = {
+			isa = PBXFileReference;
+			name = "QtCore.framework";
+			path = "/Users/hidog/code/qt5-build/qtbase/lib/QtCore.framework";
+			refType = 0;
+			sourceTree = "<absolute>";
+			lastKnownFileType = "wrapper.framework";
+		};
+		5B9C8530F689EAF5FFD93695 = {
+			fileRef = "87A9B6A94B6270C974F2C37B";
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		2B774D8E4178765CE52EAAF5 = {
+			isa = PBXFileReference;
+			name = "DiskArbitration.framework";
+			path = "/System/Library/Frameworks/DiskArbitration.framework";
+			refType = 0;
+			sourceTree = "<absolute>";
+			lastKnownFileType = "wrapper.framework";
+		};
+		A99B2AA0F9CBBDD12BA126A4 = {
+			fileRef = "2B774D8E4178765CE52EAAF5";
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		A1A67BEAA744704B29168D39 = {
+			isa = PBXFileReference;
+			name = "IOKit.framework";
+			path = "/System/Library/Frameworks/IOKit.framework";
+			refType = 0;
+			sourceTree = "<absolute>";
+			lastKnownFileType = "wrapper.framework";
+		};
+		8D267F2E4776F0ECA2F49DC8 = {
+			fileRef = "A1A67BEAA744704B29168D39";
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		D4B32C2222F82AC56BADEB21 = {
+			isa = PBXFileReference;
+			name = "OpenGL.framework";
+			path = "/System/Library/Frameworks/OpenGL.framework";
+			refType = 0;
+			sourceTree = "<absolute>";
+			lastKnownFileType = "wrapper.framework";
+		};
+		8771A8C96E9C391044035D99 = {
+			fileRef = "D4B32C2222F82AC56BADEB21";
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		8D9815BDB5BD9F90D2BC05C5 = {
+			isa = PBXFileReference;
+			name = "AGL.framework";
+			path = "/System/Library/Frameworks/AGL.framework";
+			refType = 0;
+			sourceTree = "<absolute>";
+			lastKnownFileType = "wrapper.framework";
+		};
+		E45E51A644D5FC9F942ECE55 = {
+			fileRef = "8D9815BDB5BD9F90D2BC05C5";
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		AF39DD055C3EF8226FBE929D = {
+			children = (
+				"9A80DC9FA73D657C6EB1E06A",
+				"1E64D8EB5C04311A44D248A9",
+				"723F90793B2C195E2CCB2233",
+				"1B2543FCC48E9436F21C4F63",
+				"87A9B6A94B6270C974F2C37B",
+				"2B774D8E4178765CE52EAAF5",
+				"A1A67BEAA744704B29168D39",
+				"D4B32C2222F82AC56BADEB21",
+				"8D9815BDB5BD9F90D2BC05C5");
+			isa = PBXGroup;
+			name = "Frameworks";
+			sourceTree = "<group>";
+		};
+		D1C883685E82D5676953459A = {
+			buildActionMask = 2147483647;
+			files = (
+				"24E2F7010B7F5E71FC02C7A1",
+				"0551AFE34D91E0FE74132284",
+				"F2A75ACAC9DF6A3F4E5711E7",
+				"B3FE8FAC746D3D5BB24FA398",
+				"5B9C8530F689EAF5FFD93695",
+				"A99B2AA0F9CBBDD12BA126A4",
+				"8D267F2E4776F0ECA2F49DC8",
+				"8771A8C96E9C391044035D99",
+				"E45E51A644D5FC9F942ECE55");
+			isa = PBXFrameworksBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+			name = "Link Binary With Libraries";
+		};
+		30414803F31797EB689AE508 = {
+			buildActionMask = 2147483647;
+			files = (
+				);
+			isa = PBXResourcesBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+			name = "Copy Bundle Resources";
+		};
+		99542592E9780B9225F24AA8 = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		DCA7E63B0DEA6509D4D4C07D = {
+			isa = PBXFileReference;
+			includeInIndex = 0;
+			explicitFileType = "wrapper.application";
+			path = "QTMSER.app";
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		FE0A091FDBFB3E9C31B7A1BD = {
+			children = (
+				"DCA7E63B0DEA6509D4D4C07D");
+			isa = PBXGroup;
+			name = "Products";
+			sourceTree = "<group>";
+		};
+		E8C543AB96796ECAA2E65C57 = {
+			children = (
+				"2EB56BE3C2D93CDAB0C52E67",
+				"25B08E2869634E9BCBA333A2",
+				"B8254625CFD509ED2A24A166",
+				"12E908B8A1C3C07C115504F5",
+				"74B182DB50CB5611B5C1C297",
+				"AF39DD055C3EF8226FBE929D",
+				"FE0A091FDBFB3E9C31B7A1BD");
+			isa = PBXGroup;
+			name = "QTMSER";
+			sourceTree = "<group>";
+		};
+		92539B700C965F9997CEF19A = {
+			buildPhases = (
+				"5E618435888B9D49F8540165",
+				"7EF0942E79C014DCEC8976BC");
+			dependencies = (
+				);
+			buildConfigurationList = 6CC3B5D2136C7CD6A5CF5A59;
+			isa = PBXAggregateTarget;
+			buildRules = (
+);
+			productName = "Qt Preprocess";
+			name = "Qt Preprocess";
+		};
+		61A0EE7434BBC77E1884AE96 = {
+			isa = PBXTargetDependency;
+			target = "92539B700C965F9997CEF19A";
+		};
+		7A2D9DB2D83682813EFE7217 = {
+			buildPhases = (
+				"F7E50F631C51CD5B5DC0BC43",
+				"D1C883685E82D5676953459A",
+				"30414803F31797EB689AE508",
+				"99542592E9780B9225F24AA8");
+			dependencies = (
+				"61A0EE7434BBC77E1884AE96");
+			productReference = "DCA7E63B0DEA6509D4D4C07D";
+			buildConfigurationList = 6CC3B5D2136C7CD6A5CF5A59;
+			isa = PBXNativeTarget;
+			buildRules = (
+);
+			productType = "com.apple.product-type.application";
+			name = "QTMSER";
+			productName = "QTMSER";
+		};
+		3AA6C32AC930069E80220CF1 = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				APPLICATION_EXTENSION_API_ONLY = "NO";
+				"ARCHS[sdk=macosx*]" = "x86_64";
+				COPY_PHASE_STRIP = "NO";
+				ENABLE_BITCODE = "NO";
+				GCC_OPTIMIZATION_LEVEL = "0";
+				ONLY_ACTIVE_ARCH = "YES";
+				PRODUCT_BUNDLE_IDENTIFIER = "andreas.${PRODUCT_NAME:rfc1034identifier}";
+				PRODUCT_NAME = "QTMSER";
+				QMAKE_FULL_VERSION = "1.0.0";
+				QMAKE_PKGINFO_TYPEINFO = "????";
+				QMAKE_SHORT_VERSION = "1.0";
+				QT_LIBRARY_SUFFIX = "_debug";
+				SDKROOT = "macosx";
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				CC = "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang";
+				LDPLUSPLUS = "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang++";
+				INFOPLIST_FILE = "Info.plist";
+				SYMROOT = ".xcode";
+				CONFIGURATION_BUILD_DIR = "$(PROJECT_DIR)/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)";
+				DYLIB_CURRENT_VERSION = "1.0.0";
+				DYLIB_COMPATIBILITY_VERSION = "1.0";
+				MACOSX_DEPLOYMENT_TARGET = "10.13";
+				HEADER_SEARCH_PATHS = (
+					".",
+					"../../qt5-build/qtbase/include",
+					"../../qt5-build/qtbase/include/QtWidgets",
+					"../../qt5-build/qtbase/include/QtGui",
+					"../../qt5-build/qtbase/include/QtCore",
+					".",
+					"/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX11.1.sdk/System/Library/Frameworks/OpenGL.framework/Headers",
+					"/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX11.1.sdk/System/Library/Frameworks/AGL.framework/Headers",
+					".",
+					"../../QT5/qtbase/mkspecs/macx-clang");
+				LIBRARY_SEARCH_PATHS = (
+					"/Users/hidog/code/qt5-build/qtbase/lib",
+					"/System/Library/Frameworks/");
+				FRAMEWORK_SEARCH_PATHS = (
+					"/Users/hidog/code/qt5-build/qtbase/lib",
+					"/Users/hidog/code/qt5-build/qtbase/lib");
+				OTHER_CFLAGS = (
+					"-pipe",
+					"-g",
+					"-Wall",
+					"-Wextra",
+					"-fPIC",
+					"-DQT_DEPRECATED_WARNINGS",
+					"-DQT_WIDGETS_LIB",
+					"-DQT_GUI_LIB",
+					"-DQT_CORE_LIB");
+				OTHER_CPLUSPLUSFLAGS = (
+					"-pipe",
+					"-stdlib=libc++",
+					"-g",
+					"-std=gnu++11",
+					"-Wall",
+					"-Wextra",
+					"-fPIC",
+					"-DQT_DEPRECATED_WARNINGS",
+					"-DQT_WIDGETS_LIB",
+					"-DQT_GUI_LIB",
+					"-DQT_CORE_LIB");
+				OTHER_LDFLAGS = (
+						"-stdlib=libc++",
+						"-headerpad_max_install_names",
+						"-Wl,-rpath,@executable_path/../Frameworks",
+						"-Wl,-rpath,/Users/hidog/code/qt5-build/qtbase/lib",
+						"-F/Users/hidog/code/qt5-build/qtbase/lib");
+				ARCHS = "x86_64";
+			};
+			name = "Debug";
+		};
+		77418F46922677BB04ED38DD = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				APPLICATION_EXTENSION_API_ONLY = "NO";
+				"ARCHS[sdk=macosx*]" = "x86_64";
+				COPY_PHASE_STRIP = "NO";
+				ENABLE_BITCODE = "NO";
+				GCC_OPTIMIZATION_LEVEL = "0";
+				ONLY_ACTIVE_ARCH = "YES";
+				PRODUCT_BUNDLE_IDENTIFIER = "andreas.${PRODUCT_NAME:rfc1034identifier}";
+				PRODUCT_NAME = "QTMSER";
+				QMAKE_FULL_VERSION = "1.0.0";
+				QMAKE_PKGINFO_TYPEINFO = "????";
+				QMAKE_SHORT_VERSION = "1.0";
+				QT_LIBRARY_SUFFIX = "_debug";
+				SDKROOT = "macosx";
+				PRODUCT_NAME = "QTMSER";
+			};
+			name = "Debug";
+		};
+		339EE1B2CC4FC24589A0EA95 = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				APPLICATION_EXTENSION_API_ONLY = "NO";
+				"ARCHS[sdk=macosx*]" = "x86_64";
+				COPY_PHASE_STRIP = "NO";
+				ENABLE_BITCODE = "NO";
+				PRODUCT_BUNDLE_IDENTIFIER = "andreas.${PRODUCT_NAME:rfc1034identifier}";
+				PRODUCT_NAME = "QTMSER";
+				QMAKE_FULL_VERSION = "1.0.0";
+				QMAKE_PKGINFO_TYPEINFO = "????";
+				QMAKE_SHORT_VERSION = "1.0";
+				QT_LIBRARY_SUFFIX = "";
+				SDKROOT = "macosx";
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				CC = "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang";
+				LDPLUSPLUS = "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang++";
+				INFOPLIST_FILE = "Info.plist";
+				SYMROOT = ".xcode";
+				CONFIGURATION_BUILD_DIR = "$(PROJECT_DIR)/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)";
+				DYLIB_CURRENT_VERSION = "1.0.0";
+				DYLIB_COMPATIBILITY_VERSION = "1.0";
+				MACOSX_DEPLOYMENT_TARGET = "10.13";
+				HEADER_SEARCH_PATHS = (
+					".",
+					"../../qt5-build/qtbase/include",
+					"../../qt5-build/qtbase/include/QtWidgets",
+					"../../qt5-build/qtbase/include/QtGui",
+					"../../qt5-build/qtbase/include/QtCore",
+					".",
+					"/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX11.1.sdk/System/Library/Frameworks/OpenGL.framework/Headers",
+					"/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX11.1.sdk/System/Library/Frameworks/AGL.framework/Headers",
+					".",
+					"../../QT5/qtbase/mkspecs/macx-clang");
+				LIBRARY_SEARCH_PATHS = (
+					"/Users/hidog/code/qt5-build/qtbase/lib",
+					"/System/Library/Frameworks/");
+				FRAMEWORK_SEARCH_PATHS = (
+					"/Users/hidog/code/qt5-build/qtbase/lib",
+					"/Users/hidog/code/qt5-build/qtbase/lib");
+				OTHER_CFLAGS = (
+					"-pipe",
+					"-g",
+					"-Wall",
+					"-Wextra",
+					"-fPIC",
+					"-DQT_DEPRECATED_WARNINGS",
+					"-DQT_WIDGETS_LIB",
+					"-DQT_GUI_LIB",
+					"-DQT_CORE_LIB");
+				OTHER_CPLUSPLUSFLAGS = (
+					"-pipe",
+					"-stdlib=libc++",
+					"-g",
+					"-std=gnu++11",
+					"-Wall",
+					"-Wextra",
+					"-fPIC",
+					"-DQT_DEPRECATED_WARNINGS",
+					"-DQT_WIDGETS_LIB",
+					"-DQT_GUI_LIB",
+					"-DQT_CORE_LIB");
+				OTHER_LDFLAGS = (
+						"-stdlib=libc++",
+						"-headerpad_max_install_names",
+						"-Wl,-rpath,@executable_path/../Frameworks",
+						"-Wl,-rpath,/Users/hidog/code/qt5-build/qtbase/lib",
+						"-F/Users/hidog/code/qt5-build/qtbase/lib");
+				ARCHS = "x86_64";
+			};
+			name = "Release";
+		};
+		6666AA5E688052234F6758D8 = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				APPLICATION_EXTENSION_API_ONLY = "NO";
+				"ARCHS[sdk=macosx*]" = "x86_64";
+				COPY_PHASE_STRIP = "NO";
+				ENABLE_BITCODE = "NO";
+				PRODUCT_BUNDLE_IDENTIFIER = "andreas.${PRODUCT_NAME:rfc1034identifier}";
+				PRODUCT_NAME = "QTMSER";
+				QMAKE_FULL_VERSION = "1.0.0";
+				QMAKE_PKGINFO_TYPEINFO = "????";
+				QMAKE_SHORT_VERSION = "1.0";
+				QT_LIBRARY_SUFFIX = "";
+				SDKROOT = "macosx";
+				PRODUCT_NAME = "QTMSER";
+			};
+			name = "Release";
+		};
+		DAC4C1AA5EDEA1C85E9CA5E6 = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				"3AA6C32AC930069E80220CF1",
+				"339EE1B2CC4FC24589A0EA95");
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = "Debug";
+		};
+		6CC3B5D2136C7CD6A5CF5A59 = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				"77418F46922677BB04ED38DD",
+				"6666AA5E688052234F6758D8");
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = "Debug";
+		};
+		6DB9C3763D02B1415CD9D565 = {
+			hasScannedForEncodings = 1;
+			compatibilityVersion = "Xcode 3.2";
+			isa = PBXProject;
+			mainGroup = "E8C543AB96796ECAA2E65C57";
+			productRefGroup = "FE0A091FDBFB3E9C31B7A1BD";
+			buildConfigurationList = "DAC4C1AA5EDEA1C85E9CA5E6";
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				"7A2D9DB2D83682813EFE7217",
+				"92539B700C965F9997CEF19A");
+			attributes = {
+				TargetAttributes = {
+				};
+			};
+		};
+	};
+	rootObject = "6DB9C3763D02B1415CD9D565";
+}

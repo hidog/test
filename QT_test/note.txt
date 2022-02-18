@@ -1,0 +1,95 @@
+https://www.coder.work/article/7126960
+unix環境下, 出現找不到QApplication的錯誤
+sudo apt-get install libclang-common-8-dev
+
+
+
+linux, 終端機環境下
+qmake CONFIG+=Debug 
+assert有作用,會定義_DEBUG
+
+qmake CONFIG+=Release
+assert無作用,會定義NDEBUG
+
+qmake
+assert有作用,不定義_DEBUG, NDEBUG
+
+上述行為跟QTCreator不同
+Debug, Release都會跳assert
+Profile不會跳assert.
+
+
+
+mac環境下
+framework沒自動copy過去
+目前看到手動的方式
+QT_run.app/Contents/
+建立Frameworks
+copy dylib  (目前來講是QR code的lib)
+此時可以run
+
+進階用法看起來需要使用qt打包工具
+https://doc.qt.io/qt-5/macos-deployment.html
+參考搜尋關鍵字 otool
+
+其他網頁資料參考
+https://www.twblogs.net/a/5c573f9fbd9eee06ee21dc7e
+https://blog.csdn.net/mydad353193052/article/details/114977848
+http://www.cxyzjd.com/article/robert_cysy/93979746
+https://jamesdouble.github.io/blog/2018/11/19/frameworkEasy/
+
+
+
+
+QR code lib:
+https://github.com/fukuchi/libqrencode
+
+
+
+
+
+
+build QT5 with openSSL  
+
+必須用新的, 1.1.x 以後的openssl
+底下這個不確定是否有用
+
+REM Set up \Microsoft Visual Studio 2015, where <arch> is \c amd64, \c x86, etc.
+CALL "C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Auxiliary\Build\vcvarsall.bat" amd64
+
+REM Uncomment the below line when building with OpenSSL enabled. If so, make sure the directory points
+REM to the correct location (binaries for OpenSSL).
+SET PATH=C:\OpenSSL-Win64-v111\bin;%PATH%
+
+
+ubuntu似乎是參考這個,但沒驗證
+https://doc.qt.io/qt-5/ssl.html#enabling-and-disabling-ssl-support
+
+windows 參考這個
+https://doc.qt.io/qt-5/windows-requirements.html
+
+
+
+..\\QT5\\configure -openssl-runtime OPENSSL_INCDIR="C:\OpenSSL-Win64-v111\include" -opensource -nomake examples -nomake tests -prefix C:\Qt
+
+configure -openssl-runtime OPENSSL_INCDIR="C:\Program Files\OpenSSL-Win64\include"
+configure -openssl-linked OPENSSL_PREFIX="C:\Program Files\OpenSSL-Win64"
+
+set OPENSSL_DIR=C:\Program Files\OpenSSL-Win64
+
+configure -openssl-linked 
+          OPENSSL_INCDIR="%OPENSSL_DIR%\include" 
+		  OPENSSL_LIBDIR="%OPENSSL_DIR%\lib\VC\static" 
+          OPENSSL_LIBS="-lWs2_32 -lGdi32 -lAdvapi32 -lCrypt32 -lUser32" 
+          OPENSSL_LIBS_DEBUG="-llibssl64MDd -llibcrypto64MDd" OPENSSL_LIBS_RELEASE="-llibssl64MD -llibcrypto64MD"
+
+整理後如下
+
+..\\QT5\\configure -opensource -nomake examples -nomake tests -prefix C:\Qt 
+                   -openssl-linked OPENSSL_PREFIX="C:\OpenSSL-Win64-v111"
+				   
+				   
+				   
+有些app會需要使用qt ssl support. 需要編譯進去
+
+

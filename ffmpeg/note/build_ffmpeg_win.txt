@@ -1,0 +1,67 @@
+官網  https://trac.ffmpeg.org/wiki/CompilationGuide/MinGW
+
+可能需要安裝visual studio 2010轉發套件
+
+https://blog.csdn.net/zhouyongku/article/details/44961447   其他參考  (印象當初參考的是這個網站)
+
+https://github.com/m-ab-s/media-autobuild_suite   自動化腳本  但沒測試過
+https://www.mobile01.com/topicdetail.php?f=510&t=3779579
+
+
+git clone git://source.ffmpeg.org/ffmpeg.git 
+
+1. download mingw and install
+https://sourceforge.net/projects/mingw/files/
+
+2. 配置環境
+編輯 C:\MinGW\msys\1.0\msys.bat
+第一行加入 
+call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Auxiliary\Build\vcvars64.bat"
+路徑會隨著不同的visual studio 版本而改變
+有32, 64兩個
+
+3. yasm
+http://yasm.tortall.net/Download.html
+下載win64版本 (或者32版本)
+改名yasm.exe後複製到 C:\Windows\SysWOW64  (或是32的位置)
+這樣的做法可以不必設環境變數  
+
+4. cmd 執行 C:\MinGW\msys\1.0\msys.bat
+會跳出mingw的編譯視窗
+
+5.
+移動到ffmpeg的路徑
+./configure --enable-gpl --enable-version3 --enable-shared --disable-w32threads --disable-autodetect --target-os=win64 --arch=x86_64 --toolchain=msvc
+這是參考ffmpeg下載檔的內容修改的
+最簡化編譯,沒加入其他內容
+
+./configure --prefix=/Users/jing/Work/HiCam/ffmpeg-bin 
+--enable-gpl --enable-nonfree --enable-libass --enable-libfdk-aac --enable-libfreetype 
+--enable-libmp3lame --enable-libopus --enable-libtheora --enable-libvorbis --enable-libvpx 
+--enable-libx264 --enable-libxvid --enable-shared --disable-static --disable-optimizations 
+--disable-mmx --disable-stripping
+
+
+6. make  
+開始編譯
+
+
+遇到 ... missing separator的錯誤訊息
+這是win, linux換行符號不同造成的
+
+git config --global core.autocrlf false
+git rm --cached -r .
+git reset --hard
+
+用以上指令來修復
+
+
+
+
+可以考慮安裝pkg-config   有windows版本
+
+其他參考   https://www.itread01.com/content/1548112167.html
+
+
+https://charlottehong.blogspot.com/2018/05/windwos10-pkg-config.html
+

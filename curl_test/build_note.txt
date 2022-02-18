@@ -1,0 +1,11 @@
+https://stackoverflow.com/questions/55039469/setting-up-curl-for-visual-studio-2017-nmake-fatal-error-u1073-dont-know-how
+https://fossies.org/linux/curl/winbuild/README.md
+https://github.com/curl/curl
+https://www.jianshu.com/p/d64b88b8fa17
+
+原本想參考上面網址用curl內建的script來編譯,但沒成功.
+遇到錯誤且找不到解決的方式.
+
+
+windows平台最後用cmake編譯 
+

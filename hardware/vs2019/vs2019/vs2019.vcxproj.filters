@@ -1,0 +1,78 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="來源檔案">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="標頭檔">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="資源檔">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="src">
+      <UniqueIdentifier>{79e4c8f1-6cef-41b4-aad4-ebbe3eba1e34}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\thread">
+      <UniqueIdentifier>{da79649b-58cf-47d6-b6e7-8ec99323feea}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="vs2019.cpp">
+      <Filter>來源檔案</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\CPU.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\file.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\macro.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\timer.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\thread\thread.c">
+      <Filter>src\thread</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\thread\win_thread.c">
+      <Filter>src\thread</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\thread\thread_test_1.c">
+      <Filter>src\thread</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\thread\thread_entry.c">
+      <Filter>src\thread</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\src\CPU.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\file.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\macro.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\timer.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\thread\thread.h">
+      <Filter>src\thread</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\thread\win_thread.h">
+      <Filter>src\thread</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\thread\thread_test_1.h">
+      <Filter>src\thread</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\thread\thread_entry.h">
+      <Filter>src\thread</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

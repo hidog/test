@@ -1,0 +1,10 @@
+https://sqlitebrowser.org/
+
+sqlite browser
+
+
+
+
+https://www.sqlite.org/index.html
+
+SQLite從官網下載複製原始檔後即可使用,不需要編譯

@@ -1,0 +1,39 @@
+1. 
+gst-launch-1.0 filesrc location=~/Videos/test.mp4 ! qtdemux !  avdec_h264 ! videoconvert ! fakesink
+fakesink無作用,測試用
+改成 gst-launch-1.0 filesrc location=~/Videos/test.mp4 ! qtdemux !  avdec_h264 ! videoconvert ! xvimagesink 後可以正常播放
+部份mkv用這個指令無法播放,需要研究原因. 似乎要至換成matroskademux才能work
+
+
+
+2.
+gst-launch-1.0 filesrc location=~/Videos/test.mp4 ! qtdemux ! h264parse ! nvdec ! gldownload ! videoconvert ! xvimagesink
+用gpu decode的版本
+
+
+
+3.
+產生測試影像
+gst-launch-1.0 videotestsrc ! videoconvert ! video/x-raw ! nvh264enc  ! h264parse ! video/x-h264,stream-format=byte-stream ! avdec_h264 ! videoconvert ! autovideosink
+gst-launch-1.0 videotestsrc ! videoconvert ! video/x-raw ! nvh264enc  ! video/x-h264,stream-format=byte-stream ! avdec_h264 ! videoconvert ! autovideosink
+
+沒有encode直接輸出
+gst-launch-1.0 -v videotestsrc pattern=snow ! video/x-raw,width=500,height=500 ! autovideosink
+
+h265版本
+gst-launch-1.0 videotestsrc pattern=snow ! video/x-raw,width=500,height=500 ! videoconvert ! video/x-raw ! nvh265enc ! video/x-h265,stream-format=byte-stream ! avdec_h265 ! videoconvert ! autovideosink
+
+可以直接連接enc, dec
+gst-launch-1.0 videotestsrc pattern=snow ! video/x-raw,width=500,height=500 ! nvh264enc  !  avdec_h264  ! autovideosink
+
+
+
+4. 底下兩個指令需要準備jpg檔案後實測
+gst-launch-1.0 multifilesrc location=./jpg/file_%d.jpg caps=image/jpeg,framerate=30/1 ! jpegdec ! videoconvert ! nvh264enc ! avdec_h264 ! autovideosink 
+gst-launch-1.0 multifilesrc location=./jpg/file_%d.jpg caps=image/jpeg,framerate=30/1 ! jpegdec ! videoconvert ! nvh264enc ! avimux ! filesink location=./test.avi
+
+
+
+5.
+https://forums.developer.nvidia.com/t/command-for-merging-audio-and-video-in-gstreamer/79171
+有一些cmd設置可以研究

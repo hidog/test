@@ -1,0 +1,261 @@
+# install nvidia driver
+sudo add-apt-repository ppa:graphics-drivers/ppa
+sudo apt update
+sudo apt install ubuntu-drivers-common
+sudo apt install nvidia-driver-430 
+sudo reboot 
+
+# install cuda
+sudo apt install nvidia-cuda-toolkit
+
+# install nvidia codec
+https://developer.nvidia.com/nvidia-video-codec-sdk
+download and copy
+
+
+
+底下是目前可用版本
+
+# install nvidia driver
+sudo ubuntu-drivers autoinstall
+https://medium.com/@maniac.tw/ubuntu-18-04-%E5%AE%89%E8%A3%9D-nvidia-driver-418-cuda-10-tensorflow-1-13-a4f1c71dd8e5
+https://www.itread01.com/content/1545804381.html
+
+# install cuda
+https://developer.nvidia.com/cuda-toolkit
+
+# config cuda 
+
+#Please make sure that
+# -   PATH includes /usr/local/cuda-10.2/bin
+# -   LD_LIBRARY_PATH includes /usr/local/cuda-10.2/lib64, or, add /usr/local/cuda-10.2/lib64 to /etc/ld.so.conf and run ldconfig as root
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/cuda-10.2/lib64
+export PATH=$PATH:/usr/local/cuda-10.2/bin
+ld config
+//source
+https://ithelp.ithome.com.tw/articles/10191693
+
+
+# git clone
+https://github.com/Xilinx/gst-plugins-bad 
+https://github.com/Xilinx/gst-plugins-base
+
+
+先邊base
+./autogen.sh --disable-examples disalbe-test
+make, install
+
+在編bad
+
+ NVENCODE_CFLAGS="-I/home/hidog/code/gst-plugins-bad/sys/nvenc" ./autogen.sh --with-cuda-prefix="/usr/local/cuda"
+複製檔案 .h, 等等
+
+
+sudo apt-get install autoconf
+sudo apt-get install autopoint
+
+
+
+## how to build nvdec, h264parse
+#  nvdec
+enter gst-plugins-bad
+./autogen.sh
+make
+# get build fail, add gnuc++11 to makefile, where in foldre ext/openexr, add to CXXFLAGS CFLAGS.  cant's run, add to other makefile
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+https://forums.developer.nvidia.com/t/how-to-use-and-install-the-nvenc-in-gstreamer-on-ubuntu-18-04-x86-64-to-decode-a-h264-stream/60356
+
+
+https://t.codebug.vip/questions-1538542.htm
+
+
+https://www.bilibili.com/read/cv2967035/
+
+https://t.codebug.vip/questions-1538542.htm
+
+https://medium.com/@nareshkumarganesan/nvidia-hardware-accelerated-video-encoding-decoding-nvcodec-gstreamer-4b8eab662bf1
+
+
+https://ithelp.ithome.com.tw/articles/10191693
+
+
+
+http://lifestyletransfer.com/how-to-install-nvidia-gstreamer-plugins-nvenc-nvdec-on-ubuntu/
+
+
+http://lifestyletransfer.com/how-to-install-nvidia-gstreamer-plugins-nvenc-nvdec-on-ubuntu/
+
+
+sudo apt-get install build-essential libgl1-mesa-dev
+sudo apt-get install freeglut3-dev
+sudo apt-get install libglew-dev libsdl2-dev libsdl2-image-dev libglm-dev libfreetype6-dev
+
+
+
+https://www.cnblogs.com/walker-lin/p/11520064.html    upgrade gst to 1.16
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+https://github.com/GStreamer/gst-plugins-base/blob/master/gst-libs/gst/gl/gstgldisplay.c
+
+https://hant-kb.kutu66.com/gstreamer/post_4614771
+https://stackoom.com/question/38yQo/%E5%9C%A8Qt%E5%92%8CRaspberry-Pi%E4%B8%8A%E4%BD%BF%E7%94%A8qtgstreamer
+
+
+gst-launch-1.0 videotestsrc ! videoconvert ! video/x-raw ! nvh264enc  ! h264parse ! video/x-h264,stream-format=byte-stream ! avdec_h264 ! videoconvert ! autovideosink
+gst-launch-1.0 videotestsrc ! videoconvert ! video/x-raw ! nvh264enc  ! videoparse ! video/x-h264,stream-format=byte-stream ! avdec_h264 ! videoconvert ! autovideosink
+
+
+gst-launch-1.0 videotestsrc ! videoconvert ! video/x-raw ! nvh264enc  ! video/x-h264,stream-format=byte-stream ! avdec_h264 ! videoconvert ! autovideosink
+
+gst-launch-1.0 -v videotestsrc pattern=snow ! video/x-raw,width=2500,height=2000 ! autovideosink
+
+gst-launch-1.0 videotestsrc pattern=snow ! video/x-raw,width=2500,height=2000 ! videoconvert ! video/x-raw ! nvh264enc  ! video/x-h264,stream-format=byte-stream ! avdec_h264 ! videoconvert ! autovideosink
+
+
+
+精簡後的指令 
+gst-launch-1.0 videotestsrc pattern=snow ! video/x-raw,width=2500,height=2000 ! nvh264enc  !  avdec_h264  ! autovideosink
+
+
+
+gst-launch-1.0 multifilesrc location=./jpg/file_%d.jpg caps=image/jpeg,framerate=30/1 ! jpegdec ! videoconvert ! nvh264enc ! avdec_h264 ! autovideosink 
+上面這個可以跑
+
+
+
+
+gst-launch-1.0 multifilesrc location=./jpg/file_%d.jpg caps=image/jpeg,framerate=30/1 ! jpegdec ! videoconvert ! nvh264enc ! avimux ! filesink location=./test.avi
+
+
+
+https://forums.developer.nvidia.com/t/command-for-merging-audio-and-video-in-gstreamer/79171
+
+
+
+https://superuser.com/questions/1368001/save-both-audio-and-video-to-one-file-using-gstreamer-from-camera-and-microphone
+
+
+上面是測試用cmd
+
+
+
+官方沒有gst-nvh264enc這東西,需要從第三方的git編譯
+
+https://gist.github.com/corenel/a615b6f7eb5b5425aa49343a7b409200
+
+https://gitlab.com/sat-metalab/switcher/blob/master/doc/using-nvdec-gstreamer-plugins.md
+
+
+cd /path/to/video/codec/sdk
+cp /usr/local/cuda/include/cuda.h /path/to/gst-plugins-bad/sys/nvenc
+cp include/nvEncodeAPI.h /path/to/gst-plugins-bad/sys/nvenc
+cp include/cuviddec.h /path/to/gst-plugins-bad/sys/nvdec
+cp include/nvcuvid.h /path/to/gst-plugins-bad/sys/nvdev
+
+cd /path/to/gst-plugins-bad
+NVENCODE_CFLAGS="-I/path/to/gst-plugins-bad/sys/nvenc" ./autogen.sh --with-cuda-prefix="/usr/local/cuda"
+cd sys/nvenc
+make
+sudo cp .libs/libgstnvenc.so /usr/lib/x86_64-linux-gnu/gstreamer-1.0/
+cd ../nvdec
+make
+sudo cp .libs/libgstnvdec.so /usr/lib/x86_64-linux-gnu/gstreamer-1.0/
+
+上面的指令, cuda的路徑跟gst-plugin-bad的路徑要自己改
+用apt裝的應該會出現在/usr/lib/cuda
+
+https://github.com/Xilinx/gst-plugins-bad  用這個git編譯出nvenc的 
+
+
+
+https://github.com/freedesktop/gstreamer-gst-plugins-gl
+
+
+https://github.com/webosose/gst-plugins-bad/tree/master/sys/nvdec
+
+https://gstreamer.freedesktop.org/data/doc/gstreamer/head/gst-plugins-good/html/gst-plugins-good-plugins-avimux.html
+
+
+https://github.com/radiokit/docker-gstreamer/blob/master/Dockerfile
+
+https://weblog.hirozo.net/?p=541
+
+https://medium.com/@nareshkumarganesan/nvidia-hardware-accelerated-video-encoding-decoding-nvcodec-gstreamer-4b8eab662bf1
+
+
+
+
+https://medium.com/@nareshkumarganesan/nvidia-hardware-accelerated-video-encoding-decoding-nvcodec-gstreamer-4b8eab662bf1
+https://marc.info/?l=gstreamer-bugs&m=147325706211717&w=2
+
+https://gitlab.com/sat-metalab/switcher/blob/master/doc/using-nvdec-gstreamer-plugins.md
+
+
+
+
+https://medium.com/@maniac.tw/ubuntu-18-04-%E5%AE%89%E8%A3%9D-nvidia-driver-418-cuda-10-tensorflow-1-13-a4f1c71dd8e5
+
+
+https://zoomadmin.com/HowToInstall/UbuntuPackage/libnvidia-encode
+
+In 1.0 it would be in ~/.cache/gstreamer-1.0/registry*
+
+
+
+https://gist.github.com/corenel/a615b6f7eb5b5425aa49343a7b409200
+
+https://askubuntu.com/questions/778100/how-to-install-compile-nvenc-in-ubuntu
+
+
+
+http://gstreamer-devel.966125.n4.nabble.com/Disabling-the-building-of-documentation-how-td4680861.html
+./configure --help | grep doc 
+--disable-gtk-doc
+
+
+
+http://www.adintr.com/article/blog/328
+cp lib to /usr/lib...
+enter gst/videoparsers and build and cp
+build h264parse success

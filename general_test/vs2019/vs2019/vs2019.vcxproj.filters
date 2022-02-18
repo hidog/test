@@ -1,0 +1,117 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="src">
+      <UniqueIdentifier>{94fcccb7-d70d-4854-b6e1-65a8031055df}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\class">
+      <UniqueIdentifier>{ae19e5ac-ab4a-4e06-a9db-4e2a03f28686}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\cast">
+      <UniqueIdentifier>{a509549c-f90a-4f81-8a2c-0c68b113faab}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="vs2019.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\linklist.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\pointer.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\variable_arg.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\class\array.cpp">
+      <Filter>src\class</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\class\rule_three.cpp">
+      <Filter>src\class</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\macro.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\class\adv_array.cpp">
+      <Filter>src\class</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\class\inherit.cpp">
+      <Filter>src\class</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\typeid.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\template.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\other_test.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\scanf_regular.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\cast\cast_obj.cpp">
+      <Filter>src\cast</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\cast\cast_test.cpp">
+      <Filter>src\cast</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\src\linklist.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\pointer.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\variable_arg.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\class\array.h">
+      <Filter>src\class</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\class\rule_three.h">
+      <Filter>src\class</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\macro.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\class\adv_array.h">
+      <Filter>src\class</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\class\inherit.h">
+      <Filter>src\class</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\typeid.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\template.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\other_test.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\scanf_regular.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\cast\cast_obj.h">
+      <Filter>src\cast</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\cast\cast_test.h">
+      <Filter>src\cast</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

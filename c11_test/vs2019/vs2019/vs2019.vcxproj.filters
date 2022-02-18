@@ -1,0 +1,222 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="src">
+      <UniqueIdentifier>{0765ef77-8c38-4aa7-9da8-8731e27f9f48}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\move">
+      <UniqueIdentifier>{9579debe-469b-486e-a5ed-85fd2f84cc02}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\template">
+      <UniqueIdentifier>{5d83b271-fd46-4bee-8b4b-a1484b3a0ab3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\class">
+      <UniqueIdentifier>{63160daf-4018-45f3-812e-3f6f248b4ff0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\LR_value">
+      <UniqueIdentifier>{8f10355e-5289-442f-a4f4-8dad7a9f6ccc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\initial">
+      <UniqueIdentifier>{8fc0d477-5597-43e2-8aa6-d64a39b2046b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\perfect_forward">
+      <UniqueIdentifier>{e7272b59-0f84-418c-94c4-8969accd2da6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\inherit">
+      <UniqueIdentifier>{c2fefab5-f310-45fd-b20e-99ba6f2bbbe7}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="vs2019.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\move\c11_move.cpp">
+      <Filter>src\move</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\template\c11_template_test.cpp">
+      <Filter>src\template</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\c11_using.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\class\rule_five_class.cpp">
+      <Filter>src\class</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\class\c11_rule_five.cpp">
+      <Filter>src\class</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\class\c11_mutable_class.cpp">
+      <Filter>src\class</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\class\c11_explicit_class.cpp">
+      <Filter>src\class</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\c11_constexpr.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\c11_lambda_op.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\LR_value\c11_LR_value.cpp">
+      <Filter>src\LR_value</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\LR_value\lr_func.cpp">
+      <Filter>src\LR_value</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\initial\c11_initial.cpp">
+      <Filter>src\initial</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\initial\initial_base.cpp">
+      <Filter>src\initial</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\initial\initial_obj.cpp">
+      <Filter>src\initial</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\template\template_array.cpp">
+      <Filter>src\template</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\move\move_class_1.cpp">
+      <Filter>src\move</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\move\move_class_2.cpp">
+      <Filter>src\move</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\move\move_class_3.cpp">
+      <Filter>src\move</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\move\move_func.cpp">
+      <Filter>src\move</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\perfect_forward\c11_perfect_forward.cpp">
+      <Filter>src\perfect_forward</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\perfect_forward\pf_func.cpp">
+      <Filter>src\perfect_forward</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\move\c11_swap.cpp">
+      <Filter>src\move</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\c11_other_test.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\c11_enum_class.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\class\c11_class_dd.cpp">
+      <Filter>src\class</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\inherit\c11_final_class.cpp">
+      <Filter>src\inherit</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\inherit\c11_virtual_inherit.cpp">
+      <Filter>src\inherit</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\c11_range_for.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\src\move\c11_move.h">
+      <Filter>src\move</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\template\c11_template_test.h">
+      <Filter>src\template</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\template\template_func.h">
+      <Filter>src\template</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\c11_using.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\class\c11_rule_five.h">
+      <Filter>src\class</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\class\rule_five_class.h">
+      <Filter>src\class</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\class\c11_mutable_class.h">
+      <Filter>src\class</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\class\c11_explicit_class.h">
+      <Filter>src\class</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\c11_constexpr.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\c11_lambda_op.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\LR_value\c11_LR_value.h">
+      <Filter>src\LR_value</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\LR_value\lr_func.h">
+      <Filter>src\LR_value</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\initial\c11_initial.h">
+      <Filter>src\initial</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\initial\initial_base.h">
+      <Filter>src\initial</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\initial\initial_obj.h">
+      <Filter>src\initial</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\template\template_array.h">
+      <Filter>src\template</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\move\move_class_1.h">
+      <Filter>src\move</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\move\move_class_2.h">
+      <Filter>src\move</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\move\move_class_3.h">
+      <Filter>src\move</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\move\move_func.h">
+      <Filter>src\move</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\perfect_forward\c11_perfect_forward.h">
+      <Filter>src\perfect_forward</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\perfect_forward\pf_class.h">
+      <Filter>src\perfect_forward</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\perfect_forward\pf_func.h">
+      <Filter>src\perfect_forward</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\move\c11_swap.h">
+      <Filter>src\move</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\c11_enum_class.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\c11_other_test.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\class\c11_class_dd.h">
+      <Filter>src\class</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\inherit\c11_final_class.h">
+      <Filter>src\inherit</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\inherit\c11_virtual_inherit.h">
+      <Filter>src\inherit</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\c11_range_for.h">
+      <Filter>src</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

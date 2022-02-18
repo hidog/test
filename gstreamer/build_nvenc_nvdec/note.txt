@@ -1,0 +1,88 @@
+1. install gstreamer
+
+https://gstreamer.freedesktop.org/src/gstreamer/
+https://gstreamer.freedesktop.org/
+https://gstreamer.freedesktop.org/documentation/installing/on-linux.html?gi-language=c
+
+apt-get install libgstreamer1.0-0 gstreamer1.0-plugins-base gstreamer1.0-plugins-good gstreamer1.0-plugins-bad gstreamer1.0-plugins-ugly gstreamer1.0-libav gstreamer1.0-doc gstreamer1.0-tools gstreamer1.0-x gstreamer1.0-alsa gstreamer1.0-gl gstreamer1.0-gtk3 gstreamer1.0-qt5 gstreamer1.0-pulseaudio
+
+
+
+2. run upgrade_gst.txt
+會安裝需要的程式,lib,下載檔案並且編譯
+
+
+
+3. 到這邊為止,編譯nvenc,nvdec應該沒成功
+gst-plugins-bad/sys/nvenc
+此目錄下make,會跳出編譯錯誤
+
+
+
+4. Download NVIDIA Video Codec SDK
+https://developer.nvidia.com/nvidia-video-codec-sdk
+
+
+
+
+
+note: install cuda.
+https://developer.nvidia.com/cuda-downloads
+
+
+
+
+
+
+5.
+cd /path/to/gst-plugins-bad
+NVENCODE_CFLAGS="-I/home/hidog/Downloads/Video_Codec_SDK_11.0.10/Interface" ./autogen.sh --with-cuda-prefix="/usr/local/cuda"
+
+/home/hidog/Downloads/Video_Codec_SDK_11.0.10/Interface   這是剛才下載的NVIDIA Video Codec SDK
+/usr/local/cuda   需要先下載cuda
+
+cd sys/nvenc
+make
+gst-plugins-bad/sys/nvenc/.libs   裡面會出現編好的 libgstnvenc.so
+
+
+
+6. 同樣的方式可以編譯nvdec
+https://gist.github.com/corenel/a615b6f7eb5b5425aa49343a7b409200   參考這個網站
+此時可以手動方式複製到指定目錄
+cd /path/to/gst-plugins-bad
+
+sudo cp .libs/libgstnvenc.so /usr/lib/x86_64-linux-gnu/gstreamer-1.0/
+cd ../nvdec
+make
+sudo cp .libs/libgstnvdec.so /usr/lib/x86_64-linux-gnu/gstreamer-1.0/
+
+
+
+7. 此時可以回到gst-plugins-bad 直接下make, make install來編譯等等.
+不過會跳錯誤
+/usr/include/c++/9/bits/c++0x_warning.h:32:2: error: #error This file requires compiler and library support for the ISO C++ 2011 standard. This support must be enabled with the -std=c++11 or -std=gnu++11 compiler options.
+   32 | #error This file requires compiler and library suppot \
+記得要修改makefile裡面的cxxflag等,增加option
+或者改用這個命令
+NVENCODE_CFLAGS="-I/home/hidog/Downloads/Video_Codec_SDK_11.0.10/Interface" ./autogen.sh --with-cuda-prefix="/usr/local/cuda" CXXFLAGS=-std=c++11
+此時可以用make編譯全部資料
+測試結果編譯成功,可以用make install安裝
+
+
+
+8. 進 ~/.cache/ 刪除 gstreamer-1.0
+讓gst-inspect能更新
+之後執行,檢查是否有 nvenc, nvdec
+
+hidog@ub:~$ gst-inspect-1.0 | grep nv
+nvenc:  nvh265enc: NVENC HEVC Video Encoder
+nvenc:  nvh264enc: NVENC H.264 Video Encoder
+nvdec:  nvdec: NVDEC video decoder
+
+有出現這幾個,就算是編譯完成
+
+
+
+
+

@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <VCProjectVersion>16.0</VCProjectVersion>
+    <ProjectGuid>{FE6CBE67-8B18-4ED2-9F6E-6ACFED300A7C}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Makefile</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v142</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Makefile</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v142</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>Makefile</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v142</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>Makefile</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v142</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <NMakeBuildCommandLine>vsmkfd.bat</NMakeBuildCommandLine>
+    <NMakeOutput>qt_test.exe</NMakeOutput>
+    <NMakeCleanCommandLine>vsmkfd_clean.bat</NMakeCleanCommandLine>
+    <NMakeReBuildCommandLine>vsmkfd_rebuild.bat</NMakeReBuildCommandLine>
+    <NMakePreprocessorDefinitions>WIN32;_DEBUG;$(NMakePreprocessorDefinitions)</NMakePreprocessorDefinitions>
+    <IncludePath>D:\code\qt5-build\qtbase\include\QtWidgets;D:\code\test\QT_test\src;D:\code\test\QT_test\qt;$(IncludePath)</IncludePath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <NMakeBuildCommandLine>vsmkfd.bat</NMakeBuildCommandLine>
+    <NMakeOutput>qt_test.exe</NMakeOutput>
+    <NMakeCleanCommandLine>vsmkfd_clean.bat</NMakeCleanCommandLine>
+    <NMakeReBuildCommandLine>vsmkfd_rebuild.bat</NMakeReBuildCommandLine>
+    <NMakePreprocessorDefinitions>_DEBUG;$(NMakePreprocessorDefinitions)</NMakePreprocessorDefinitions>
+    <IncludePath>D:\code\test\QT_test\3rd\QRencode\include;D:\code\test\QT_test\vs2019;D:\code\qt5-build\qtbase\include;D:\code\QT5\qtbase\src\corelib\global;D:\code\QT5\qtbase\src\widgets\widgets;D:\code\qt5-build\qtbase\include\QtCore;D:\code\qt5-build\qtbase\include\QtWidgets;D:\code\test\QT_test\src;D:\code\test\QT_test\qt;D:\code\qt5-build\qtbase\include\QtGui;$(IncludePath)</IncludePath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <NMakeBuildCommandLine>vsmkf.bat</NMakeBuildCommandLine>
+    <NMakeOutput>qt_test.exe</NMakeOutput>
+    <NMakeCleanCommandLine>vsmkf_clean.bat</NMakeCleanCommandLine>
+    <NMakeReBuildCommandLine>vsmkf_rebuild.bat</NMakeReBuildCommandLine>
+    <NMakePreprocessorDefinitions>WIN32;NDEBUG;$(NMakePreprocessorDefinitions)</NMakePreprocessorDefinitions>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <NMakeBuildCommandLine>vsmkf.bat</NMakeBuildCommandLine>
+    <NMakeOutput>qt_test.exe</NMakeOutput>
+    <NMakeCleanCommandLine>vsmkf_clean.bat</NMakeCleanCommandLine>
+    <NMakeReBuildCommandLine>vsmkf_rebuild.bat</NMakeReBuildCommandLine>
+    <NMakePreprocessorDefinitions>NDEBUG;$(NMakePreprocessorDefinitions)</NMakePreprocessorDefinitions>
+    <IncludePath>D:\code\test\QT_test\3rd\QRencode\include;D:\code\test\QT_test\vs2019;D:\code\qt5-build\qtbase\include;D:\code\QT5\qtbase\src\corelib\global;D:\code\QT5\qtbase\src\widgets\widgets;D:\code\qt5-build\qtbase\include\QtCore;D:\code\qt5-build\qtbase\include\QtWidgets;D:\code\test\QT_test\src;D:\code\test\QT_test\qt;D:\code\qt5-build\qtbase\include\QtGui;$(IncludePath)</IncludePath>
+  </PropertyGroup>
+  <ItemDefinitionGroup>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="..\qt\mainwindow.cpp" />
+    <ClCompile Include="..\src\main.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\qt\mainwindow.h" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

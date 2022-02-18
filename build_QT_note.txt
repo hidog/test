@@ -1,0 +1,8 @@
+..\\QT5\\configure -opensource -nomake examples -nomake tests -prefix C:\Qt
+
+
+version 5.15.2
+perl init-repository
+
+不要加參數,不然會造成qt-creator無法編譯
+不編譯qt-creator, 可以加上 --module-subset=default,-qtwebengine

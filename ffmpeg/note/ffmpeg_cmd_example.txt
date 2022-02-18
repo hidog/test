@@ -1,0 +1,262 @@
+研究怎麼用help  (-vf 無法用help)
+
+
+教學網站
+https://xdsnet.gitbooks.io/other-doc-cn-ffmpeg/content/ffmpeg-doc-cn-17.html
+https://ffmpeg.org/ffmpeg-codecs.html   官網
+https://lnpcd.blogspot.com/2012/09/ffmpeg.html   簡易教學
+https://www.itread01.com/content/1544692003.html   x264 指令介紹
+https://www.mobile01.com/topicdetail.php?f=510&t=4500233   ffempg 簡介
+https://trac.ffmpeg.org/wiki/Encode/H.264   官網
+
+
+
+
+
+findstr      windows用的grep
+grep      
+
+
+
+
+
+
+1. 
+ffmpeg -stream_loop -1 -re -i test.mp4 -vcodec copy -acodec copy -f mpegts udp://127.0.0.1:1234
+
+-stream_loop -1  永遠循環
+-stream_loop 999 循環999次
+
+-re 照1x速度播放
+
+-i 後面接的是輸入檔案
+
+-acodec copy    音樂 ....
+-vcodec copy    視訊不轉檔,直接複製給最後生成的檔案 
+
+-c:v copy
+-c:a copy 同上
+
+-f mpegts    用mpegts封裝
+-f matroska
+
+最後面的 udp://127.0.0.1:1234 表示輸出位置,也可以改成檔案
+
+
+
+2. mpegts-ts 封裝 介紹網址
+https://blog.csdn.net/michaeluo/article/details/75263462
+
+
+
+3. 1080p 轉 1080i
+ffmpeg -i test.mp4 -c:v libx264 -pix_fmt yuv420p -x264opts interlaced=0 -r 30 testi2.mp4
+
+-x264opts interlaced=0     1080p
+-x264opts interlaced=1     1080i
+
+-x264-params interlaced=1   效果類似
+
+-r 30 或是  -vf fps=40 
+
+ffprobe -select_streams v -i %1 -show_entries "frame=pkt_pts_time,pkt_duration_time,interlaced_frame" -pretty -print_format json -of json > %1.json      檢視是否有interlaced frame
+
+也可以用 ffprobe -show_frames test.mp4   檢查interlaced
+
+
+
+4.
+ffmpeg -i test.mp4 -an test2.mp4    移除音軌
+ffmpeg -i test.mp4 -vn -y -acodec copy audio.aac    分離音軌
+-y   覆寫
+
+ffmpeg -i test.mp4 -i audio.aac -map 0 -map 1:a -c:v copy  output.mp4  添加音軌
+ffmpeg -i yuv422p10le_v.mp4 -i a.aac -i a.aac -i a.aac -i a.aac -i a.aac -i a.aac -i a.aac -i a.aac -map 0:v -map 1:a -map 2:a -map 3:a -map 4:a -map 5:a -map 6:a -map 7:a -map 8:a -c:v copy -c:a copy -f mpegts output.mp4   
+多音軌,會有default
+-shortest  用最短者當時間控制   研究如何加入這個參數
+移除音軌
+ffmpeg -i input.mov -vcodec copy -an output.mp4 
+
+
+
+5. 改變fps
+ffmpeg -i test.mp4 -vf fps=10
+ffmpeg -i test.mp4 -r 10     印象這個有些情況下會失敗
+ffmpeg -i test.mp4 -vf fps=60000/1001 test2.mp4    fps = 5994
+
+
+
+6. -f 
+ffmpeg -formats   列出format
+ffmpeg -i test.mp4 -f mpegts test2.mp4     用mpegts
+ffmpeg -i test.mp4 -f h264 test2.mp4
+ffmpeg -i test.mp4 -f hevc test2.mp4
+需要研究一下 -f 的具體作用跟細節
+
+
+
+7. bframe, gop, bitrate
+ffmpeg -i test.mp4 -bf 0 -b:v 40M -f mp4 test2.mp4    應該有類似bframe的指令,需要搜尋一下
+
+-bf 0    沒有b-frame
+-bf 4    最大連續b-frame = 4
+
+-b:v 40M    video bitrate = 40M
+
+使用命令如下 ffprobe -show_streams -count_frames -pretty filename，檢視輸出結果中的 "has_b_frames"
+
+ffprobe -show_frames output.mp4 | findstr pict_typep    檢視B frame. (windows指令) linux用grep
+
+h264 參數 
+https://sites.google.com/site/linuxencoding/x264-ffmpeg-mapping
+	
+	
+	
+8.  convert to yuv422p10le
+ffmpeg -i test.mp4 -pix_fmt yuv422p10le output.mp4
+ffmpeg -pix_fmts    列出支援的格式清單
+rgb24
+	
+
+
+9. raw data 操作
+ffmpeg -s 1920*1080 -pix_fmt yuv420p -f rawvideo -r 24000/1001 -i output.yuv -i audio.aac -map 0:v -map 1:a -c:a copy -c:v h264_nvenc -b:v 10M -f mp4 output.mp4     讀取yuv資料,並且encode h264,包含音效
+-vf fps 這邊不能用  研究怎麼回事
+ffmpeg -pix_fmts 列出支援的格式
+
+ffmpeg -s 1920*1080 -pix_fmt yuv420p -f rawvideo -r 24000/1001 -i input.yuv -pix_fmt uyvy422 -vcodec h264 -f mp4 output2.mp4
+輸出uyvy422, h264的影片.
+h264_nvenc不支援此格式
+不過顯示的是yuv422p
+
+ffmpeg -s 1920*1080 -pix_fmt yuv420p -f rawvideo -i input.yuv -pix_fmt uyvy422 -f rawvideo -s 1440*720 output.yuv
+
+-s 1920*1080
+-s:v   同上
+
+
+
+10. bits_per_mb
+http://underpop.online.fr/f/ffmpeg/help/prores.htm.gz  研究這個參數的作用跟效果
+
+
+
+11.
+-vf "setpts=PTS-STARTPTS"   研究作用
+
+
+
+12.
+http://albert-oma.blogspot.com/2014/01/ffmpeg-ffmpeg-h264.html  ffmpeg -- 使用 ffmpeg 命令降低 H.264 檔案大小   
+整理這個網址的preset, profile作法
+
+
+
+13.
+ffmpeg.exe -i audio.aac -ac 2 -ar 48000 -acodec mp3 output.mp3
+-ar 取樣率  sample rate
+-acodec pcm_s32le
+-acodec mp3
+
+
+
+14.
+研究key frame
+https://stackoverflow.com/questions/30979714/how-to-change-keyframe-interval-in-ffmpeg
+
+
+
+15.
+ffmpeg.exe -i test.mp4 -acodec aac -ab 256k -ac 2 -ar 48000  -g 12 -bf 0 -c:v libx264 -b:v 10000k -minrate 10000k -maxrate 10000k -c:a aac -r 25 -f mpegts output.ts
+ffmpeg.exe -i test.mp4 -acodec mp3 -ab 256k -ac 2 -ar 48000  -g 150 -bf 20 -c:v libx264 -minrate 1k -maxrate 10000k -c:a aac -r 25 -f avi output.avi   會跳錯誤,但影片能播放
+
+-ab    audio bitrate
+-ac    audio channel
+-ar    取樣率  sample rate
+-g     gop, 影響I出現的頻率
+-bf    最大連續bframe個數
+-b:v   video bitrate
+-minrate 10000k -maxrate 10000k   固定bitrate
+
+
+
+16.
+ffmpeg.exe -i test.mp4 -vf "drawtext=fontcolor=black:fontsize=100:fontfile="/Windows/Fonts/arial.ttf":box=1:boxcolor=yellow@0.3:x=(w-text_w-10):y=(h-text_h-5):timecode='00\:00\:00\:00':rate=24000/1001" -f mp4 output.mp4
+打上time code
+ffmpeg -i input.mp4  -filter_complex "drawtext=fontfile=/Windows/Fonts/arial.ttf:x=320:y=main_h-50:fontsize=32:fontcolor='white':timecode='00\:00\:00\:00':rate=29.97" -y output.mp4
+
+
+
+17. 不印log
+ffmpeg -loglevel panic 
+[rest of your ffmpeg stuff]
+https://superuser.com/questions/326629/how-can-i-make-ffmpeg-be-quieter-less-verbose
+
+
+
+18. 轉1080p
+ffmpeg -i test.mp4 -c:v libx264 -pix_fmt yuv420p -x264opts interlaced=0 -r 30 testp.mp4
+interlaced = 1 代表 1080i
+-r 30  fps
+https://stackoverflow.com/questions/22471099/how-to-convert-a-1080p-to-1080i-using-ffmpeg
+https://superuser.com/questions/1344442/ffmpeg-how-to-create-an-interlaced-h-264-video
+1080i 轉 1080p 有de-interlace演算法選擇,日後再來研究
+
+
+
+19. 切影片
+ffmpeg -i test.mp4 -ss 00:05:00.0 -t 00:15:00.0 output.mp4
+-ss 開始
+-t 持續時間
+
+
+
+20. 串接兩個檔案
+https://www.itread01.com/content/1545873861.html
+
+filelist.txt
+
+file 'VID_20181219_214101.mp4'
+file 'VID_20181220_172414.mp4'
+
+命令
+
+ffmpeg -f concat -i filelist.txt -c copy rtsp-server-0.mp4
+
+
+
+
+21. 增加字幕
+ffmpeg -i input.mp4 -vf subtitles=subs.srt out.mp4
+字幕增加到 image 中
+
+ffmpeg -i input.mkv -i input.ass -map 0:0 -map 0:1 -map 1:0 output.mkv
+字幕增加到字幕軌
+0:0   通常表示 video  看情況
+0:1   audio
+1:0   subtitle
+
+
+
+
+22. 從影片中抓取字幕
+ffmpeg -i test.mkv -map 0:s:1 test.srt
+0:s:1    1表示兩個字幕軌. 如果只有一個字幕軌,用0
+輸出可以 test.srt, test.ass等等
+
+
+
+
+
+
+
+日後再來整理
+* 產生streamer
+ffmpeg -f lavfi -re -i smptebars=duration=300:size=1280x720:rate=30 -f lavfi -re -i sine=frequency=1000:duration=60:sample_rate=44100 -pix_fmt yuv420p -c:v libx264 -b:v 1000k -g 30 -keyint_min 120 -profile:v baseline -preset veryfast -f mpegts "udp://127.0.0.1:1234?pkt_size=1316"
+ffmpeg -f lavfi -re -i smptebars=duration=300:size=1280x720:rate=30 -f lavfi -re -i sine=frequency=1000:duration=60:sample_rate=44100 -pix_fmt yuv420p -c:v libx264 -b:v 1000k -g 30 -keyint_min 120 -profile:v baseline -preset veryfast -f mpegts "udp://127.0.0.1:1234?pkt_size=1316"
+
+
+
+似乎可以用來播放NV12,但沒有測試
+"C:\Program Files\VideoLAN\VLC\vlc.exe" --demux rawvideo --rawvid-fps 25 --rawvid-width 1920 --rawvid-height 1080 --rawvid-chroma YUV-NV12 D:\test.nv12
+

@@ -1,0 +1,51 @@
+
+	// 讀取圖檔的範例
+      IplImage *img = NULL;
+      img = cvLoadImage( path );
+      assert( img != NULL );
+      cv::Mat mat( img, true );
+
+
+
+			// 畫框,寫文字的範例
+            cv::Scalar slr = cv::Scalar(0,0,255);
+            cv::rectangle( mat, cv::Rect( rectX, rectY, rectW, rectH ), slr, 3 );
+            cv::putText( mat, description, cv::Point(rectX,rectY), 0, 1, slr, 1 );
+    
+
+
+
+
+      if( imageInfo.width > 1920 || imageInfo.height > 1080 )
+      {
+         cv::Mat mat2;
+         cv::resize( mat, mat2, cv::Size(1920,1080) );
+         cv::imshow( "OBJ test", mat2 );
+      }
+      else
+         cv::imshow( "OBJ test", mat );
+      cv::waitKey(1);
+
+
+
+
+      sprintf( path, "/home/gorilla/code/output/%d.jpg", index );
+      printf( "path = %s\n", path);
+      cv::imwrite( path, mat );
+
+
+      cvReleaseImage(&img);
+
+
+
+
+
+
+
+xcode 編譯的時候
+
+header search path       .h 搜尋路徑
+library search path      編譯的時候設置這個path指定到opencv編譯出來的lib
+framework search path    看起來用不到
+runpath search path      動態執行的時候設置這邊才能載入動態的opencv lib  (dylib)
+

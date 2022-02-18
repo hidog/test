@@ -1,0 +1,15 @@
+ b2.exe --prefix=D:\Boost\x64 --build-type=complete --build-dir=build_tmp_x64 toolset=msvc-14.0 
+ address-model=64 install
+ 參考上面指令
+ 
+ 編譯成x64版本
+ b2.exe address-model=64
+ 
+
+
+
+
+幾個參考
+https://www.ptt.cc/bbs/C_and_CPP/M.1455637005.A.3C0.html
+https://blog.csdn.net/Xingewudi21/article/details/45116991
+https://blog.csdn.net/zhangzq86/article/details/90030094

@@ -1,0 +1,114 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="來源檔案">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="標頭檔">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="資源檔">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="src">
+      <UniqueIdentifier>{1cf9ec1e-2206-47f7-a21d-3aed76cc9a75}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\smart_pt">
+      <UniqueIdentifier>{4ddc50a8-4037-452c-8a8b-f1ff6b21f154}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\thread">
+      <UniqueIdentifier>{61647d5a-9356-49d7-86b0-4f27f07f1c37}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="vs2019.cpp">
+      <Filter>來源檔案</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\container.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\for_each.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\my_array.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\function.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\smart_pt\smart_point.cpp">
+      <Filter>src\smart_pt</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\smart_pt\sp_class.cpp">
+      <Filter>src\smart_pt</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\c11_timer.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\other_test.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\regular_express.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\random.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\atomic_test.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\thread\thread_test.cpp">
+      <Filter>src\thread</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\thread\thread_obj.cpp">
+      <Filter>src\thread</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\src\container.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\for_each.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\my_array.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\my_map_class.hpp">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\function.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\smart_pt\smart_point.h">
+      <Filter>src\smart_pt</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\smart_pt\sp_class.h">
+      <Filter>src\smart_pt</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\c11_timer.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\other_test.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\regular_express.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\random.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\atomic_test.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\thread\thread_test.h">
+      <Filter>src\thread</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\thread\thread_obj.h">
+      <Filter>src\thread</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

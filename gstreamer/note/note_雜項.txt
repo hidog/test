@@ -1,0 +1,256 @@
+https://blog.csdn.net/weixin_38727369/article/details/80927132
+
+https://developer.ridgerun.com/wiki/index.php?title=GstRtspSink_-_Dual_H264_Video_Streaming
+
+
+http://seanhung365.pixnet.net/blog/post/212558487-gstreamer(gst-launch)-%E6%B8%AC%E8%A9%A6%E6%8C%87%E4%BB%A4
+
+
+https://gitlab.com/sat-metalab/switcher/blob/master/doc/using-nvdec-gstreamer-plugins.md
+https://gist.github.com/corenel/a615b6f7eb5b5425aa49343a7b409200
+https://medium.com/@nareshkumarganesan/nvidia-hardware-accelerated-video-encoding-decoding-nvcodec-gstreamer-4b8eab662bf1
+https://gstreamer.freedesktop.org/documentation/tutorials/playback/hardware-accelerated-video-decoding.html?gi-language=c
+nvidia相關
+
+
+https://www.cnblogs.com/xleng/default.html?page=2
+
+
+gcc basic-tutorial-1.c -o basic-tutorial-1 `pkg-config --cflags --libs gstreamer-0.10`
+ gcc tcp_server.c -o tcp_server `pkg-config --cflags --libs gstreamer-1.0`
+
+
+
+http://blog.iotwrt.com/media/2017/08/23/opencv-gstreamer/
+https://github.com/wzyy2/gstreamer-opencv
+
+
+
+
+https://blog.csdn.net/hwmstudent/article/details/69946552
+
+
+
+http://www.tastones.com/zh-tw/stackoverflow/gstreamer/appsrc-saving-application-generated-media-to-file/saving_application-generated_media_to_file/
+
+
+
+http://cn.voidcc.com/question/p-ccyiwgsw-mh.html
+
+
+https://www.itread01.com/content/1547122982.html
+
+
+https://blog.csdn.net/sakulafly/article/details/21748777
+
+https://www.itread01.com/content/1544560939.html
+
+
+https://foreachsam.github.io/book-framework-gstreamer/read/subject/command/gst-inspect-1.0/
+
+
+
+https://blog.csdn.net/u013606170/article/details/18958015
+
+https://foreachsam.github.io/book-framework-gstreamer/read/subject/command/gst-inspect-1.0/
+https://www.cnblogs.com/xuyh/p/4562789.html
+
+
+https://blog.csdn.net/qq_29729577/article/details/51504865
+
+https://blog.csdn.net/u013606170/article/details/18958015
+http://www.voidcn.com/article/p-cirglsvz-bhv.html
+
+gst-launch-1.0 -v filesrc location=mjpeg.avi ! avidemux !  queue ! jpegdec ! videoconvert ! videoscale ! autovideosink
+gst-launch-1.0 videotestsrc num-buffers=50 ! video/x-raw, framerate='(fraction)'5/1 ! jpegenc ! avimux ! filesink location=mjpeg.avi
+
+
+https://www.itread01.com/content/1547794453.html
+https://antkillerfarm.github.io/technology/2016/01/27/gstreamer_program.html
+gst-launch-1.0 tcpserversrc host="127.0.0.1" port=3000 ! decodebin ! autoaudiosink
+gst-launch-1.0 filesrc location=./1.mp3 ! tcpclientsink host="127.0.0.1" port=3000
+
+
+
+https://stackoverflow.com/questions/26410585/add-callback-for-separate-g-main-loop
+
+
+
+https://stackoverflow.com/questions/41698656/convert-gstreamer-command-to-c-code
+
+
+
+https://hant-kb.kutu66.com/gstreamer/post_6047201
+
+https://blog.csdn.net/weixin_38727369/article/details/80927132
+
+
+
+https://devtalk.nvidia.com/default/topic/1058082/jetson-nano/gstreamer-tcpserversink/
+
+
+
+https://devtalk.nvidia.com/default/topic/1058082/jetson-nano/gstreamer-tcpserversink/
+
+
+https://www.itdaan.com/tw/76cddfff6ad16d0d11db9fc5901d79eb
+
+
+https://www.cnblogs.com/luckbird/p/GStreamer_Demo.html
+
+
+https://blog.csdn.net/weixin_41944449/article/details/81952175
+
+
+https://gist.github.com/nebgnahz/26a60cd28f671a8b7f522e80e75a9aa5
+
+https://www.raspberrypi.org/forums/viewtopic.php?t=44987
+
+
+https://www.itread01.com/content/1549627580.html
+https://stackoom.com/question/3hXgg/%E9%80%9A%E8%BF%87gstreamer-udpsink%E6%B5%81h-%E6%97%B6%E5%A6%82%E4%BD%95%E8%A7%A3%E5%86%B3%E5%9B%BE%E5%83%8F%E9%97%AE%E9%A2%98
+rtp相關 有機會用到
+
+
+https://www.ojit.com/article/449042
+有提到vlc
+
+
+https://devtalk.nvidia.com/default/topic/1056240/jetson-nano/low-latency-wireless-video-streaming-with-gstreamer/
+有提到jpeg的討論 
+gst-launch-1.0 -e -vvvv tcpclientsrc host=yinon-jetson port=5000 ! jpegdec ! autovideosink
+gst-launch-1.0 nvarguscamerasrc ! 'video/x-raw(memory:NVMM), format=(string)NV12, width=(int)1280, height=(int)720, framerate=30/1' ! nvjpegenc ! tcpserversink host=0.0.0.0 port=5000
+
+
+
+http://hk.voidcc.com/question/p-skufhfjj-bec.html
+而不是使用「autovideosink」嘗試「xvimagesink sync = false」。
+
+
+
+https://gstreamer.freedesktop.org/data/doc/gstreamer/head/gst-plugins-good/html/gst-plugins-good-plugins-multifilesrc.html
+gst-launch-1.0 multifilesrc location="img.%04d.png" index=0 caps="image/png,framerate=\(fraction\)12/1" ! \
+    pngdec ! videoconvert ! videorate ! theoraenc ! oggmux ! \
+    filesink location="images.ogg"
+
+
+
+
+gst-launch-1.0 -v filesrc location=/home/andrea/code/test.mp3 ! audioparse ! tcpserversink port=3000 host=127.0.0.1
+gst-launch-1.0 tcpclientsrc port=3000 host=127.0.0.1 ! decodebin ! autoaudiosink
+無法repeat
+研究中
+
+gst-launch-1.0 -v multifilesrc location=/home/andrea/code/test.mp3 loop=true ! audioparse ! tcpserversink port=3000 host=127.0.0.1
+可以repeat, 但會有延遲問題, 要研究怎麼即時播放
+
+
+
+https://stackoverflow.com/questions/6833147/looping-a-video-with-gstreamer-and-gst-launch
+有sample code
+
+
+https://stackoverflow.com/questions/50549584/gstreamer-udpsink-udpsrc-versus-tcpserversink-tcpclientsrc
+https://superuser.com/questions/1144607/streaming-264-file-in-gstreamer-1-0
+UDP example
+https://forum.openframeworks.cc/t/writing-gstreamer-pipeline-in-c/20930
+
+
+
+GstMultiSocketSink
+
+
+
+
+
+https://openhome.cc/Gossip/GTKGossip/SignalEmitStop.html
+gtk的signal 
+
+
+
+https://blog.csdn.net/weixin_38727369/article/details/80927132
+一些指令範例
+
+
+
+
+
+https://freedesktop.org/wiki/GstOpenMAX/
+https://github.com/GStreamer/gst-omx/blob/master/meson.build
+https://blog.csdn.net/xiaohuan_study/article/details/7697051
+
+https://artistehsu.pixnet.net/blog/post/378129700
+https://www.khronos.org/openmax/
+https://www.khronos.org/openmax/
+https://gstreamer.freedesktop.org/documentation/tutorials/playback/hardware-accelerated-video-decoding.html?gi-language=c
+
+
+https://gitpress.io/@chchang/install-nvidia-driver-cuda-pgstrom-in-ubuntu-1804
+
+https://gitlab.com/sat-metalab/switcher/blob/master/doc/using-nvdec-gstreamer-plugins.md
+
+http://gstreamer-devel.966125.n4.nabble.com/Gst-inspect-not-finding-built-plugins-td4670426.html
+   export LD_LIBRARY_PATH=/usr/local/lib
+   export GST_PLUGIN_PATH=/usr/local/lib/gstreamer-1.0 
+
+gst-launch-1.0 filesrc location=/home/hidog/Videos/test.mp4 ! qtdemux name=demux demux.video_0 ! queue ! h264parse ! nvdec ! autovideosink -e 
+
+gst-launch-1.0 filesrc location=/home/hidog/Videos/test.mp4 ! qtdemux name=demux demux.video_0 ! queue ! h264parse ! avdec_h264 ! autovideosink -e   
+
+
+
+https://blog.csdn.net/tianjian789/article/details/56492131
+https://blog.csdn.net/qjh5606/article/details/82695696
+https://medium.com/@multi.flexi/how-to-get-info-about-nvdec-and-nvenc-capabilities-of-your-gpu-6ecc9a5d4dac
+https://developer.nvidia.com/nvidia-video-codec-sdk
+
+
+
+http://www.linuxfromscratch.org/blfs/view/svn/multimedia/gstreamer10.html
+https://devtalk.nvidia.com/default/topic/1050595/jetson-nano/gstreamer-upgrade-to-1-16/
+https://gstreamer.freedesktop.org/documentation/installing/on-linux.html?gi-language=c
+http://lifestyletransfer.com/how-to-install-gstreamer-on-ubuntu/
+https://packages.ubuntu.com/search?keywords=gstreamer
+
+
+https://developer.nvidia.com/nvidia-video-codec-sdk
+
+
+
+gst-launch-1.0 filesrc location="h264_looped_high.mp4" ! qtdemux ! h264parse ! "video/x-h264, stream-format=(string)byte-stream, alignment=(string)au" ! nvdec ! "video/x-raw(memory:GLMemory),format=(string)NV12" ! glcolorconvert ! "video/x-raw(memory:GLMemory),format=(string)RGBA" ! gtkglsink   
+(目前這個範例會有問題)
+參考這個討論 https://devtalk.nvidia.com/default/topic/1052145/general/gstreamer-nvdec-compatility/
+
+
+https://github.com/ph0b/cerbero
+
+https://medium.com/@nareshkumarganesan/nvidia-hardware-accelerated-video-encoding-decoding-nvcodec-gstreamer-4b8eab662bf1
+
+https://docs.microsoft.com/en-us/azure/virual-machines/linux/n-series-driver-setup
+
+https://gist.github.com/corenel/a615b6f7eb5b5425aa49343a7b409200
+
+
+https://github.com/radiokit/docker-gstreamer/blob/master/Dockerfile
+
+
+https://medium.com/@nareshkumarganesan/nvidia-hardware-accelerated-video-encoding-decoding-nvcodec-gstreamer-4b8eab662bf1
+https://mesonbuild.com/Quick-guide.html
+
+
+https://gist.github.com/corenel/a615b6f7eb5b5425aa49343a7b409200
+
+
+
+https://k2r2bai.com/2018/02/17/container/nvidia-docker-install/
+
+
+
+
+gst-launch-1.0 filesrc location=~/Videos/test_4k.mkv ! qtdemux !  avdec_h264 ! videoconvert ! fakesink
+gst-launch-1.0 filesrc location=~/Videos/test_4k.mp4 ! qtdemux ! h264parse ! nvdec ! gldownload ! videoconvert ! fakesink
+
+gst-launch-1.0 filesrc location=~/Videos/test_4k.mkv ! queue ! matroskademux name=dmux dmux.video_0 ! queue ! filesink location=vid.265 dmux.audio_0 ! queue ! filesink location=aud.aac
+
+http://seanhung365.pixnet.net/blog/post/212558487-gstreamer(gst-launch)-%E6%B8%AC%E8%A9%A6%E6%8C%87%E4%BB%A4
+
