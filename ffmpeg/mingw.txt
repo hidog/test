@@ -8,19 +8,25 @@ gcc -s -o test.exe –O3 test.o
 
 
 
+https://stevenerickevin.wordpress.com/2014/01/01/mingw-%E5%AE%89%E8%A3%9D%E7%AD%86%E8%A8%98/
+mingw-get install mintty
 
-整理底下的東西
 
-第一次使用 MSYS2
 
-現在假定我們剛裝好 MSYS2，要先更新 MSYS2 系統到最新狀態。開啟一個 MSYS 視窗，更新系統的核心組件：
+https://ithelp.ithome.com.tw/articles/10077982
+mingw-get install msys-wget
+mingw-get  install msys-openssl  msys-openssh msys-zlib
 
-$ pacman -Syu
 
-更新完成後，關閉再重開 MSYS 視窗，更新其他部分：
 
-$ pacman -Sy
 
-用以下指令安裝 C 和 C++ 編譯器以及其他常見的開發工具：
+cmake + mingw
+cmake -G   "MinGW Makefiles" . 
 
-$ pacman -S mingw-w64-x86_64-toolchain
+
+
+C:\MinGW\msys\1.0\home\hidog
+mingw的home path.
+
+
+

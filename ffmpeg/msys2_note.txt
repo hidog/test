@@ -1,0 +1,17 @@
+
+https://www.msys2.org/
+官網
+一個優化的MinGW環境
+
+
+pacman -Syu   更新  之後會關閉視窗
+pacman -Su   
+
+
+home路徑
+C:\msys64\home\hidog
+
+
+
+參考網頁
+https://opensourcedoc.com/windows-programming/mingw-msys/
