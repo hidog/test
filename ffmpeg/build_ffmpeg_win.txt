@@ -65,3 +65,9 @@ git reset --hard
 
 https://charlottehong.blogspot.com/2018/05/windwos10-pkg-config.html
 
+
+
+
+build nvenc
+這個網頁僅供參考 沒成功
+https://www.jianshu.com/p/032b47c48ada

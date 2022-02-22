@@ -54,6 +54,10 @@ cmake -G   指定編譯環境. 例如Unix Makefiles, ninja
 cmake -G "Unix Makefiles" .
 
 
+cmake + mingw
+cmake -G   "MinGW Makefiles" . 
+
+
 
 
 底下是複製出來的,有空測一下相關的語法.

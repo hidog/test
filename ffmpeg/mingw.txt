@@ -30,3 +30,7 @@ mingw的home path.
 
 
 
+
+
+其他參考
+https://my.oschina.net/N3verL4nd/blog/866896
