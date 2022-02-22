@@ -1,0 +1,26 @@
+https://opensourcedoc.com/windows-programming/mingw-msys/
+改良版的 msys2 未來有機會參考這個
+
+
+http://hsintahsieh.blogspot.com/2014/07/mingw.html
+8.      最後要講的是編譯最佳化指令，方法是在.c檔前加上-O1、-O2、或是-O3，數字是最佳化的等級，可視情況決定用哪種等級編譯
+gcc -s -o test.exe –O3 test.o
+
+
+
+
+整理底下的東西
+
+第一次使用 MSYS2
+
+現在假定我們剛裝好 MSYS2，要先更新 MSYS2 系統到最新狀態。開啟一個 MSYS 視窗，更新系統的核心組件：
+
+$ pacman -Syu
+
+更新完成後，關閉再重開 MSYS 視窗，更新其他部分：
+
+$ pacman -Sy
+
+用以下指令安裝 C 和 C++ 編譯器以及其他常見的開發工具：
+
+$ pacman -S mingw-w64-x86_64-toolchain
