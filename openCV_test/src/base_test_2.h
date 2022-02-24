@@ -4,6 +4,7 @@
 
 void generate_test_image();
 void blur_test();
+void draw_mask();
 
 
 
