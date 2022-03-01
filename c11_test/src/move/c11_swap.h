@@ -9,6 +9,10 @@
 
 /*
 通常operator = 會有 *this != rhs 的問題. (沒處理好會造成crash)
+例如
+Obj a;
+OBJ &b = a;
+a = b; 沒處理好造成這邊crash
 可以用std::swap
 
 copy and swap idiom
