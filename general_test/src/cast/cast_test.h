@@ -12,7 +12,7 @@ https://docs.microsoft.com/zh-tw/cpp/cpp/reinterpret-cast-operator?view=msvc-160
 static_cast   
 一般用於基本型態的轉型   int, double, char等
 可以用在class的轉型, 兩個沒繼承關係的class不能轉. (至少xcode的行為是如此,其他編譯器不確定)
-如果是有繼承關係的class可轉, 但型態不對的時候會造成未知的錯物
+如果是有繼承關係的class可轉, 但型態不對的時候會造成未知的錯誤
 
 dynamic_cast
 一般用在繼承關係的class轉型.
