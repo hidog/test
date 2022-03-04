@@ -5,12 +5,12 @@ NOTE: 編譯失敗可以 apt-cache search 關鍵字, 一個一個安裝, 最後�
 # other tools: nano git cmake build-essential   
 # 非必要 gnome-devel
 
-#Install nvidia SDK
+# Install nvidia SDK
 cd ~/code/tmp/ffmpeg_sources
 git clone https://git.videolan.org/git/ffmpeg/nv-codec-headers.git
 cd nv-codec-headers
 make
-sudo make install
+make install
 
 
 
@@ -83,11 +83,16 @@ apt install \
   libjack-dev \
   libcdio-dev \
   libcdio-cdda2 libcdio-dev libcdio-cdda-dev \
-  libcdio-paranoia-dev
+  libcdio-paranoia-dev \
+  libiec61883-dev \
+  libdrm-dev
 
 
 
 # git checkout n4.2.4
+
+git clone https://github.com/FFmpeg/FFmpeg
+
 
 ./configure \
 --prefix=/usr \
@@ -149,7 +154,13 @@ apt install \
 --enable-libdrm \
 --enable-libiec61883 \
 --enable-nvenc \
+--enable-nvdec \
 --enable-chromaprint \
 --enable-frei0r \
 --enable-libx264 \
 --enable-shared
+
+
+
+
+
