@@ -1,6 +1,9 @@
 NOTE: 編譯失敗可以 apt-cache search 關鍵字, 一個一個安裝, 最後有成功編譯
 
 
+NOTE: 有機會需要手動安裝nvidia-driver
+      apt-install nvidia-driver-510
+
 
 # other tools: nano git cmake build-essential   
 # 非必要 gnome-devel
