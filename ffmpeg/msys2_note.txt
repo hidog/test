@@ -2,6 +2,9 @@ https://www.mobile01.com/topicdetail.php?f=510&t=3779579
 
 https://github.com/m-ab-s/media-autobuild_suite
 上面這個是base on mysys2的script. 
+NOTE: 沒成功 可能有選項錯誤 有空在研究了
+
+
 
 
 
