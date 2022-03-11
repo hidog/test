@@ -1,3 +1,32 @@
+參考 
+https://www.cnblogs.com/Bob-wei/p/8435000.html
+https://www.twblogs.net/a/5d42732dbd9eee5174235246
+
+./configure \
+  --prefix=/usr/ffmpeg --enable-static --disable-shared \
+  --enable-gpl --enable-small --disable-doc --enable-nonfree \
+  --enable-libfdk-aac --enable-libx264 --enable-libx265 --enable-openssl \
+  --enable-pic
+
+不要設PKG_CONFIG_PATH
+
+https://stackoverflow.com/questions/18152168/using-cygwin-for-ffmpeg-build-error-cmp-command-not-found
+./configure: line 1132: cmp: command not found
+install diffutils
+pacman -S diffutils
+
+ 
+ 
+ 
+
+
+
+
+
+
+
+
+
 https://www.mobile01.com/topicdetail.php?f=510&t=3779579
 
 https://github.com/m-ab-s/media-autobuild_suite
