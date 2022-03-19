@@ -21,11 +21,15 @@ set( DEFINE ${DEFINE} -DUNIX )
 add_definitions( ${DEFINE} ) 
 
 # head
-set( HEAD ${CMAKE_SOURCE_DIR}/../p1.h )
+set( HEAD ${CMAKE_SOURCE_DIR}/../p1.h 
+          ${CMAKE_SOURCE_DIR}/../p8.h 
+)
 
 # source 
 set( SOURCE main.cpp 
-            ${CMAKE_SOURCE_DIR}/../p1.cpp )
+            ${CMAKE_SOURCE_DIR}/../p1.cpp 
+	    ${CMAKE_SOURCE_DIR}/../p8.cpp 
+)
 
 # exec file
 add_executable( ${PROJECT_NAME} ${SOURCE} ${HEAD} )
