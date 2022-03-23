@@ -287,6 +287,7 @@ void p2p_server_2()
 #endif
         return;
     }
+    printf("\n");
 
     // ************************************ recv from client 2 ************************************
     sockaddr_in remote_addr_2;
@@ -315,13 +316,15 @@ void p2p_server_2()
     }
 
     // ************************************ send back ************************************
-    char msg1[30] = {0}, msg2[30] = {0};
+    char msg1[60] = {0}, msg2[60] = {0};
 
     sprintf( msg1, "%s %d", inet_ntoa(remote_addr_1.sin_addr), ntohs(remote_addr_1.sin_port) );
-    sendto( server_skt, msg1, 30, 0, (sockaddr*)&remote_addr_2, remote_len_2 );
+    printf( "msg1 = %s\n\n", msg1 );
+    sendto( server_skt, msg1, 60, 0, (sockaddr*)&remote_addr_2, remote_len_2 );
 
-    sprintf(msg1, "%s %d", inet_ntoa(remote_addr_2.sin_addr), ntohs(remote_addr_2.sin_port));
-    sendto(server_skt, msg1, 30, 0, (sockaddr*)&remote_addr_1, remote_len_1);
+    sprintf(msg2, "%s %d", inet_ntoa(remote_addr_2.sin_addr), ntohs(remote_addr_2.sin_port));
+    printf("msg2 = %s\n\n", msg2);
+    sendto(server_skt, msg2, 60, 0, (sockaddr*)&remote_addr_1, remote_len_1);
 
 
 #ifdef _WIN32
