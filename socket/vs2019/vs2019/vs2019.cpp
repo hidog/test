@@ -90,8 +90,8 @@ int main()
     //tool_test_funcs();
     //tcp_test_funcs();
 
-    p2p_server_1();
-
+    //p2p_server_1();
+    p2p_client_1();
 
     return 0;
 }
