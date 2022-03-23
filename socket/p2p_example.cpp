@@ -358,7 +358,7 @@ void p2p_client_2()
     }
 
     // 用來指定本地端的port
-    p2p_bind_client_socket(client_skt);
+    //p2p_bind_client_socket(client_skt);
 
     // ************************************************ send to server ************************************************
     sockaddr_in remote_addr;
