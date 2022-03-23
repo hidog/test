@@ -387,7 +387,7 @@ void p2p_client_2()
     int device_port = 0;
     printf( "recv msg = %s\n", recv_data );
     sscanf( recv_data, "%s %d", device_ip, &device_port );
-    printf( "device ip = %s, device port = %d", device_ip, device_port );
+    printf( "device ip = %s, device port = %d\n", device_ip, device_port );
 
     // ************************************************ start p2p ************************************************
     bzero(&remote_addr, sizeof remote_addr);
@@ -412,7 +412,7 @@ void p2p_client_2()
         ret = recvfrom( client_skt, msg2, 60, 0, (sockaddr*)&remote_addr, &remote_len);
         printf( "msg2 = %s, from %s %d\n", msg2, inet_ntoa(remote_addr.sin_addr), ntohs(remote_addr.sin_port) );
 
-        Sleep(100);
+        Sleep(500);
     }
 
 
