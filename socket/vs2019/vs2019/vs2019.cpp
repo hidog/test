@@ -1,8 +1,10 @@
 #include <iostream>
+
 #include "../../udp_example.h"
 #include "../../tool.h"
 #include "../../tcp_example.h"
 #include "../../tcp_nb.h"
+#include "../../p2p_example.h"
 
 extern "C" {
 #include "../../tool_2.h"
@@ -86,9 +88,11 @@ void tcp_test_funcs()
 int main()
 {
     //tool_test_funcs();
-    tcp_test_funcs();
+    //tcp_test_funcs();
 
-    system("PAUSE");
+    p2p_server_1();
+
+
     return 0;
 }
 

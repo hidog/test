@@ -145,6 +145,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\p2p_example.cpp" />
     <ClCompile Include="..\..\tcp_example.cpp" />
     <ClCompile Include="..\..\tcp_example_2.c" />
     <ClCompile Include="..\..\tcp_nb.cpp" />
@@ -160,6 +161,7 @@
     <ClCompile Include="vs2019.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\p2p_example.h" />
     <ClInclude Include="..\..\tcp_example.h" />
     <ClInclude Include="..\..\tcp_example_2.h" />
     <ClInclude Include="..\..\tcp_nb.h" />
