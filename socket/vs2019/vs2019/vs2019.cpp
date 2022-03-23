@@ -92,6 +92,8 @@ int main()
 
     //p2p_server_1();
     p2p_server_2();
+    //p2p_server_1();
+    p2p_client_2();
 
     return 0;
 }

@@ -361,13 +361,13 @@ void p2p_client_2()
     }
 
     // 用來指定本地端的port
-    p2p_bind_client_socket(client_skt);
+    //p2p_bind_client_socket(client_skt);
 
     // ************************************************ send to server ************************************************
     sockaddr_in remote_addr;
     bzero(&remote_addr, sizeof remote_addr);
     remote_addr.sin_family = AF_INET;
-    remote_addr.sin_port = htons(p2p_server_port_1);
+    remote_addr.sin_port = htons(p2p_server_port_2);
 #ifdef _WIN32
     remote_addr.sin_addr.S_un.S_addr = inet_addr("36.231.65.243");
 #elif defined(UNIX) || defined(MACOS)
@@ -383,12 +383,14 @@ void p2p_client_2()
     printf("client send, ret = %ld\n", ret);
 
     // ************************************************ recv from server ************************************************
-    char recv_data[30] = {0};
-    ret = recvfrom( client_skt, recv_data, 30, 0, (sockaddr*)&remote_addr, &remote_len );
+    char recv_data[60] = {0};
+    ret = recvfrom( client_skt, recv_data, 60, 0, (sockaddr*)&remote_addr, &remote_len );
 
-    char device_ip[30], device_port = 0;
+    char device_ip[30];
+    int device_port = 0;
+    printf( "recv msg = %s\n", recv_data );
     sscanf( recv_data, "%s %d", device_ip, &device_port );
-    printf( "device ip = %s, device port = %d", device_ip, device_port );
+    printf( "device ip = %s, device port = %d\n", device_ip, device_port );
 
     // ************************************************ start p2p ************************************************
     bzero(&remote_addr, sizeof remote_addr);
@@ -413,7 +415,7 @@ void p2p_client_2()
         ret = recvfrom( client_skt, msg2, 60, 0, (sockaddr*)&remote_addr, &remote_len);
         printf( "msg2 = %s, from %s %d\n", msg2, inet_ntoa(remote_addr.sin_addr), ntohs(remote_addr.sin_port) );
 
-        Sleep(100);
+        Sleep(500);
     }
 
 
