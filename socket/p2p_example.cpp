@@ -364,7 +364,7 @@ void p2p_client_2()
     sockaddr_in remote_addr;
     bzero(&remote_addr, sizeof remote_addr);
     remote_addr.sin_family = AF_INET;
-    remote_addr.sin_port = htons(p2p_server_port_1);
+    remote_addr.sin_port = htons(p2p_server_port_2);
 #ifdef _WIN32
     remote_addr.sin_addr.S_un.S_addr = inet_addr("36.231.65.243");
 #elif defined(UNIX) || defined(MACOS)
