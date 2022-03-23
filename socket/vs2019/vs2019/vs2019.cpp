@@ -87,6 +87,13 @@ void tcp_test_funcs()
 
 int main()
 {
+    char  recv_data[60] = "122.52.33.111 1234";
+    char device_ip[30];
+        int device_port = 0;
+    printf("recv msg = %s\n", recv_data);
+    sscanf(recv_data, "%s %d", device_ip, &device_port);
+    printf( "device_ip = %s, device port = %d", device_ip, device_port );
+
     //tool_test_funcs();
     //tcp_test_funcs();
 

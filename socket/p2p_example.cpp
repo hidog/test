@@ -380,10 +380,12 @@ void p2p_client_2()
     printf("client send, ret = %ld\n", ret);
 
     // ************************************************ recv from server ************************************************
-    char recv_data[30] = {0};
-    ret = recvfrom( client_skt, recv_data, 30, 0, (sockaddr*)&remote_addr, &remote_len );
+    char recv_data[60] = {0};
+    ret = recvfrom( client_skt, recv_data, 60, 0, (sockaddr*)&remote_addr, &remote_len );
 
-    char device_ip[30], device_port = 0;
+    char device_ip[30];
+    int device_port = 0;
+    printf( "recv msg = %s\n", recv_data );
     sscanf( recv_data, "%s %d", device_ip, &device_port );
     printf( "device ip = %s, device port = %d", device_ip, device_port );
 
