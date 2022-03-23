@@ -9,6 +9,10 @@ void p2p_bind_client_socket(int skt);
 void p2p_server_1();
 void p2p_client_1();
 
+// 實驗type B, 實測p2p連線效果
+void p2p_server_2();
+void p2p_client_2();
+
 
 
 
