@@ -1,4 +1,4 @@
-#include "p2p_example.h"
+ï»¿#include "p2p_example.h"
 
 #include <stdio.h>
 
@@ -16,7 +16,7 @@ typedef int SOCKET;
 #elif defined(_WIN32)
 #define bzero(ptr,size)     memset( (ptr), 0, (size) )
 typedef int socklen_t;
-typedef int ssize_t; // ¬d¤F¤@¤Uwindows¨S§ä¨ìssize_t³o­Ó©w¸q,¦b¬ã¨s¤@¤U. ¬İ°Q½×¥Ø«e«D¼Ğ·Ç©w¸q
+typedef int ssize_t; // æŸ¥äº†ä¸€ä¸‹windowsæ²’æ‰¾åˆ°ssize_té€™å€‹å®šç¾©,åœ¨ç ”ç©¶ä¸€ä¸‹. çœ‹è¨è«–ç›®å‰éæ¨™æº–å®šç¾©
 #endif
 
 
@@ -32,11 +32,11 @@ constexpr int p2p_server_port_2 = 2345;
 
 void p2p_bind_client_socket(int skt)
 {
-    // ¥Î©³¤Uªºbind¥i¥H°µ¨ì«ü©wclient portªº®ÄªG,¦ı¤£³]©w¤]·|¦Û°Ê³]©wport.
+    // ç”¨åº•ä¸‹çš„bindå¯ä»¥åšåˆ°æŒ‡å®šclient portçš„æ•ˆæœ,ä½†ä¸è¨­å®šä¹Ÿæœƒè‡ªå‹•è¨­å®šport.
     sockaddr_in local_addr;
-    bzero(&local_addr, sizeof local_addr);  // windows¨S¦³bzero
+    bzero(&local_addr, sizeof local_addr);  // windowsæ²’æœ‰bzero
     local_addr.sin_family = AF_INET;
-    local_addr.sin_port = htons(p2p_client_port_1);  // local port«ü©w24256
+    local_addr.sin_port = htons(p2p_client_port_1);  // local portæŒ‡å®š24256
 
 #ifdef _WIN32
     local_addr.sin_addr.S_un.S_addr = INADDR_ANY; // inet_addr("111.248.195.94");
@@ -74,7 +74,7 @@ void p2p_server_1()
     SOCKET server_skt = socket(PF_INET, SOCK_DGRAM, IPPROTO_UDP);
 
     sockaddr_in local_addr;
-    bzero(&local_addr, sizeof local_addr);  // windows¨S¦³bzero
+    bzero(&local_addr, sizeof local_addr);  // windowsæ²’æœ‰bzero
     local_addr.sin_family = AF_INET;
     local_addr.sin_port = htons(p2p_server_port_1);
 
@@ -161,7 +161,7 @@ void p2p_client_1()
         return;
     }
 
-    // ¥Î¨Ó«ü©w¥»¦aºİªºport
+    // ç”¨ä¾†æŒ‡å®šæœ¬åœ°ç«¯çš„port
     p2p_bind_client_socket(client_skt);
 
     // ************************************************ send to server 1 ************************************************
@@ -173,7 +173,7 @@ void p2p_client_1()
     remote_addr.sin_addr.S_un.S_addr = inet_addr( "36.231.65.243" );
 #elif defined(UNIX) || defined(MACOS)
     remote_addr.sin_addr.s_addr = inet_addr(ip.c_str());
-    //inet_pton( AF_INET, "127.0.0.1", &servaddr.sin_addr );  // ¥t¤@­Ó§@ªk
+    //inet_pton( AF_INET, "127.0.0.1", &servaddr.sin_addr );  // å¦ä¸€å€‹ä½œæ³•
 #endif
     socklen_t remote_len = sizeof(remote_addr);
 
@@ -191,7 +191,7 @@ void p2p_client_1()
     remote_addr.sin_addr.S_un.S_addr = inet_addr("122.116.84.59");
 #elif defined(UNIX) || defined(MACOS)
     remote_addr.sin_addr.s_addr = inet_addr(ip.c_str());
-    //inet_pton( AF_INET, "127.0.0.1", &servaddr.sin_addr );  // ¥t¤@­Ó§@ªk
+    //inet_pton( AF_INET, "127.0.0.1", &servaddr.sin_addr );  // å¦ä¸€å€‹ä½œæ³•
 #endif
     remote_len = sizeof(remote_addr);
 
@@ -234,7 +234,7 @@ void p2p_server_2()
     SOCKET server_skt = socket(PF_INET, SOCK_DGRAM, IPPROTO_UDP);
 
     sockaddr_in local_addr;
-    bzero(&local_addr, sizeof local_addr);  // windows¨S¦³bzero
+    bzero(&local_addr, sizeof local_addr);  // windowsæ²’æœ‰bzero
     local_addr.sin_family = AF_INET;
     local_addr.sin_port = htons(p2p_server_port_2);
 
@@ -360,7 +360,7 @@ void p2p_client_2()
         return;
     }
 
-    // ¥Î¨Ó«ü©w¥»¦aºİªºport
+    // ç”¨ä¾†æŒ‡å®šæœ¬åœ°ç«¯çš„port
     //p2p_bind_client_socket(client_skt);
 
     // ************************************************ send to server ************************************************
@@ -372,7 +372,7 @@ void p2p_client_2()
     remote_addr.sin_addr.S_un.S_addr = inet_addr("36.231.65.243");
 #elif defined(UNIX) || defined(MACOS)
     remote_addr.sin_addr.s_addr = inet_addr(ip.c_str());
-    //inet_pton( AF_INET, "127.0.0.1", &servaddr.sin_addr );  // ¥t¤@­Ó§@ªk
+    //inet_pton( AF_INET, "127.0.0.1", &servaddr.sin_addr );  // å¦ä¸€å€‹ä½œæ³•
 #endif
     socklen_t remote_len = sizeof(remote_addr);
 
@@ -400,7 +400,7 @@ void p2p_client_2()
     remote_addr.sin_addr.S_un.S_addr = inet_addr(device_ip);
 #elif defined(UNIX) || defined(MACOS)
     remote_addr.sin_addr.s_addr = inet_addr(ip.c_str());
-    //inet_pton( AF_INET, "127.0.0.1", &servaddr.sin_addr );  // ¥t¤@­Ó§@ªk
+    //inet_pton( AF_INET, "127.0.0.1", &servaddr.sin_addr );  // å¦ä¸€å€‹ä½œæ³•
 #endif
     remote_len = sizeof(remote_addr);
 

@@ -1,15 +1,15 @@
-#ifndef P2P_EXAMPLE_H
+ï»¿#ifndef P2P_EXAMPLE_H
 #define P2P_EXAMPLE_H
 
 
 
 void p2p_bind_client_socket(int skt);
 
-// ¹êÅçtype B, °eµ¹¤£¦Pserverªºport¬O§_¯à¬Û¦P
+// å¯¦é©—type B, é€çµ¦ä¸åŒserverçš„portæ˜¯å¦èƒ½ç›¸åŒ
 void p2p_server_1();
 void p2p_client_1();
 
-// ¹êÅçtype B, ¹ê´úp2p³s½u®ÄªG
+// å¯¦é©—type B, å¯¦æ¸¬p2pé€£ç·šæ•ˆæœ
 void p2p_server_2();
 void p2p_client_2();
 
