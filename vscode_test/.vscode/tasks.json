@@ -21,6 +21,16 @@
                 "isDefault": true
             },
             "dependsOn": ["cmake"]
+        }, 
+        {
+            "label": "clean",
+            "type": "shell",
+            "command": "make clean",
+            "args": [],
+            "group": {
+                "kind": "clean",
+                "isDefault": false
+            }
         }
     ]
 }
