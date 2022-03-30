@@ -10,15 +10,17 @@
                 "kind": "build",
                 "isDefault": false
             }
-        }, {
+        }, 
+        {
             "label": "build",
             "type": "shell",
             "command": "make",
             "args": [],
             "group": {
                 "kind": "build",
-                "isDefault": false
-            }
+                "isDefault": true
+            },
+            "dependsOn": ["cmake"]
         }
     ]
 }
