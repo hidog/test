@@ -1,0 +1,36 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "cmake",
+            "type": "shell",
+            "command": "cmake",
+            "args": [ "." ],
+            "group": {
+                "kind": "build",
+                "isDefault": false
+            }
+        }, 
+        {
+            "label": "build",
+            "type": "shell",
+            "command": "make",
+            "args": [],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "dependsOn": ["cmake"]
+        }, 
+        {
+            "label": "clean",
+            "type": "shell",
+            "command": "make clean",
+            "args": [],
+            "group": {
+                "kind": "clean",
+                "isDefault": false
+            }
+        }
+    ]
+}

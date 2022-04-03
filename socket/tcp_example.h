@@ -15,7 +15,7 @@ void tcp_server_timeout_test();
     buffer開9999999,一下就報錯
     網頁搜尋到的結果,一般不超過64k 65536
     可以參考MTU   通常是14xx, 某些環境可能會在500以下.
-    這是建議值, TCP的畫會自己切
+    這是建議值, TCP的話會自己切
     看起來行為會隨著網路環境不同有所改變. (ubuntu/mac測到不同的結果,但結論是都有機會沒傳完)
 */
 void tcp_size_server( int port );

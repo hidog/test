@@ -5,7 +5,10 @@
 #ifdef _WIN32
 #include <WinSock2.h>
 #else
-#error undefined
+#include <unistd.h>
+#include <sys/socket.h>
+#include <arpa/inet.h>
+#include <string.h>
 #endif
 
 
@@ -16,7 +19,7 @@ typedef int SOCKET;
 #elif defined(_WIN32)
 #define bzero(ptr,size)     memset( (ptr), 0, (size) )
 typedef int socklen_t;
-typedef int ssize_t; // 查了一下windows沒找到ssize_t這個定義,在研究一下. 看討論目前非標準定義
+typedef int ssize_t;
 #endif
 
 
@@ -172,7 +175,7 @@ void p2p_client_1()
 #ifdef _WIN32
     remote_addr.sin_addr.S_un.S_addr = inet_addr( "36.231.65.243" );
 #elif defined(UNIX) || defined(MACOS)
-    remote_addr.sin_addr.s_addr = inet_addr(ip.c_str());
+    remote_addr.sin_addr.s_addr = inet_addr( "36.231.65.243" );
     //inet_pton( AF_INET, "127.0.0.1", &servaddr.sin_addr );  // 另一個作法
 #endif
     socklen_t remote_len = sizeof(remote_addr);
@@ -190,7 +193,7 @@ void p2p_client_1()
 #ifdef _WIN32
     remote_addr.sin_addr.S_un.S_addr = inet_addr("122.116.84.59");
 #elif defined(UNIX) || defined(MACOS)
-    remote_addr.sin_addr.s_addr = inet_addr(ip.c_str());
+    remote_addr.sin_addr.s_addr = inet_addr("122.116.84.59");
     //inet_pton( AF_INET, "127.0.0.1", &servaddr.sin_addr );  // 另一個作法
 #endif
     remote_len = sizeof(remote_addr);
@@ -371,7 +374,7 @@ void p2p_client_2()
 #ifdef _WIN32
     remote_addr.sin_addr.S_un.S_addr = inet_addr("36.231.65.243");
 #elif defined(UNIX) || defined(MACOS)
-    remote_addr.sin_addr.s_addr = inet_addr(ip.c_str());
+    remote_addr.sin_addr.s_addr = inet_addr("36.231.65.243");
     //inet_pton( AF_INET, "127.0.0.1", &servaddr.sin_addr );  // 另一個作法
 #endif
     socklen_t remote_len = sizeof(remote_addr);
@@ -399,7 +402,7 @@ void p2p_client_2()
 #ifdef _WIN32
     remote_addr.sin_addr.S_un.S_addr = inet_addr(device_ip);
 #elif defined(UNIX) || defined(MACOS)
-    remote_addr.sin_addr.s_addr = inet_addr(ip.c_str());
+    remote_addr.sin_addr.s_addr = inet_addr(device_ip);
     //inet_pton( AF_INET, "127.0.0.1", &servaddr.sin_addr );  // 另一個作法
 #endif
     remote_len = sizeof(remote_addr);
@@ -415,7 +418,11 @@ void p2p_client_2()
         ret = recvfrom( client_skt, msg2, 60, 0, (sockaddr*)&remote_addr, &remote_len);
         printf( "msg2 = %s, from %s %d\n", msg2, inet_ntoa(remote_addr.sin_addr), ntohs(remote_addr.sin_port) );
 
+#ifdef _WIN32
         Sleep(500);
+#else
+        sleep(1);
+#endif
     }
 
 
