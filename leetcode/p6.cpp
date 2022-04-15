@@ -27,16 +27,17 @@ public:
     {
         if( root == nullptr )
             return root;
-        else if( root->val < low )
+        else if( root->val < low )        
+            root = trimBST( root->right, low, high );
+        else if( root->val > high )        
+            root = trimBST( root->left, low, high );        
+        else if( root->val >= low && root->val <= high )
         {
-            root = root->right;
-            trimBST( root, low, high );
+            root->left = trimBST( root->left, low, high );
+            root->right = trimBST( root->right, low, high );
         }
-        else if( root->val > high )
-        {
-            root = root->left;
-            trimBST( root, low, high );
-        }
+
+        return root;
     }
 
     void output( TreeNode* root )
@@ -44,7 +45,10 @@ public:
         if( root != nullptr )
             cout << root->val << " ";
         else
+        {
             cout << "null ";
+            return;
+        }
         
         output( root->left );
         output( root->right );
@@ -56,14 +60,18 @@ public:
 
 void p669_Trim_a_Binary_Search_Tree()
 {
-    TreeNode n1( 1 );
-    TreeNode n2( 2, &n1, nullptr );
-    TreeNode n3( 0, nullptr, &n2 );
-    TreeNode n4( 4 );
-    TreeNode n5( 3, &n3, &n4 );
+    TreeNode n1( 2 );
+    TreeNode n2( 1, nullptr, &n1 );
+    TreeNode n3( 4 );
+    TreeNode n4( 3, &n2, &n3 );
 
     Solution so;
-    TreeNode *result = so.trimBST( &n5, 1, 3 );
+    so.output(&n4);
+    cout << "\n";
+
+    TreeNode *result = so.trimBST( &n4, 3, 4 );
 
     so.output( result );
+    cout << "\n";
+
 }
