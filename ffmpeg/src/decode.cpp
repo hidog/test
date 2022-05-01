@@ -1,38 +1,18 @@
-/*
- * Copyright (c) 2012 Stefano Sabatini
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in
- * all copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
- * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
- * THE SOFTWARE.
- */
+#include "decode.h"
 
-/**
- * @file
- * Demuxing and decoding example.
- *
- * Show how to use the libavformat and libavcodec API to demux and
- * decode audio and video data.
- * @example demuxing_decoding.c
- */
+
+extern "C" {
 
 #include <libavutil/imgutils.h>
 #include <libavutil/samplefmt.h>
 #include <libavutil/timestamp.h>
+#include <libavcodec/avcodec.h>
 #include <libavformat/avformat.h>
+
+}
+
+
+
 
 static AVFormatContext *fmt_ctx = NULL;
 static AVCodecContext *video_dec_ctx = NULL, *audio_dec_ctx;
@@ -51,7 +31,7 @@ static int video_dst_bufsize;
 
 static int video_stream_idx = -1, audio_stream_idx = -1;
 static AVFrame *frame = NULL;
-static AVPacket pkt;
+static AVPacket *pkt = NULL;
 static int video_frame_count = 0;
 static int audio_frame_count = 0;
 
@@ -68,7 +48,7 @@ static int output_video_frame(AVFrame *frame)
                 "new: width = %d, height = %d, format = %s\n",
                 width, height, av_get_pix_fmt_name(pix_fmt),
                 frame->width, frame->height,
-                av_get_pix_fmt_name(frame->format));
+                av_get_pix_fmt_name(  static_cast<AVPixelFormat>(frame->format)  ) );
         return -1;
     }
 
@@ -86,12 +66,14 @@ static int output_video_frame(AVFrame *frame)
     return 0;
 }
 
+
+
+
 static int output_audio_frame(AVFrame *frame)
 {
-    size_t unpadded_linesize = frame->nb_samples * av_get_bytes_per_sample(frame->format);
-    printf("audio_frame n:%d nb_samples:%d pts:%s\n",
-           audio_frame_count++, frame->nb_samples,
-           av_ts2timestr(frame->pts, &audio_dec_ctx->time_base));
+    size_t unpadded_linesize = frame->nb_samples * av_get_bytes_per_sample( static_cast<AVSampleFormat>(frame->format) );
+    printf("audio_frame n:%d nb_samples:%d \n",
+           audio_frame_count++, frame->nb_samples);
 
     /* Write the raw audio data samples of the first plane. This works
      * fine for packed formats (e.g. AV_SAMPLE_FMT_S16). However,
@@ -106,14 +88,17 @@ static int output_audio_frame(AVFrame *frame)
     return 0;
 }
 
-static int decode_packet(AVCodecContext *dec, const AVPacket *pkt)
+
+
+
+int decode_packet(AVCodecContext *dec, const AVPacket *pkt)
 {
     int ret = 0;
 
     // submit the packet to the decoder
     ret = avcodec_send_packet(dec, pkt);
     if (ret < 0) {
-        fprintf(stderr, "Error submitting a packet for decoding (%s)\n", av_err2str(ret));
+        fprintf(stderr, "Error submitting a packet for decoding \n");
         return ret;
     }
 
@@ -126,7 +111,7 @@ static int decode_packet(AVCodecContext *dec, const AVPacket *pkt)
             if (ret == AVERROR_EOF || ret == AVERROR(EAGAIN))
                 return 0;
 
-            fprintf(stderr, "Error during decoding (%s)\n", av_err2str(ret));
+            fprintf(stderr, "Error during decoding \n" );
             return ret;
         }
 
@@ -149,8 +134,7 @@ static int open_codec_context(int *stream_idx,
 {
     int ret, stream_index;
     AVStream *st;
-    AVCodec *dec = NULL;
-    AVDictionary *opts = NULL;
+    const AVCodec *dec = NULL;
 
     ret = av_find_best_stream(fmt_ctx, type, -1, -1, NULL, 0);
     if (ret < 0) {
@@ -185,7 +169,7 @@ static int open_codec_context(int *stream_idx,
         }
 
         /* Init the decoders */
-        if ((ret = avcodec_open2(*dec_ctx, dec, &opts)) < 0) {
+        if ((ret = avcodec_open2(*dec_ctx, dec, NULL)) < 0) {
             fprintf(stderr, "Failed to open %s codec\n",
                     av_get_media_type_string(type));
             return ret;
@@ -225,22 +209,17 @@ static int get_format_from_sample_fmt(const char **fmt,
     return -1;
 }
 
-int main (int argc, char **argv)
+
+
+
+
+int decode_test()
 {
     int ret = 0;
 
-    if (argc != 4) {
-        fprintf(stderr, "usage: %s  input_file video_output_file audio_output_file\n"
-                "API example program to show how to read frames from an input file.\n"
-                "This program reads frames from a file, decodes them, and writes decoded\n"
-                "video frames to a rawvideo file named video_output_file, and decoded\n"
-                "audio frames to a rawaudio file named audio_output_file.\n",
-                argv[0]);
-        exit(1);
-    }
-    src_filename = argv[1];
-    video_dst_filename = argv[2];
-    audio_dst_filename = argv[3];
+    src_filename = "D:\\test.mkv";
+    video_dst_filename = "D:\\v.data";
+    audio_dst_filename = "D:\\a.data";
 
     /* open input file, and allocate format context */
     if (avformat_open_input(&fmt_ctx, src_filename, NULL, NULL) < 0) {
@@ -303,10 +282,12 @@ int main (int argc, char **argv)
         goto end;
     }
 
-    /* initialize packet, set data to NULL, let the demuxer fill it */
-    av_init_packet(&pkt);
-    pkt.data = NULL;
-    pkt.size = 0;
+    pkt = av_packet_alloc();
+    if (!pkt) {
+        fprintf(stderr, "Could not allocate packet\n");
+        ret = AVERROR(ENOMEM);
+        goto end;
+    }
 
     if (video_stream)
         printf("Demuxing video from file '%s' into '%s'\n", src_filename, video_dst_filename);
@@ -314,14 +295,14 @@ int main (int argc, char **argv)
         printf("Demuxing audio from file '%s' into '%s'\n", src_filename, audio_dst_filename);
 
     /* read frames from the file */
-    while (av_read_frame(fmt_ctx, &pkt) >= 0) {
+    while (av_read_frame(fmt_ctx, pkt) >= 0) {
         // check if the packet belongs to a stream we are interested in, otherwise
         // skip it
-        if (pkt.stream_index == video_stream_idx)
-            ret = decode_packet(video_dec_ctx, &pkt);
-        else if (pkt.stream_index == audio_stream_idx)
-            ret = decode_packet(audio_dec_ctx, &pkt);
-        av_packet_unref(&pkt);
+        if (pkt->stream_index == video_stream_idx)
+            ret = decode_packet(video_dec_ctx, pkt);
+        else if (pkt->stream_index == audio_stream_idx)
+            ret = decode_packet(audio_dec_ctx, pkt);
+        av_packet_unref(pkt);
         if (ret < 0)
             break;
     }
@@ -372,6 +353,7 @@ end:
         fclose(video_dst_file);
     if (audio_dst_file)
         fclose(audio_dst_file);
+    av_packet_free(&pkt);
     av_frame_free(&frame);
     av_free(video_dst_data[0]);
 
