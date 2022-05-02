@@ -1,6 +1,6 @@
 #include "decode.h"
 #include <thread>
-
+#include "wrap.h"
 
 
 
@@ -172,7 +172,7 @@ int decode_test()
 {
     int ret = 0;
 
-    src_filename = "D:\\test.mkv";
+    src_filename = "D:\\test.rmvb";
     video_dst_filename = "D:\\v.data";
     audio_dst_filename = "D:\\a.data";
 
@@ -190,7 +190,11 @@ int decode_test()
     width = video_dec_ctx->width;
     height = video_dec_ctx->height;
     pix_fmt = video_dec_ctx->pix_fmt;
-    ret = av_image_alloc(video_dst_data, video_dst_linesize, width, height, pix_fmt, 1);
+
+    //ret = av_image_alloc(video_dst_data, video_dst_linesize, width, height, pix_fmt, 1);
+    ret = wap_av_image_alloc(video_dst_data, video_dst_linesize, width, height, pix_fmt, 1);
+
+    
     video_dst_bufsize = ret;    
 
     //
