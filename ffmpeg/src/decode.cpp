@@ -35,9 +35,12 @@ int output_video_frame(AVFrame *frame)
 {
     printf( "video_frame n:%d coded_n:%d\n", video_frame_count++, frame->coded_picture_number );
 
-    av_image_copy( video_dst_data, video_dst_linesize,
+    /*av_image_copy( video_dst_data, video_dst_linesize,
                    (const uint8_t **)(frame->data), frame->linesize,
-                   pix_fmt, width, height);
+                   pix_fmt, width, height);*/
+    wap_av_image_copy( video_dst_data, video_dst_linesize,
+                       (const uint8_t **)(frame->data), frame->linesize,
+                       pix_fmt, width, height);
 
     fwrite( video_dst_data[0], 1, video_dst_bufsize, video_dst_file );
     return 0;

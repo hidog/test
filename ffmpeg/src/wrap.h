@@ -17,4 +17,13 @@ int wap_av_image_alloc( uint8_t *pointers[4], int linesizes[4], int w, int h, en
 
 
 
+void wap_image_copy_plane( uint8_t *dst, ptrdiff_t dst_linesize, const uint8_t *src, ptrdiff_t src_linesize, ptrdiff_t bytewidth, int height);
+void wap_image_copy(uint8_t *dst_data[4], const ptrdiff_t dst_linesizes[4], const uint8_t *src_data[4], const ptrdiff_t src_linesizes[4], 
+                    enum AVPixelFormat pix_fmt, int width, int height,
+                    void (*copy_plane)(uint8_t *, ptrdiff_t, const uint8_t *, ptrdiff_t, ptrdiff_t, int));
+void wap_av_image_copy(uint8_t *dst_data[4], int dst_linesizes[4], const uint8_t *src_data[4], const int src_linesizes[4], enum AVPixelFormat pix_fmt, int width, int height);
+
+
+
+
 #endif

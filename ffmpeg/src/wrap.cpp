@@ -1,4 +1,5 @@
 #include "wrap.h"
+#include <cassert>
 
 extern "C" {
 
@@ -199,4 +200,97 @@ int wap_av_image_alloc( uint8_t *pointers[4], int linesizes[4], int w, int h, en
     }
 
     return ret;
+}
+
+
+
+
+
+
+
+void wap_image_copy(uint8_t *dst_data[4], const ptrdiff_t dst_linesizes[4], const uint8_t *src_data[4], const ptrdiff_t src_linesizes[4], 
+                enum AVPixelFormat pix_fmt, int width, int height,
+                void (*copy_plane)(uint8_t *, ptrdiff_t, const uint8_t *, ptrdiff_t, ptrdiff_t, int))
+{
+    const AVPixFmtDescriptor *desc = av_pix_fmt_desc_get(pix_fmt);
+
+    if (!desc || desc->flags & AV_PIX_FMT_FLAG_HWACCEL)
+        return;
+
+    if (desc->flags & AV_PIX_FMT_FLAG_PAL) 
+    {
+        copy_plane(dst_data[0], dst_linesizes[0],
+                   src_data[0], src_linesizes[0],
+                   width, height);
+        /* copy the palette */
+        if ((desc->flags & AV_PIX_FMT_FLAG_PAL) || (dst_data[1] && src_data[1]))
+            memcpy(dst_data[1], src_data[1], 4*256);
+    } 
+    else 
+    {
+        int i, planes_nb = 0;
+
+        for (i = 0; i < desc->nb_components; i++)
+            planes_nb = FFMAX(planes_nb, desc->comp[i].plane + 1);
+
+        for (i = 0; i < planes_nb; i++) 
+        {
+            int h = height;
+            ptrdiff_t bwidth = av_image_get_linesize(pix_fmt, width, i);
+            if (bwidth < 0) 
+            {
+                av_log(NULL, AV_LOG_ERROR, "av_image_get_linesize failed\n");
+                return;
+            }
+            if (i == 1 || i == 2) 
+            {
+                h = AV_CEIL_RSHIFT(height, desc->log2_chroma_h);
+            }
+            copy_plane(dst_data[i], dst_linesizes[i],
+                       src_data[i], src_linesizes[i],
+                       bwidth, h);
+        }
+    }
+}
+
+
+
+
+
+void wap_image_copy_plane( uint8_t *dst, ptrdiff_t dst_linesize, const uint8_t *src, ptrdiff_t src_linesize, ptrdiff_t bytewidth, int height)
+{
+    if (!dst || !src)
+        return;
+    
+    assert(FFABS(src_linesize) >= bytewidth);
+    assert(FFABS(dst_linesize) >= bytewidth);
+    
+    for (;height > 0; height--) 
+    {
+        memcpy(dst, src, bytewidth);
+        dst += dst_linesize;
+        src += src_linesize;
+    }
+}
+
+
+
+
+
+
+
+void wap_av_image_copy(uint8_t *dst_data[4], int dst_linesizes[4], const uint8_t *src_data[4], const int src_linesizes[4], 
+                       enum AVPixelFormat pix_fmt, int width, int height)
+{
+    ptrdiff_t dst_linesizes1[4], src_linesizes1[4];
+    int i;
+
+    for (i = 0; i < 4; i++) 
+    {
+        dst_linesizes1[i] = dst_linesizes[i];
+        src_linesizes1[i] = src_linesizes[i];
+    }
+
+    wap_image_copy( dst_data, dst_linesizes1, src_data, src_linesizes1, pix_fmt,
+                    width, height, wap_image_copy_plane);
 }
