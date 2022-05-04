@@ -294,3 +294,219 @@ void wap_av_image_copy(uint8_t *dst_data[4], int dst_linesizes[4], const uint8_t
     wap_image_copy( dst_data, dst_linesizes1, src_data, src_linesizes1, pix_fmt,
                     width, height, wap_image_copy_plane);
 }
+
+
+
+
+
+
+
+
+
+
+
+int wap_sws_scale( SwsContext *c, const uint8_t * const srcSlice[], const int srcStride[], int srcSliceY, int srcSliceH, uint8_t *const dst[], const int dstStride[] )
+{
+    if( c->nb_slice_ctx )
+        c = c->slice_ctx[0];
+
+    //return scale_internal(c, srcSlice, srcStride, srcSliceY, srcSliceH,
+      //                    dst, dstStride, 0, c->dstH);
+    return 0;
+}
+
+
+
+
+static int scale_internal(SwsContext *c,
+                          const uint8_t * const srcSlice[], const int srcStride[],
+                          int srcSliceY, int srcSliceH,
+                          uint8_t *const dstSlice[], const int dstStride[],
+                          int dstSliceY, int dstSliceH)
+{
+    const int scale_dst = dstSliceY > 0 || dstSliceH < c->dstH;
+    const int frame_start = scale_dst || !c->sliceDir;
+    int i, ret;
+    const uint8_t *src2[4];
+    uint8_t *dst2[4];
+    int macro_height_src = isBayer(c->srcFormat) ? 2 : (1 << c->chrSrcVSubSample);
+    int macro_height_dst = isBayer(c->dstFormat) ? 2 : (1 << c->chrDstVSubSample);
+    // copy strides, so they can safely be modified
+    int srcStride2[4];
+    int dstStride2[4];
+    int srcSliceY_internal = srcSliceY;
+
+    if (!srcStride || !dstStride || !dstSlice || !srcSlice) {
+        av_log(c, AV_LOG_ERROR, "One of the input parameters to sws_scale() is NULL, please check the calling code\n");
+        return AVERROR(EINVAL);
+    }
+
+    if ((srcSliceY  & (macro_height_src - 1)) ||
+        ((srcSliceH & (macro_height_src - 1)) && srcSliceY + srcSliceH != c->srcH) ||
+        srcSliceY + srcSliceH > c->srcH) {
+        av_log(c, AV_LOG_ERROR, "Slice parameters %d, %d are invalid\n", srcSliceY, srcSliceH);
+        return AVERROR(EINVAL);
+    }
+
+    if ((dstSliceY  & (macro_height_dst - 1)) ||
+        ((dstSliceH & (macro_height_dst - 1)) && dstSliceY + dstSliceH != c->dstH) ||
+        dstSliceY + dstSliceH > c->dstH) {
+        av_log(c, AV_LOG_ERROR, "Slice parameters %d, %d are invalid\n", dstSliceY, dstSliceH);
+        return AVERROR(EINVAL);
+    }
+
+    if (!check_image_pointers(srcSlice, c->srcFormat, srcStride)) {
+        av_log(c, AV_LOG_ERROR, "bad src image pointers\n");
+        return AVERROR(EINVAL);
+    }
+    if (!check_image_pointers((const uint8_t* const*)dstSlice, c->dstFormat, dstStride)) {
+        av_log(c, AV_LOG_ERROR, "bad dst image pointers\n");
+        return AVERROR(EINVAL);
+    }
+
+    // do not mess up sliceDir if we have a "trailing" 0-size slice
+    if (srcSliceH == 0)
+        return 0;
+
+    if (c->gamma_flag && c->cascaded_context[0])
+        return scale_gamma(c, srcSlice, srcStride, srcSliceY, srcSliceH,
+                           dstSlice, dstStride, dstSliceY, dstSliceH);
+
+    if (c->cascaded_context[0] && srcSliceY == 0 && srcSliceH == c->cascaded_context[0]->srcH)
+        return scale_cascaded(c, srcSlice, srcStride, srcSliceY, srcSliceH,
+                              dstSlice, dstStride, dstSliceY, dstSliceH);
+
+    if (!srcSliceY && (c->flags & SWS_BITEXACT) && c->dither == SWS_DITHER_ED && c->dither_error[0])
+        for (i = 0; i < 4; i++)
+            memset(c->dither_error[i], 0, sizeof(c->dither_error[0][0]) * (c->dstW+2));
+
+    if (usePal(c->srcFormat))
+        update_palette(c, (const uint32_t *)srcSlice[1]);
+
+    memcpy(src2,       srcSlice,  sizeof(src2));
+    memcpy(dst2,       dstSlice,  sizeof(dst2));
+    memcpy(srcStride2, srcStride, sizeof(srcStride2));
+    memcpy(dstStride2, dstStride, sizeof(dstStride2));
+
+    if (frame_start && !scale_dst) {
+        if (srcSliceY != 0 && srcSliceY + srcSliceH != c->srcH) {
+            av_log(c, AV_LOG_ERROR, "Slices start in the middle!\n");
+            return AVERROR(EINVAL);
+        }
+
+        c->sliceDir = (srcSliceY == 0) ? 1 : -1;
+    } else if (scale_dst)
+        c->sliceDir = 1;
+
+    if (c->src0Alpha && !c->dst0Alpha && isALPHA(c->dstFormat)) {
+        uint8_t *base;
+        int x,y;
+
+        av_fast_malloc(&c->rgb0_scratch, &c->rgb0_scratch_allocated,
+                       FFABS(srcStride[0]) * srcSliceH + 32);
+        if (!c->rgb0_scratch)
+            return AVERROR(ENOMEM);
+
+        base = srcStride[0] < 0 ? c->rgb0_scratch - srcStride[0] * (srcSliceH-1) :
+                                  c->rgb0_scratch;
+        for (y=0; y<srcSliceH; y++){
+            memcpy(base + srcStride[0]*y, src2[0] + srcStride[0]*y, 4*c->srcW);
+            for (x=c->src0Alpha-1; x<4*c->srcW; x+=4) {
+                base[ srcStride[0]*y + x] = 0xFF;
+            }
+        }
+        src2[0] = base;
+    }
+
+    if (c->srcXYZ && !(c->dstXYZ && c->srcW==c->dstW && c->srcH==c->dstH)) {
+        uint8_t *base;
+
+        av_fast_malloc(&c->xyz_scratch, &c->xyz_scratch_allocated,
+                       FFABS(srcStride[0]) * srcSliceH + 32);
+        if (!c->xyz_scratch)
+            return AVERROR(ENOMEM);
+
+        base = srcStride[0] < 0 ? c->xyz_scratch - srcStride[0] * (srcSliceH-1) :
+                                  c->xyz_scratch;
+
+        xyz12Torgb48(c, (uint16_t*)base, (const uint16_t*)src2[0], srcStride[0]/2, srcSliceH);
+        src2[0] = base;
+    }
+
+    if (c->sliceDir != 1) {
+        // slices go from bottom to top => we flip the image internally
+        for (i=0; i<4; i++) {
+            srcStride2[i] *= -1;
+            dstStride2[i] *= -1;
+        }
+
+        src2[0] += (srcSliceH - 1) * srcStride[0];
+        if (!usePal(c->srcFormat))
+            src2[1] += ((srcSliceH >> c->chrSrcVSubSample) - 1) * srcStride[1];
+        src2[2] += ((srcSliceH >> c->chrSrcVSubSample) - 1) * srcStride[2];
+        src2[3] += (srcSliceH - 1) * srcStride[3];
+        dst2[0] += ( c->dstH                         - 1) * dstStride[0];
+        dst2[1] += ((c->dstH >> c->chrDstVSubSample) - 1) * dstStride[1];
+        dst2[2] += ((c->dstH >> c->chrDstVSubSample) - 1) * dstStride[2];
+        dst2[3] += ( c->dstH                         - 1) * dstStride[3];
+
+        srcSliceY_internal = c->srcH-srcSliceY-srcSliceH;
+    }
+    reset_ptr(src2, c->srcFormat);
+    reset_ptr((void*)dst2, c->dstFormat);
+
+    if (c->convert_unscaled) {
+        int offset  = srcSliceY_internal;
+        int slice_h = srcSliceH;
+
+        // for dst slice scaling, offset the pointers to match the unscaled API
+        if (scale_dst) {
+            av_assert0(offset == 0);
+            for (i = 0; i < 4 && src2[i]; i++) {
+                if (!src2[i] || (i > 0 && usePal(c->srcFormat)))
+                    break;
+                src2[i] += (dstSliceY >> ((i == 1 || i == 2) ? c->chrSrcVSubSample : 0)) * srcStride2[i];
+            }
+
+            for (i = 0; i < 4 && dst2[i]; i++) {
+                if (!dst2[i] || (i > 0 && usePal(c->dstFormat)))
+                    break;
+                dst2[i] -= (dstSliceY >> ((i == 1 || i == 2) ? c->chrDstVSubSample : 0)) * dstStride2[i];
+            }
+            offset  = dstSliceY;
+            slice_h = dstSliceH;
+        }
+
+        ret = c->convert_unscaled(c, src2, srcStride2, offset, slice_h,
+                                  dst2, dstStride2);
+        if (scale_dst)
+            dst2[0] += dstSliceY * dstStride2[0];
+    } else {
+        ret = swscale(c, src2, srcStride2, srcSliceY_internal, srcSliceH,
+                      dst2, dstStride2, dstSliceY, dstSliceH);
+    }
+
+    if (c->dstXYZ && !(c->srcXYZ && c->srcW==c->dstW && c->srcH==c->dstH)) {
+        uint16_t *dst16;
+
+        if (scale_dst) {
+            dst16 = (uint16_t *)dst2[0];
+        } else {
+            int dstY = c->dstY ? c->dstY : srcSliceY + srcSliceH;
+
+            av_assert0(dstY >= ret);
+            av_assert0(ret >= 0);
+            av_assert0(c->dstH >= dstY);
+            dst16 = (uint16_t*)(dst2[0] + (dstY - ret) * dstStride2[0]);
+        }
+
+        /* replace on the same data */
+        rgb48Toxyz12(c, dst16, dst16, dstStride2[0]/2, ret);
+    }
+
+    /* reset slice direction at end of frame */
+    if ((srcSliceY_internal + srcSliceH == c->srcH) || scale_dst)
+        c->sliceDir = 0;
+
+    return ret;
+}

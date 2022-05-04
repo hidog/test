@@ -9,7 +9,12 @@
 AVFormatContext *fmt_ctx = NULL;
 AVCodecContext *video_dec_ctx = NULL, *audio_dec_ctx;
 int width, height;
-enum AVPixelFormat pix_fmt;
+
+
+AVPixelFormat pix_fmt;
+AVPixelFormat o_pix_fmt;
+
+
 AVStream *video_stream = NULL, *audio_stream = NULL;
 const char *src_filename = NULL;
 const char *video_dst_filename = NULL;
@@ -27,6 +32,9 @@ AVPacket *pkt = NULL;
 int video_frame_count = 0;
 int audio_frame_count = 0;
 
+SwsContext *sws_ctx = nullptr;
+
+
 
 
 
@@ -38,9 +46,14 @@ int output_video_frame(AVFrame *frame)
     /*av_image_copy( video_dst_data, video_dst_linesize,
                    (const uint8_t **)(frame->data), frame->linesize,
                    pix_fmt, width, height);*/
-    wap_av_image_copy( video_dst_data, video_dst_linesize,
+
+
+    sws_scale( sws_ctx, frame->data, (const int*)frame->linesize, 0, frame->height, video_dst_data, video_dst_linesize );
+
+
+    /*wap_av_image_copy( video_dst_data, video_dst_linesize,
                        (const uint8_t **)(frame->data), frame->linesize,
-                       pix_fmt, width, height);
+                       pix_fmt, width, height);*/
 
     fwrite( video_dst_data[0], 1, video_dst_bufsize, video_dst_file );
     return 0;
@@ -53,8 +66,8 @@ int output_video_frame(AVFrame *frame)
 int output_audio_frame(AVFrame *frame)
 {
     size_t unpadded_linesize = frame->nb_samples * av_get_bytes_per_sample( static_cast<AVSampleFormat>(frame->format) );
-    printf( "audio_frame n:%d nb_samples:%d \n", audio_frame_count++, frame->nb_samples );
-    fwrite(frame->extended_data[0], 1, unpadded_linesize, audio_dst_file);
+    //printf( "audio_frame n:%d nb_samples:%d \n", audio_frame_count++, frame->nb_samples );
+    //fwrite(frame->extended_data[0], 1, unpadded_linesize, audio_dst_file);
     return 0;
 }
 
@@ -175,9 +188,9 @@ int decode_test()
 {
     int ret = 0;
 
-    src_filename = "D:\\test.rmvb";
-    video_dst_filename = "D:\\v.data";
-    audio_dst_filename = "D:\\a.data";
+    src_filename = "D:\\test.mkv";
+    video_dst_filename = "H:\\v.data";
+    audio_dst_filename = "H:\\a.data";
 
     /* open input file, and allocate format context */
     avformat_open_input(&fmt_ctx, src_filename, NULL, NULL);
@@ -193,9 +206,18 @@ int decode_test()
     width = video_dec_ctx->width;
     height = video_dec_ctx->height;
     pix_fmt = video_dec_ctx->pix_fmt;
+    o_pix_fmt = AV_PIX_FMT_YUYV422;
+
+
+
+    sws_ctx     =   sws_getContext( width, height, pix_fmt,                     // src
+                                    width, height, o_pix_fmt,            // dst
+                                    SWS_BICUBIC, NULL, NULL, NULL);     
+
+
 
     //ret = av_image_alloc(video_dst_data, video_dst_linesize, width, height, pix_fmt, 1);
-    ret = wap_av_image_alloc(video_dst_data, video_dst_linesize, width, height, pix_fmt, 1);
+    ret = wap_av_image_alloc(video_dst_data, video_dst_linesize, width, height, o_pix_fmt, 1);
 
     
     video_dst_bufsize = ret;    
@@ -242,7 +264,7 @@ int decode_test()
     if( video_stream )
     {
         printf( "Play the output video file with the command:\nffplay -f rawvideo -pix_fmt %s -video_size %dx%d %s\n",
-                av_get_pix_fmt_name(pix_fmt), width, height, video_dst_filename);
+                av_get_pix_fmt_name(o_pix_fmt), width, height, video_dst_filename);
     }
 
     if( audio_stream )
@@ -275,6 +297,7 @@ int decode_test()
     av_packet_free(&pkt);
     av_frame_free(&frame);
     av_free(video_dst_data[0]);
+    sws_freeContext( sws_ctx );
 
     return 0;
 }
