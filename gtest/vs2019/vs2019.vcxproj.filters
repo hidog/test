@@ -13,10 +13,24 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="sample">
+      <UniqueIdentifier>{bdb2e598-e920-41b9-8adc-5e0570ac7098}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\sample\sample1_unittest.cc">
+      <Filter>sample</Filter>
+    </ClCompile>
+    <ClCompile Include="..\sample\sample1.cc">
+      <Filter>sample</Filter>
+    </ClCompile>
     <ClCompile Include="vs2019.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\sample\sample1.h">
+      <Filter>sample</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
