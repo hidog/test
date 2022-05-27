@@ -27,6 +27,9 @@
     <ClCompile Include="vs2019.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\sample\std_vector_test.cc">
+      <Filter>sample</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\sample\sample1.h">

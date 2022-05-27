@@ -21,6 +21,7 @@
   <ItemGroup>
     <ClCompile Include="..\sample\sample1.cc" />
     <ClCompile Include="..\sample\sample1_unittest.cc" />
+    <ClCompile Include="..\sample\std_vector_test.cc" />
     <ClCompile Include="vs2019.cpp" />
   </ItemGroup>
   <ItemGroup>
