@@ -1,4 +1,5 @@
 #include "../p1.h"
+#include "../p6.h"
 #include "../p8.h"
 
 
@@ -10,8 +11,10 @@ int main()
     //p3_Longest_Substring_Without_Repeating_Characters();
     //p4_Median_of_Two_Sorted_Arrays();
     
-    p9_PalindromeNumber();
+    //p9_PalindromeNumber();
     
+    p669_Trim_a_Binary_Search_Tree();
+
     //p895_Maximum_Frequency_Stack();
     
     return  0;

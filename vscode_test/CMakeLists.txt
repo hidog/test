@@ -19,7 +19,7 @@ set( CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin )
 
 # set default release build
 #if( "${CMAKE_BUILD_TYPE}" STREQUAL "Release")
-#    set(CMAKE_BUILD_TYPE Release)
+set(CMAKE_BUILD_TYPE Debug)
 #endif()
 
 # preprocessor define
