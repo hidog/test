@@ -1,0 +1,109 @@
+# https://gist.github.com/sparrc/026ed9958502072dda749ba4e5879ee3
+# https://gist.github.com/Brainiarc7/3f7695ac2a0905b05c5b
+
+# 編譯完畢後可能需要呼叫 ldconfig
+# docker 底下有碰到需要重新安裝driver的問題
+# 使用的時候需要先建立 ~/code/tmp
+
+#!/usr/bin/env bash
+
+# Installs ffmpeg from source (HEAD) with libaom and libx265, as well as a few
+# other common libraries
+# binary will be at ~/bin/ffmpeg
+
+sudo apt update && sudo apt upgrade
+
+mkdir -p ~/code/tmp/ffmpeg_sources ~/code/tmp/bin
+export PATH="$HOME/code/tmp/bin:$PATH"
+
+sudo apt install \
+  autoconf \
+  automake \
+  build-essential \
+  cmake \
+  git \
+  libass-dev \
+  libfreetype6-dev \
+  libsdl2-dev \
+  libtheora-dev \
+  libtool \
+  libva-dev \
+  libvdpau-dev \
+  libvorbis-dev \
+  libxcb1-dev \
+  libxcb-shm0-dev \
+  libxcb-xfixes0-dev \
+  mercurial \
+  pkg-config \
+  texinfo \
+  wget \
+  zlib1g-dev \
+  nasm \
+  yasm \
+  libvpx-dev \
+  libopus-dev \
+  libx264-dev \
+  libmp3lame-dev \
+  libfdk-aac-dev \
+  libgpac-dev \
+  libsdl1.2-dev \
+  texi2html
+
+#Install nvidia SDK
+cd ~/code/tmp/ffmpeg_sources
+git clone https://git.videolan.org/git/ffmpeg/nv-codec-headers.git
+cd nv-codec-headers
+make
+sudo make install
+
+# Install libaom from source.
+cd ~/code/tmp/ffmpeg_sources && \
+  git clone https://aomedia.googlesource.com/aom && \
+  mkdir ~/code/tmp/ffmpeg_sources/aom_build && \
+  cd ~/code/tmp/ffmpeg_sources/aom_build && \
+  cmake ../aom && \
+  make && \
+  sudo make install
+
+# Install libx265 from source.
+cd ~/code/tmp/ffmpeg_sources && \
+  git clone https://bitbucket.org/multicoreware/x265_git.git && \
+  cd x265_git/build/linux && \
+  cmake -G "Unix Makefiles" -DCMAKE_INSTALL_PREFIX="$HOME/code/tmp/build" -DENABLE_SHARED:bool=off ../../source && \
+  make && \
+  make install  
+  
+cd ~/code/tmp/ffmpeg_sources && \
+  wget -O ffmpeg-snapshot.tar.bz2 https://ffmpeg.org/releases/ffmpeg-snapshot.tar.bz2 && \
+  tar xjvf ffmpeg-snapshot.tar.bz2 && \
+  cd ffmpeg && \
+  PKG_CONFIG_PATH="$HOME/code/tmp/build/lib/pkgconfig" ./configure \
+    --prefix="$HOME/code/tmp/bin" \
+    --pkg-config-flags="--static" \
+    --extra-cflags="-I$HOME/code/tmp/build/include" \
+    --extra-ldflags="-L$HOME/code/tmp/build/lib" \
+    --extra-libs="-lpthread -lm" \
+    --bindir="$HOME/code/tmp/bin" \
+    --enable-cuda-nvcc \
+    --enable-cuvid \
+    --enable-libnpp \
+    --extra-cflags="-I/usr/local/cuda/include/" \
+    --extra-ldflags=-L/usr/local/cuda/lib64/ \
+    --enable-gpl \
+    --enable-libass \
+    --enable-libfdk-aac \
+    --enable-vaapi \
+    --enable-libmp3lame \
+    --enable-libx264 \
+    --enable-libx265 \
+    --enable-libtheora \
+    --enable-libfreetype \
+    --enable-libvorbis \
+    --enable-libopus \
+    --enable-libvpx \
+    --enable-libaom \
+    --enable-nonfree \
+    --enable-nvenc \
+    --enable-nvdec && \
+  make && \
+  make install

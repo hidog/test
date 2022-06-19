@@ -11,7 +11,7 @@
 int main()
 {
     // base
-    load_image_1();
+    /*load_image_1();
     load_image_2();
     create_image();
     image_convert();
@@ -33,13 +33,14 @@ int main()
 
     // base 2
     generate_test_image();
-    blur_test();
+    blur_test();*/
+    draw_mask();
 
     // image process
-    my_canny::canny_test();
+    /*my_canny::canny_test();
     my_canny::canny_test_2();
     histogram_test();
-    my_harris::harris_corner_test();
+    my_harris::harris_corner_test();*/
 
     return 0;
 }

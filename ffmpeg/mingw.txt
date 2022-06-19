@@ -1,0 +1,36 @@
+https://opensourcedoc.com/windows-programming/mingw-msys/
+改良版的 msys2 未來有機會參考這個
+
+
+http://hsintahsieh.blogspot.com/2014/07/mingw.html
+8.      最後要講的是編譯最佳化指令，方法是在.c檔前加上-O1、-O2、或是-O3，數字是最佳化的等級，可視情況決定用哪種等級編譯
+gcc -s -o test.exe –O3 test.o
+
+
+
+https://stevenerickevin.wordpress.com/2014/01/01/mingw-%E5%AE%89%E8%A3%9D%E7%AD%86%E8%A8%98/
+mingw-get install mintty
+
+
+
+https://ithelp.ithome.com.tw/articles/10077982
+mingw-get install msys-wget
+mingw-get  install msys-openssl  msys-openssh msys-zlib
+
+
+
+
+cmake + mingw
+cmake -G   "MinGW Makefiles" . 
+
+
+
+C:\MinGW\msys\1.0\home\hidog
+mingw的home path.
+
+
+
+
+
+其他參考
+https://my.oschina.net/N3verL4nd/blog/866896

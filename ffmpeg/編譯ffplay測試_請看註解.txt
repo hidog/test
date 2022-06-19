@@ -1,0 +1,38 @@
+# 自己用 mingw 編譯 ffmpeg 後, 並不會自動編譯 ffplay
+# 可以用這個檔案, 配合 cmake 做編譯
+# 需要複製 .lib, .dll
+# 編譯環境會是 visual studio, 不是 Unix Makefiles.
+
+
+
+cmake_minimum_required(VERSION 3.6)
+
+
+# print message
+message("cmake exec test project")
+message("root path =" ${CMAKE_SOURCE_DIR} )
+
+
+# Project Name
+set( PROJECT_NAME ffplay )
+project(${PROJECT_NAME})
+
+
+# include path 
+set( INCLUDE_PATH "D:/code/ffmpeg"
+			      "D:/code/SDL2/include" )
+include_directories( ${INCLUDE_PATH} )
+
+
+# library path
+set( LIB_PATH "D:/code/SDL2/lib/x64" 
+              "D:/code/ffmpeg" )
+link_directories( ${LIB_PATH} )
+
+# source 
+set( SOURCE ffplay.c cmdutils.c )
+
+# 
+add_executable( ${PROJECT_NAME} ${SOURCE} )
+
+target_link_libraries( ${PROJECT_NAME} SDL2 avcodec avdevice avfilter avformat avutil postproc swresample swscale )

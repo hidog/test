@@ -9,6 +9,165 @@
 
 
 
+struct MaskPoint
+{
+    int x;
+    int y;
+};
+
+
+struct MaskLine
+{
+    int a;
+    int b;
+    int c;
+    int d;
+};
+
+/*
+    x = at + b
+    y = ct + d
+    用這種方式表示線,在畫mask跟線
+*/
+void draw_mask()
+{
+    constexpr int width = 1280;
+    constexpr int height = 720;
+
+    cv::Mat mask( height, width, CV_8UC3 );
+    uchar* ptr = mask.ptr();
+
+    for( int i = 0; i < width; i++ )
+    {
+        for( int j = 0; j < height; j++ )
+        {
+            *(ptr + (j*mask.cols + i)*3 + 0) = 0;
+            *(ptr + (j*mask.cols + i)*3 + 1) = 0;  
+            *(ptr + (j*mask.cols + i)*3 + 2) = 0;  
+        }
+    }
+
+    MaskPoint point[4];
+#if 0
+    point[0].x = 235;
+    point[0].y = 119;
+    point[1].x = 413;
+    point[1].y = 98;
+    point[2].x = 669;
+    point[2].y = 533;
+    point[3].x = 280;
+    point[3].y = 699;
+#else
+    point[0].x = 100;
+    point[0].y = 100;
+    point[1].x = 500;
+    point[1].y = 100;
+    point[2].x = 500;
+    point[2].y = 300;
+    point[3].x = 100;
+    point[3].y = 300;
+#endif
+
+    // conver to line
+    /*
+        x = at + b 代入 0, 1
+        x0 = b, a + x0 = x1, a = x1 - x0
+        y0 = d, c + y0 = y1, c = y1 - y0
+    */
+    MaskLine line[4];
+    for( int i = 0; i < 4; i++ )
+    {
+        int j = (i + 1) % 4;
+        line[i].a = point[j].x - point[i].x;
+        line[i].b = point[i].x;
+        line[i].c = point[j].y - point[i].y;
+        line[i].d = point[i].y;
+    }
+
+    // polygen (use blue)
+    int x_start, x_end, y_start, y_end;
+    int max, min;
+
+    x_start = width;
+    x_end = 0;
+    for( int i = 0; i < 4; i++ )
+    {
+        if( x_start > point[i].x )
+            x_start = point[i].x;
+        if( x_end < point[i].x )
+            x_end = point[i].x;
+    }
+    
+
+    for( int x = x_start; x < x_end; x++ )
+    {
+        y_end = 0;
+        y_start = height;
+        for( int j = 0; j < 4; j++ )
+        {            
+            int k = (j + 1) % 4;
+            max = point[j].x > point[k].x ? point[j].x : point[k].x;
+            min = point[j].y < point[k].x ? point[j].x : point[k].x;
+            if( max == min && x == max )
+            {
+                if( y_end < point[j].y )
+                    y_end = point[j].y;
+                if( y_start > point[j].y )
+                    y_start = point[j].y;
+            }
+            else if( x >= min && x <= max )
+            {
+                // x = at + b, t = (x - b)/a
+                double t = 1.0 * (x - line[j].b) / line[j].a;
+                int yy = line[j].c * t + line[j].d;
+
+                if( y_end < yy )
+                    y_end = yy;
+                if( y_start > yy )
+                    y_start = yy;
+            }
+        }
+
+        for( int y = y_start; y <= y_end; y++ )
+        {
+            *(ptr + (y*mask.cols + x)*3 + 0) = 255;
+            *(ptr + (y*mask.cols + x)*3 + 1) = 0;  
+            *(ptr + (y*mask.cols + x)*3 + 2) = 0;  
+        }
+    }
+
+
+
+    // draw line. (use red)
+    double step = width > height ? width : height;
+    step = 0.5 / step; 
+    int x, y;
+
+    for( int i = 0; i < 4; i++ )
+    {
+        for( double t = 0; t <= 1; t += step )
+        {
+            x = line[i].a * t + line[i].b;
+            y = line[i].c * t + line[i].d;
+            *(ptr + (y*mask.cols + x)*3 + 0) = 0;
+            *(ptr + (y*mask.cols + x)*3 + 1) = 0;  
+            *(ptr + (y*mask.cols + x)*3 + 2) = 255;  
+        }
+    }
+
+    imshow( "mask test", mask );
+    cv::waitKey(0);
+}
+
+
+
+
+
+
+
+
+
+
 void generate_test_image()
 {
     constexpr int w = 400;

@@ -73,7 +73,7 @@ public:
 void test_inherit_1()
 {
     /*
-    不加virtual,這邊會沒執行到Array的destructor.
+    不加virtual,這邊會沒執行到AdvArray的destructor.
     */
     Array *ptr = new AdvArray;
     ptr->output();    // output 沒宣告成 virtual, 會執行到Array::output. 
@@ -127,7 +127,7 @@ void test_inherit_2()
 void test_inherit_3()
 {
     Foo* ptr = new Bar;
-    Bar* ptr2 = dynamic_cast<Bar*>(ptr);   // Foo::f1沒有virtual, 會造成編譯錯誤.
+    Bar* ptr2 = dynamic_cast<Bar*>(ptr);   // Foo::f1沒有virtual的話, 會造成編譯錯誤.
     ptr2->f2();
 }
 

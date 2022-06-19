@@ -6,11 +6,13 @@
 #include "uuid.h"
 #include "hardware.h"
 #include "container.h"
-
+#include "timer.h"
 
 
 int main()
 {
+    timer_test();
+
     boost_json_example();
     thread_test();
     all_of_example();

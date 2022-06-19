@@ -1,0 +1,66 @@
+1. ffmpeg -pix_fmts 列出支援的pixel formats.
+
+
+
+2. ffmpeg -codecs 列出支援的codec.
+
+
+
+3. ffmpeg -i test.mkv -map 0:0 -map 0:2 -map 0:4 -c copy -disposition:s:0 default output.mkv
+將輸出的第一個字幕軌設為預設
+沒設的情況會需要開啟後手動選擇字幕
+
+-c copy 全部的codec都直接複製.
+
+
+
+4. ffmpeg -i test.mkv -map 0:0 -map 0:4 -map 0:2 -c copy output.mkv
+-map 會將原本 stream   0 -> 0      4 -> 1      2 -> 3
+其他的stream跳過.
+
+https://blog.csdn.net/xiaoluer/article/details/81136478  可以參考這篇
+
+
+
+5. ffmpeg -i test.mkv -i test2.mkv -i test2.ass -map 0:0 -map 0:1 -map 0:4 -map 1:0 -map 1:1 -map 2:0 -c:s copy output.mkv
+建立一個有兩個 video stream 的檔案
+
+
+
+
+6. ffmpeg -i test.mkv -r 24000/1001 -f image2 image-%5d.jpg 
+參考 https://www.itread01.com/content/1548752605.html
+其中 -r 表示提取影象的頻率，-f 表示輸出格式， %3d 表示檔案命名方式（也即生成的圖片名為 image-001.jpeg, image-002.jpeg, …, image-999.jpeg)
+將影片分解成圖檔
+
+
+
+7. ffmpeg -f image2 -i image-%5d.jpg -r 24000/1001 -vcodec hevc_nvenc -cq 20 output.mp4
+-cq 固定品質
+ffmpeg -f image2 -i image-%5d.jpg -i audio.aac -r 24000/1001 -vcodec hevc -crt 50 output.mp4     
+增加音軌  不過實際上播放速度不對,有空再研究
+
+
+
+8. ffmpeg -i test.mkv -vcodec rawvideo -an output.yuv
+轉 yuv raw file.
+逆轉換沒成功
+
+
+
+9. ffmpeg –i test.mkv –vcodec h264 –bf 5 –g 30 output.mp4
+-g  控制 I frame 間隔
+
+
+
+10. ffmpeg -h encoder=libx264
+可以看到x264如何操作
+可以改成 hevc_nvenc
+
+
+
+
+
+
+
+

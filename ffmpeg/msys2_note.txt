@@ -1,0 +1,159 @@
+參考 
+https://www.cnblogs.com/Bob-wei/p/8435000.html
+https://www.twblogs.net/a/5d42732dbd9eee5174235246
+
+./configure \
+  --prefix=/usr/ffmpeg --enable-static --disable-shared \
+  --enable-gpl --enable-small --disable-doc --enable-nonfree \
+  --enable-libfdk-aac --enable-libx264 --enable-libx265 --enable-openssl \
+  --enable-pic
+
+不要設PKG_CONFIG_PATH
+
+https://stackoverflow.com/questions/18152168/using-cygwin-for-ffmpeg-build-error-cmp-command-not-found
+./configure: line 1132: cmp: command not found
+install diffutils
+pacman -S diffutils
+
+ 
+ 
+ 
+
+
+
+
+
+
+
+
+
+https://www.mobile01.com/topicdetail.php?f=510&t=3779579
+
+https://github.com/m-ab-s/media-autobuild_suite
+上面這個是base on mysys2的script. 
+NOTE: 沒成功 可能有選項錯誤 有空在研究了
+
+
+
+
+
+https://www.msys2.org/
+官網
+一個優化的MinGW環境
+
+
+pacman -Syu   更新  之後會關閉視窗
+pacman -Su   
+
+
+home路徑
+C:\msys64\home\hidog
+
+
+
+pacman -S git     安裝git
+
+
+安裝常用套件
+pacman -S make
+pacman -S gcc
+pacman -S diffutils
+pacman -S coreutils
+pacman -S pkg-config
+pacman -S tar
+pacman -S yasm
+pacman -S nasm
+
+
+
+pacman -S mingw-w64-x86_64-gcc
+pacman -S mingw-w64-x86_64-toolchain
+
+
+
+
+
+https://www.cyberciti.biz/faq/howto-searching-for-package-in-arch-linux-using-regex/
+pacman -Ss {pkgNameHere}
+pacman -Ss {keyWordHere}
+pacman --sync --search packageName
+
+pacman -Ss libass   搜尋 libass 套件
+
+
+
+
+參考網頁
+https://opensourcedoc.com/windows-programming/mingw-msys/
+
+
+c:\msys64\msys2_shell.cmd -mingw64  開啟64環境
+
+
+
+編譯ffmpeg參考
+https://www.cnblogs.com/Bob-wei/p/8435000.html
+
+https://stackoverflow.com/questions/41870137/ffmpeg-error-libnpp-not-found-in-windows
+
+https://copyfuture.com/blogs-details/202112270552292998
+
+https://packages.msys2.org/package/mingw-w64-x86_64-ffmpeg?repo=mingw64\
+
+https://juejin.cn/post/6844904097053671437
+
+https://shaochien.gitbooks.io/how-to-use-gcc-to-develop-c-cpp-on-windows/content/shell-select-and-install-gcc.html
+
+
+
+
+
+
+
+build libav, libx264
+https://www.bbsmax.com/A/x9J2RvpNJ6/
+
+git clone git://git.videolan.org/x264.git
+./configure --enable-shared --disable-cli
+
+git clone git://git.libav.org/libav.git
+./configure --enable-gpl --enable-shared --disable-static --disable-doc --disable-avconv --disable-avplay --disable-avprobe 
+            --disable-avserver --enable-libx264 --disable-debug
+
+
+
+
+
+
+編譯相依套件
+pacman -S mingw-w64-x86_64-libass
+pacman -S autoconf2.71
+pacman -S automake1.16
+pacman -S mingw-w64-x86_64-freetype
+pacman -S mingw-w64-x86_64-SDL2
+pacman -S mingw-w64-x86_64-libtheora
+pacman -S mingw-w64-x86_64-libltdl
+
+
+
+
+PKG_CONFIG_PATH="/usr/lib/pkgconfig" ./configure --enable-nonfree --enable-nvenc --enable-shared --enable-cuda-nvcc  --enable-cuda-llvm 
+--enable-libnpp --toolchain=msvc --enable-gpl --prefix=./build 
+--extra-cflags='-I/home/hidog/nvsdk/ -I/home/hidog/nv-codec-headers/include' --extra-ldflags='-LIBPATH:/home/hidog/nvsdk'
+
+
+
+
+PKG_CONFIG_PATH="/usr/lib/pkgconfig" ./configure --prefix=./build --enable-nonfree --disable-shared --enable-nvenc 
+--enable-cuda --enable-cuvid --enable-libnpp 
+--extra-cflags=-I'/home/hidog/nvsdk/' --extra-cflags=-I'/home/hidog/nv-codec-headers/include' --extra-ldflags=-L'/home/hidog/nvsdk'
+
+
+
+
+其他參考
+https://www.itread01.com/content/1550324904.html
+https://www.itread01.com/content/1541748985.html
+https://magiclen.org/msys2/
+https://blog.owo9.com/907/msys2-plain-introduction/
+https://am3devdiary.wordpress.com/2019/10/26/msys2-pacman-%E5%B8%B8%E7%94%A8%E6%8C%87%E4%BB%A4/

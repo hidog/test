@@ -1,0 +1,45 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "cmake",
+            "type": "shell",
+            "command": "cmake",
+            "args": [ "." ],
+            "group": {
+                "kind": "build",
+                "isDefault": false
+            },
+            "options": {
+                "cwd": "${workspaceRoot}/ubuntu"
+            }
+        }, 
+        {
+            "label": "build",
+            "type": "shell",
+            "command": "make",
+            "args": [],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "options": {
+                "cwd": "${workspaceRoot}/ubuntu"
+            },
+            "dependsOn": ["cmake"]
+        }, 
+        {
+            "label": "clean",
+            "type": "shell",
+            "command": "make clean",
+            "args": [],
+            "group": {
+                "kind": "clean",
+                "isDefault": false
+            },
+            "options": {
+                "cwd": "${workspaceRoot}/ubuntu"
+            }
+        }
+    ]
+}

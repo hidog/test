@@ -35,7 +35,8 @@ set( HEAD ${CMAKE_SOURCE_DIR}/../udp_example.h
           ${CMAKE_SOURCE_DIR}/../tcp_nonblock.h
           ${CMAKE_SOURCE_DIR}/../tcp_nb.h
           ${CMAKE_SOURCE_DIR}/../tool.h 
-          ${CMAKE_SOURCE_DIR}/../tool_2.h )
+          ${CMAKE_SOURCE_DIR}/../tool_2.h 
+          ${CMAKE_SOURCE_DIR}/../p2p_example.h )
 
 # source 
 set( SOURCE main.cpp 
@@ -46,7 +47,8 @@ set( SOURCE main.cpp
             ${CMAKE_SOURCE_DIR}/../tcp_nonblock.c
             ${CMAKE_SOURCE_DIR}/../tcp_nb.cpp
             ${CMAKE_SOURCE_DIR}/../tool.cpp 
-            ${CMAKE_SOURCE_DIR}/../tool_2.c )
+            ${CMAKE_SOURCE_DIR}/../tool_2.c 
+            ${CMAKE_SOURCE_DIR}/../p2p_example.cpp )
 
 # exec file
 add_executable( ${PROJECT_NAME} ${SOURCE} ${HEAD} )
