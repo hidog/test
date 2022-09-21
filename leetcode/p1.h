@@ -9,4 +9,6 @@ void    p4_Median_of_Two_Sorted_Arrays();
 
 void    p9_PalindromeNumber();
 
+void    p96();
+
 #endif

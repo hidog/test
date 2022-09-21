@@ -12,8 +12,9 @@ int main()
     //p4_Median_of_Two_Sorted_Arrays();
     
     //p9_PalindromeNumber();
+    p96();
     
-    p669_Trim_a_Binary_Search_Tree();
+    //p669_Trim_a_Binary_Search_Tree();
 
     //p895_Maximum_Frequency_Stack();
     
