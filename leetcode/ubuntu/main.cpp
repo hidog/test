@@ -12,7 +12,8 @@ int main()
     //p4_Median_of_Two_Sorted_Arrays();
     
     //p9_PalindromeNumber();
-    p96();
+    p95();
+    //p96();
     
     //p669_Trim_a_Binary_Search_Tree();
 
