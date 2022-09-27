@@ -10,7 +10,9 @@ int main()
     
     //p9_PalindromeNumber();
     p95_Unique_Binary_Search_Trees_II();
-    //p96();
+    //p96_Unique_Binary_Search_Trees();
+
+    p169_Majority_Element();
     
     //p669_Trim_a_Binary_Search_Tree();
 
