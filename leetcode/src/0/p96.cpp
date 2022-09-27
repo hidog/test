@@ -1,5 +1,9 @@
 #include "p96.h"
 
+#include <iostream>
+
+using namespace std;
+
 
 class Solution2 {
 public:

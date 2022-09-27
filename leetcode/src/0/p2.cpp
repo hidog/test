@@ -1,5 +1,9 @@
 #include "p2.h"
 
+#include <iostream>
+
+using namespace std;
+
 
  /* Definition for singly-linked list.*/
  struct ListNode {

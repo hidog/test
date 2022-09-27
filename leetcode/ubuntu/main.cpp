@@ -1,7 +1,4 @@
-#include "../p1.h"
-#include "../p6.h"
-#include "../p8.h"
-
+#include "../problem.h"
 
 
 int main()
@@ -12,7 +9,7 @@ int main()
     //p4_Median_of_Two_Sorted_Arrays();
     
     //p9_PalindromeNumber();
-    p95();
+    p95_Unique_Binary_Search_Trees_II();
     //p96();
     
     //p669_Trim_a_Binary_Search_Tree();

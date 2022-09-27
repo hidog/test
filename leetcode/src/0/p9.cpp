@@ -1,5 +1,10 @@
 #include "p9.h"
 
+#include <iostream>
+#include <cstdint>
+
+using namespace std;
+
 
 
 bool isPalindrome(int x) 

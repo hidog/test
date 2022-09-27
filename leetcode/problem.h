@@ -1,3 +1,7 @@
+#ifndef PROBLEM_H
+#define PROBLEM_H
+
+
 #include "0/p1.h"
 #include "0/p2.h"
 #include "0/p3.h"
@@ -17,3 +21,5 @@
 
 #include "10/p1007.h"
 
+
+#endif

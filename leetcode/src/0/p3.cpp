@@ -1,5 +1,10 @@
 #include "p3.h"
 
+#include <iostream>
+
+using namespace std;
+
+
 
 int lengthOfLongestSubstring(string s) 
 {
