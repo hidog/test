@@ -9,10 +9,13 @@ int main()
     //p4_Median_of_Two_Sorted_Arrays();
     
     //p9_PalindromeNumber();
-    p95_Unique_Binary_Search_Trees_II();
+
+    p15_3_sum();
+
+    //p95_Unique_Binary_Search_Trees_II();
     //p96_Unique_Binary_Search_Trees();
 
-    p169_Majority_Element();
+    //p169_Majority_Element();
     
     //p669_Trim_a_Binary_Search_Tree();
 

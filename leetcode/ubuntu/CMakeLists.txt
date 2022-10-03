@@ -30,6 +30,7 @@ set( HEAD ${CMAKE_SOURCE_DIR}/../src/0/p1.h
           ${CMAKE_SOURCE_DIR}/../src/0/p3.h
           ${CMAKE_SOURCE_DIR}/../src/0/p4.h
           ${CMAKE_SOURCE_DIR}/../src/0/p9.h
+          ${CMAKE_SOURCE_DIR}/../src/0/p15.h
           ${CMAKE_SOURCE_DIR}/../src/0/p95.h
           ${CMAKE_SOURCE_DIR}/../src/0/p96.h
           ${CMAKE_SOURCE_DIR}/../src/1/p169.h
@@ -45,6 +46,7 @@ set( SOURCE main.cpp
 	        ${CMAKE_SOURCE_DIR}/../src/0/p3.cpp
             ${CMAKE_SOURCE_DIR}/../src/0/p4.cpp
             ${CMAKE_SOURCE_DIR}/../src/0/p9.cpp
+            ${CMAKE_SOURCE_DIR}/../src/0/p15.cpp
             ${CMAKE_SOURCE_DIR}/../src/0/p95.cpp
             ${CMAKE_SOURCE_DIR}/../src/0/p96.cpp
             ${CMAKE_SOURCE_DIR}/../src/1/p169.cpp
