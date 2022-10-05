@@ -25,7 +25,8 @@ set( DEFINE ${DEFINE} -DUNIX )
 add_definitions( ${DEFINE} ) 
 
 # head
-set( HEAD ${CMAKE_SOURCE_DIR}/../src/0/p1.h
+set( HEAD ${CMAKE_SOURCE_DIR}/../problem.h
+          ${CMAKE_SOURCE_DIR}/../src/0/p1.h
           ${CMAKE_SOURCE_DIR}/../src/0/p2.h
           ${CMAKE_SOURCE_DIR}/../src/0/p3.h
           ${CMAKE_SOURCE_DIR}/../src/0/p4.h
@@ -34,6 +35,7 @@ set( HEAD ${CMAKE_SOURCE_DIR}/../src/0/p1.h
           ${CMAKE_SOURCE_DIR}/../src/0/p33.h          
           ${CMAKE_SOURCE_DIR}/../src/0/p95.h
           ${CMAKE_SOURCE_DIR}/../src/0/p96.h
+          ${CMAKE_SOURCE_DIR}/../src/1/p152.h
           ${CMAKE_SOURCE_DIR}/../src/1/p169.h
           ${CMAKE_SOURCE_DIR}/../src/6/p669.h
           ${CMAKE_SOURCE_DIR}/../src/8/p895.h
@@ -51,6 +53,7 @@ set( SOURCE main.cpp
             ${CMAKE_SOURCE_DIR}/../src/0/p33.cpp      
             ${CMAKE_SOURCE_DIR}/../src/0/p95.cpp
             ${CMAKE_SOURCE_DIR}/../src/0/p96.cpp
+            ${CMAKE_SOURCE_DIR}/../src/1/p152.cpp
             ${CMAKE_SOURCE_DIR}/../src/1/p169.cpp
             ${CMAKE_SOURCE_DIR}/../src/6/p669.cpp
             ${CMAKE_SOURCE_DIR}/../src/8/p895.cpp
