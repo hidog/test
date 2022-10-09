@@ -32,7 +32,8 @@ set( HEAD ${CMAKE_SOURCE_DIR}/../problem.h
           ${CMAKE_SOURCE_DIR}/../src/0/p4.h
           ${CMAKE_SOURCE_DIR}/../src/0/p9.h
           ${CMAKE_SOURCE_DIR}/../src/0/p15.h
-          ${CMAKE_SOURCE_DIR}/../src/0/p33.h          
+          ${CMAKE_SOURCE_DIR}/../src/0/p33.h
+          ${CMAKE_SOURCE_DIR}/../src/0/p53.h
           ${CMAKE_SOURCE_DIR}/../src/0/p95.h
           ${CMAKE_SOURCE_DIR}/../src/0/p96.h
           ${CMAKE_SOURCE_DIR}/../src/1/p152.h
@@ -50,7 +51,8 @@ set( SOURCE main.cpp
             ${CMAKE_SOURCE_DIR}/../src/0/p4.cpp
             ${CMAKE_SOURCE_DIR}/../src/0/p9.cpp
             ${CMAKE_SOURCE_DIR}/../src/0/p15.cpp
-            ${CMAKE_SOURCE_DIR}/../src/0/p33.cpp      
+            ${CMAKE_SOURCE_DIR}/../src/0/p33.cpp
+            ${CMAKE_SOURCE_DIR}/../src/0/p53.cpp            
             ${CMAKE_SOURCE_DIR}/../src/0/p95.cpp
             ${CMAKE_SOURCE_DIR}/../src/0/p96.cpp
             ${CMAKE_SOURCE_DIR}/../src/1/p152.cpp
