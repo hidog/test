@@ -31,20 +31,24 @@ sudo apt install \
   libfdk-aac-dev 
   
 # Install libaom from source.
-mkdir -p ~/3rd_source/libaom && \
-  cd ~/3rd_source/libaom && \
+mkdir -p ./3rd_source/libaom && \
+  cd ./3rd_source/libaom && \
   git clone https://aomedia.googlesource.com/aom && \
   cmake ./aom && \
   make -j$(nproc) && \
   sudo make install
 
+cd ../..
+
 # Install libx265 from source.
-cd ~/3rd_source && \
+cd ./3rd_source && \
   git clone https://bitbucket.org/multicoreware/x265_git.git && \
   cd x265_git/build/linux && \
   cmake -G "Unix Makefiles" -DCMAKE_INSTALL_PREFIX="../../../" -DENABLE_SHARED:bool=off ../../source && \
   make -j$(nproc) && \
   make install
+
+cd ../../../..
 
 wget -O ffmpeg-5.1.2.tar.bz2 https://ffmpeg.org/releases/ffmpeg-5.1.2.tar.bz2 && \
   tar xjvf ffmpeg-5.1.2.tar.bz2 && \
