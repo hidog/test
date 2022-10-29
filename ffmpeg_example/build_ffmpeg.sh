@@ -56,8 +56,8 @@ wget -O ffmpeg-5.1.2.tar.bz2 https://ffmpeg.org/releases/ffmpeg-5.1.2.tar.bz2 &&
   PKG_CONFIG_PATH="../ffmpeg/lib/pkgconfig" ./configure \
     --prefix="../ffmpeg" \
     --pkg-config-flags="--static" \
-    --extra-cflags="-I$HOME/3rd_source/include" \
-    --extra-ldflags="-L$HOME/3rd_source/lib" \
+    --extra-cflags="-I../3rd_source/include" \
+    --extra-ldflags="-L../3rd_source/lib" \
     --extra-libs="-lpthread -lm" \
     --bindir="../ffmpeg" \
     --enable-debug \

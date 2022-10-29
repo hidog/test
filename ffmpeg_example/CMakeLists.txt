@@ -33,14 +33,15 @@ pkg_check_modules(
 )
 
 # library path
-set( LIB_PATH ${CMAKE_SOURCE_DIR}/ffmpeg/lib/ )
+set( LIB_PATH ${CMAKE_SOURCE_DIR}/ffmpeg/lib/ 
+              ${CMAKE_SOURCE_DIR}/3rd_source/lib )
 link_directories( ${LIB_PATH} )
 
 # source 
-set( SOURCE ./ffmpeg-5.1.2/fftools/ffmpeg.c )
+set( SOURCE main.c media.c )
 
 # head
-set( HEAD )
+set( HEAD media.h )
 
 add_executable( ${PROJECT_NAME} ${SOURCE} ${HEAD} )
-target_link_libraries( ${PROJECT_NAME} PRIVATE PkgConfig::ffmpeg )
+target_link_libraries( ${PROJECT_NAME} PRIVATE PkgConfig::ffmpeg x265 )
