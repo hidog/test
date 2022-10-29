@@ -11,13 +11,13 @@ endif()
 set( DEFINE ${DEFINE} -DUNIX )
 add_definitions( ${DEFINE} )
 
-# include path 
-#set( INCLUDE_PATH ${CMAKE_SOURCE_DIR}/ffmpeg/include )
-#include_directories( ${INCLUDE_PATH} )
+#find_package(SDL2 REQUIRED)
 
-# library path
-#set( LIB_PATH ${CMAKE_SOURCE_DIR}/ffmpeg/lib/ )
-#link_directories( ${LIB_PATH} )
+# include path 
+set( INCLUDE_PATH ${CMAKE_SOURCE_DIR}/ffmpeg/include 
+                  ${CMAKE_SOURCE_DIR}/ffmpeg-5.1.2 
+                  ${SDL2_INCLUDE_DIRS} )
+include_directories( ${INCLUDE_PATH} )
 
 set(ENV{PKG_CONFIG_PATH} ./ffmpeg/lib/pkgconfig)
 find_package(PkgConfig REQUIRED)
@@ -32,11 +32,12 @@ pkg_check_modules(
     libavutil
 )
 
-#include_directories(${AVFORMAT_INCLUDE_DIRS} ${AVUTIL_INCLUDE_DIRS})
-#link_directories(${AVFORMAT_LIBRARY_DIRS} ${AVUTIL_LIBRARY_DIRS})
+# library path
+set( LIB_PATH ${CMAKE_SOURCE_DIR}/ffmpeg/lib/ )
+link_directories( ${LIB_PATH} )
 
 # source 
-set( SOURCE ffplay.c )
+set( SOURCE ./ffmpeg-5.1.2/fftools/ffmpeg.c )
 
 # head
 set( HEAD )
