@@ -14,12 +14,10 @@ add_definitions( ${DEFINE} )
 #find_package(SDL2 REQUIRED)
 
 # include path 
-set( INCLUDE_PATH ${CMAKE_SOURCE_DIR}/ffmpeg/include 
-                  ${CMAKE_SOURCE_DIR}/ffmpeg-5.1.2 )
+set( INCLUDE_PATH ${CMAKE_SOURCE_DIR}/ffmpeg/include )
 include_directories( ${INCLUDE_PATH} )
 
-set(ENV{PKG_CONFIG_PATH} ./ffmpeg/lib/pkgconfig 
-                         ./3rd_source/lib/pkgconfig )
+set(ENV{PKG_CONFIG_PATH} /home/hidog/code/test/ffmpeg_example/ffmpeg/lib/pkgconfig )
 find_package(PkgConfig REQUIRED)
 pkg_check_modules(
     ffmpeg REQUIRED IMPORTED_TARGET     
@@ -45,4 +43,4 @@ set( SOURCE main.c media.c )
 set( HEAD media.h )
 
 add_executable( ${PROJECT_NAME} ${SOURCE} ${HEAD} )
-target_link_libraries( ${PROJECT_NAME} PRIVATE PkgConfig::ffmpeg x265 aom)
+target_link_libraries( ${PROJECT_NAME} PRIVATE PkgConfig::ffmpeg )

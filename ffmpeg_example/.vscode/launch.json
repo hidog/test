@@ -6,7 +6,7 @@
             "type": "cppdbg",
             "request": "launch",
             "program": "${workspaceRoot}/ffmpeg_example",
-            "args": [],
+            "args": ["test.mp4", "output.mp4"],
             "stopAtEntry": false,
             "cwd": "${workspaceRoot}",
             "environment": [],
