@@ -15,11 +15,11 @@ add_definitions( ${DEFINE} )
 
 # include path 
 set( INCLUDE_PATH ${CMAKE_SOURCE_DIR}/ffmpeg/include 
-                  ${CMAKE_SOURCE_DIR}/ffmpeg-5.1.2 
-                  ${SDL2_INCLUDE_DIRS} )
+                  ${CMAKE_SOURCE_DIR}/ffmpeg-5.1.2 )
 include_directories( ${INCLUDE_PATH} )
 
-set(ENV{PKG_CONFIG_PATH} ./ffmpeg/lib/pkgconfig)
+set(ENV{PKG_CONFIG_PATH} ./ffmpeg/lib/pkgconfig 
+                         ./3rd_source/lib/pkgconfig )
 find_package(PkgConfig REQUIRED)
 pkg_check_modules(
     ffmpeg REQUIRED IMPORTED_TARGET     
@@ -30,6 +30,7 @@ pkg_check_modules(
     libswresample
     libswscale
     libavutil
+    x265
 )
 
 # library path
@@ -44,4 +45,4 @@ set( SOURCE main.c media.c )
 set( HEAD media.h )
 
 add_executable( ${PROJECT_NAME} ${SOURCE} ${HEAD} )
-target_link_libraries( ${PROJECT_NAME} PRIVATE PkgConfig::ffmpeg x265 )
+target_link_libraries( ${PROJECT_NAME} PRIVATE PkgConfig::ffmpeg x265 aom)
