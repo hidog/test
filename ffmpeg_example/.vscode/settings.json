@@ -1,0 +1,18 @@
+{
+    "files.associations": {
+        "iosfwd": "c",
+        "ostream": "c",
+        "iostream": "c",
+        "*.tcc": "c",
+        "unordered_map": "c",
+        "unordered_set": "c",
+        "string_view": "c",
+        "cmath": "c",
+        "iomanip": "c",
+        "numeric": "c",
+        "chrono": "c",
+        "limits": "c",
+        "valarray": "c"
+    },
+    "C_Cpp.errorSquiggles": "Disabled",
+}

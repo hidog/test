@@ -59,7 +59,12 @@ ffmpeg -f image2 -i image-%5d.jpg -i audio.aac -r 24000/1001 -vcodec hevc -crt 5
 
 
 
+11. fplay g711 raw file.
+                               1                   
+ffplay -i output.g711a  -f alaw -ac 1 -ar 8000
+ffplay -i output.g711u  -f mulaw -ac 1 -ar 8000
 
+ffmpeg -i test.mp3 -acodec pcm_alaw -f alaw -ac 2 -ar 8000 output.g711a  <= 轉檔
 
 
 

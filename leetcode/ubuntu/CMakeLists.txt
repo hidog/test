@@ -15,22 +15,51 @@ set( CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS} "-std=gnu++11" )
 # output path
 set( CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin )
 
+# include path
+set( INCLUDE_PATH ${CMAKE_SOURCE_DIR}/../src/ )
+include_directories( ${INCLUDE_PATH} )
+
 # preprocessor define
 message("define unix")
 set( DEFINE ${DEFINE} -DUNIX )
 add_definitions( ${DEFINE} ) 
 
 # head
-set( HEAD ${CMAKE_SOURCE_DIR}/../p1.h
-          ${CMAKE_SOURCE_DIR}/../p6.h
-          ${CMAKE_SOURCE_DIR}/../p8.h 
+set( HEAD ${CMAKE_SOURCE_DIR}/../problem.h
+          ${CMAKE_SOURCE_DIR}/../src/0/p1.h
+          ${CMAKE_SOURCE_DIR}/../src/0/p2.h
+          ${CMAKE_SOURCE_DIR}/../src/0/p3.h
+          ${CMAKE_SOURCE_DIR}/../src/0/p4.h
+          ${CMAKE_SOURCE_DIR}/../src/0/p9.h
+          ${CMAKE_SOURCE_DIR}/../src/0/p15.h
+          ${CMAKE_SOURCE_DIR}/../src/0/p33.h
+          ${CMAKE_SOURCE_DIR}/../src/0/p53.h
+          ${CMAKE_SOURCE_DIR}/../src/0/p95.h
+          ${CMAKE_SOURCE_DIR}/../src/0/p96.h
+          ${CMAKE_SOURCE_DIR}/../src/1/p152.h
+          ${CMAKE_SOURCE_DIR}/../src/1/p169.h
+          ${CMAKE_SOURCE_DIR}/../src/6/p669.h
+          ${CMAKE_SOURCE_DIR}/../src/8/p895.h
+          ${CMAKE_SOURCE_DIR}/../src/10/p1007.h
 )
 
 # source 
 set( SOURCE main.cpp 
-            ${CMAKE_SOURCE_DIR}/../p1.cpp 
-            ${CMAKE_SOURCE_DIR}/../p6.cpp
-	        ${CMAKE_SOURCE_DIR}/../p8.cpp 
+            ${CMAKE_SOURCE_DIR}/../src/0/p1.cpp
+            ${CMAKE_SOURCE_DIR}/../src/0/p2.cpp
+	        ${CMAKE_SOURCE_DIR}/../src/0/p3.cpp
+            ${CMAKE_SOURCE_DIR}/../src/0/p4.cpp
+            ${CMAKE_SOURCE_DIR}/../src/0/p9.cpp
+            ${CMAKE_SOURCE_DIR}/../src/0/p15.cpp
+            ${CMAKE_SOURCE_DIR}/../src/0/p33.cpp
+            ${CMAKE_SOURCE_DIR}/../src/0/p53.cpp            
+            ${CMAKE_SOURCE_DIR}/../src/0/p95.cpp
+            ${CMAKE_SOURCE_DIR}/../src/0/p96.cpp
+            ${CMAKE_SOURCE_DIR}/../src/1/p152.cpp
+            ${CMAKE_SOURCE_DIR}/../src/1/p169.cpp
+            ${CMAKE_SOURCE_DIR}/../src/6/p669.cpp
+            ${CMAKE_SOURCE_DIR}/../src/8/p895.cpp
+            ${CMAKE_SOURCE_DIR}/../src/10/p1007.cpp
 )
 
 # exec file
