@@ -7,11 +7,14 @@
 #include "hardware.h"
 #include "container.h"
 #include "timer.h"
+#include "b_process.h"
 
 
 int main()
 {
-    timer_test();
+    crack_zip();
+
+    /*timer_test();
 
     boost_json_example();
     thread_test();
@@ -22,7 +25,7 @@ int main()
 
     get_cpu_core_func();
 
-    test_vector_emplace();
+    test_vector_emplace();*/
 
     // check x64 or x86
 #if __GNUC__
