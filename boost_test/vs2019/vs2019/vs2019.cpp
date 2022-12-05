@@ -12,7 +12,7 @@
 
 int main()
 {
-    crack_zip();
+    unzip_main();
 
     /*timer_test();
 
