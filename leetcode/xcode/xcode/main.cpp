@@ -1,13 +1,9 @@
-#include "p1.h"
-#include "p8.h"
-#include "p10.h"
+#include "problem.h"
 
 
-int main(int argc, const char * argv[]) 
+int main()
 {
-    //p1_two_sum();
-
-    p1007_Minimum_Domino_Rotations_For_Equal_Row();
-
-    return 0;
+    p53_Maximum_Subarray();
+    
+    return  0;
 }
