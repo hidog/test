@@ -380,7 +380,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
-				HEADER_SEARCH_PATHS = /Users/hidog/code/test/leetcode/src/;
+				HEADER_SEARCH_PATHS = ../src/;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
@@ -389,7 +389,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
-				HEADER_SEARCH_PATHS = /Users/hidog/code/test/leetcode/src/;
+				HEADER_SEARCH_PATHS = ../src/;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
