@@ -93,3 +93,65 @@ configure -openssl-linked
 有些app會需要使用qt ssl support. 需要編譯進去
 
 
+
+
+
+
+
+build QT 5.15.2 in Macbook Pro Retina 2015  (intel cpu)
+
+It will get compile error
+
+ref:  https://codereview.qt-project.org/c/qt/qtbase/+/378706/2/src/plugins/platforms/cocoa/qiosurfacegraphicsbuffer.h#46
+
+edit file   QT5/qtbase/src/plugins/platforms/cocoa/qiosurfacegraphicsbuffer.h
+
+add #include <CoreGraphics/CGColorSpace.h>
+
+the file become
+
+#ifndef QIOSURFACEGRAPHICSBUFFER_H
+#define QIOSURFACEGRAPHICSBUFFER_H
+
+#include <qpa/qplatformgraphicsbuffer.h>
+#include <private/qcore_mac_p.h>
+
+#include <CoreGraphics/CGColorSpace.h>
+
+QT_BEGIN_NAMESPACE
+
+class QIOSurfaceGraphicsBuffer : public QPlatformGraphicsBuffer
+{
+public:
+    QIOSurfaceGraphicsBuffer(const QSize &size, const QPixelFormat &format);
+    ~QIOSurfaceGraphicsBuffer();
+
+    void setColorSpace(QCFType<CGColorSpaceRef> colorSpace);
+
+    const uchar *data() const override;
+    uchar *data() override;
+    int bytesPerLine() const override;
+
+    IOSurfaceRef surface();
+    bool isInUse() const;
+
+protected:
+    bool doLock(AccessTypes access, const QRect &rect) override;
+    void doUnlock() override;
+
+private:
+    QCFType<IOSurfaceRef> m_surface;
+
+    friend QDebug operator<<(QDebug, const QIOSurfaceGraphicsBuffer *);
+};
+
+#ifndef QT_NO_DEBUG_STREAM
+QDebug operator<<(QDebug, const QIOSurfaceGraphicsBuffer *);
+#endif
+
+QT_END_NAMESPACE
+
+#endif // QIOSURFACEGRAPHICSBUFFER_H
+
+and then build success.
+

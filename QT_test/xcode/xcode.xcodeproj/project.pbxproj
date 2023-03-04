@@ -91,7 +91,7 @@
 			buildConfigurationList = 6DCF5D6D2695B1EA00B39512 /* Build configuration list for PBXLegacyTarget "qmake" */;
 			buildPhases = (
 			);
-			buildToolPath = "/Users/hidog/code/qt5-build/qtbase/bin/qmake";
+			buildToolPath = "/usr/local/Qt-5.15.2/bin/qmake";
 			buildWorkingDirectory = /Users/hidog/code/test/QT_test;
 			dependencies = (
 			);
