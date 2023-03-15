@@ -155,3 +155,11 @@ QT_END_NAMESPACE
 
 and then build success.
 
+
+
+
+
+
+build lib qrencode的時候
+要關掉WITH_TOOLS option
+不然需要安裝GETOPT  (windows環境麻煩)
