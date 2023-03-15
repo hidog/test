@@ -17,7 +17,7 @@ LEXFLAGS  =
 YACC      = yacc
 YACCFLAGS = -d
 DEFINES       = -DQT_DEPRECATED_WARNINGS -DQT_WIDGETS_LIB -DQT_GUI_LIB -DQT_CORE_LIB
-INCPATH       = -I. -I../../qt5-build/qtbase/include -I../../qt5-build/qtbase/include/QtWidgets -I../../qt5-build/qtbase/include/QtGui -I../../qt5-build/qtbase/include/QtCore -I. -I/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX11.1.sdk/System/Library/Frameworks/OpenGL.framework/Headers -I/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX11.1.sdk/System/Library/Frameworks/AGL.framework/Headers -I. -I../../QT5/qtbase/mkspecs/macx-clang -F/Users/hidog/code/qt5-build/qtbase/lib
+INCPATH       = -I. -I../../qt5-build/qtbase/include -I../../qt5-build/qtbase/include/QtWidgets -I../../qt5-build/qtbase/include/QtGui -I../../qt5-build/qtbase/include/QtCore -I. -I/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.1.sdk/System/Library/Frameworks/OpenGL.framework/Headers -I/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.1.sdk/System/Library/Frameworks/AGL.framework/Headers -I. -I../../QT5/qtbase/mkspecs/macx-clang -F/Users/hidog/code/qt5-build/qtbase/lib
 DEL_FILE  = rm -f
 MOVE      = mv -f
 
@@ -49,7 +49,7 @@ moc_mainwindow.cpp: mainwindow.h \
 		../../qt5-build/qtbase/include/QtWidgets/QLabel \
 		moc_predefs.h \
 		../../qt5-build/qtbase/bin/moc
-	/Users/hidog/code/qt5-build/qtbase/bin/moc $(DEFINES) --include /Users/hidog/code/test/QTMSER/moc_predefs.h -I/Users/hidog/code/QT5/qtbase/mkspecs/macx-clang -I/Users/hidog/code/test/QTMSER -I/Users/hidog/code/qt5-build/qtbase/include -I/Users/hidog/code/qt5-build/qtbase/include/QtWidgets -I/Users/hidog/code/qt5-build/qtbase/include/QtGui -I/Users/hidog/code/qt5-build/qtbase/include/QtCore -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include/c++/v1 -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/12.0.0/include -I/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX11.1.sdk/usr/include -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include -F/Users/hidog/code/qt5-build/qtbase/lib mainwindow.h -o moc_mainwindow.cpp
+	/Users/hidog/code/qt5-build/qtbase/bin/moc $(DEFINES) --include /Users/hidog/code/test/QTMSER/moc_predefs.h -I/Users/hidog/code/QT5/qtbase/mkspecs/macx-clang -I/Users/hidog/code/test/QTMSER -I/Users/hidog/code/qt5-build/qtbase/include -I/Users/hidog/code/qt5-build/qtbase/include/QtWidgets -I/Users/hidog/code/qt5-build/qtbase/include/QtGui -I/Users/hidog/code/qt5-build/qtbase/include/QtCore -I/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.1.sdk/usr/include/c++/v1 -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/13.0.0/include -I/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.1.sdk/usr/include -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include -F/Users/hidog/code/qt5-build/qtbase/lib mainwindow.h -o moc_mainwindow.cpp
 
 compiler_moc_objc_header_make_all:
 compiler_moc_objc_header_clean:

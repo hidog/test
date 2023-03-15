@@ -77,3 +77,10 @@ set( SOURCE test.cpp
 
 add_executable(smart_point main.cpp ${SOURCE} ${HEAD} )
 
+
+
+
+
+mac 環境下遇到 No CMAKE_C_COMPILER could be found 錯誤
+sudo xcode-select -s /Applications/Xcode.app/Contents/Developer
+ref : https://blog.csdn.net/Lixiaohua_video/article/details/120673320
