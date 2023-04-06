@@ -1,47 +1,10 @@
-
-tres
-
-https://gitpress.io/@chchang/install-nvidia-driver-cuda-pgstrom-in-ubuntu-1804
-
-https://gitlab.com/sat-metalab/switcher/blob/master/doc/using-nvdec-gstreamer-plugins.md
-
-http://gstreamer-devel.966125.n4.nabble.com/Gst-inspect-not-finding-built-plugins-td4670426.html
-
-
-gst-launch-1.0 filesrc location=/home/hidog/Videos/test.mp4 ! qtdemux name=demux demux.video_0 ! queue ! h264parse ! nvdec ! autovideosink -e 
-
-gst-launch-1.0 filesrc location=/home/hidog/Videos/test.mp4 ! qtdemux name=demux demux.video_0 ! queue ! h264parse ! avdec_h264 ! autovideosink -e   
-
-
-
-https://blog.csdn.net/tianjian789/article/details/56492131
-https://blog.csdn.net/qjh5606/article/details/82695696
-https://medium.com/@multi.flexi/how-to-get-info-about-nvdec-and-nvenc-capabilities-of-your-gpu-6ecc9a5d4dac
-https://developer.nvidia.com/nvidia-video-codec-sdk
-
-
-
-http://www.linuxfromscratch.org/blfs/view/svn/multimedia/gstreamer10.html
-https://devtalk.nvidia.com/default/topic/1050595/jetson-nano/gstreamer-upgrade-to-1-16/
-https://gstreamer.freedesktop.org/documentation/installing/on-linux.html?gi-language=c
-http://lifestyletransfer.com/how-to-install-gstreamer-on-ubuntu/
-https://packages.ubuntu.com/search?keywords=gstreamer
-
-
-
-
-
-// 有空看一下這個網址
-// https://en.cppreference.com/w/cpp/preprocessor/replace
-// 參考這個網址 紀錄想實驗的程式碼
-
-
-
-static_cast
-reinterpret_cast
-const_cast
-dynamic_cast
- 
- 
- 
-new int[0] ?
+abasvasdfasdfasdf
+asdf
+asdffa
+sdf
+asdfasdfasdfasd
+fa
+sdfa
+sfasdf
+asf
+asf
