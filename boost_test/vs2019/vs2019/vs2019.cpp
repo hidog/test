@@ -8,11 +8,15 @@
 #include "container.h"
 #include "timer.h"
 #include "b_process.h"
+#include "file.h"
 
 
 int main()
 {
-    unzip_main();
+    //print_all_extension();
+    unzip_all_files();
+
+    //unzip_main();
 
     /*timer_test();
 
