@@ -36,7 +36,7 @@ void    unzip_file( boost::filesystem::path filepath )
 
 void    unzip_all_files()
 {
-    boost::filesystem::path     path("J:\\[Nipponsei] archive v20150127\\");
+    boost::filesystem::path     path("K:\\input\\");
     //boost::filesystem::path     path("D:\\");
 
     std::string     extension;
@@ -108,9 +108,9 @@ void    get_all_filelist( const std::string& path )
                         extension   =   boost::filesystem::extension(itr.path());
                         if( std::find( extension_list.begin(), extension_list.end(), extension ) == std::end(extension_list) )
                             extension_list.push_back(extension);
-                        if( extension == "" )
-                            //remove_list.emplace_back( itr.path().string() );
-                            std::cout << itr.path() << "\n\n";
+                        if( extension == ".png" )
+                            remove_list.emplace_back( itr.path().string() );
+                            //std::cout << itr.path() << "\n\n";
                     }
                 }
             }
@@ -128,7 +128,7 @@ void    get_all_filelist( const std::string& path )
 
 
 
-void    print_all_extension()
+void    remove_by_extension()
 {
     get_all_filelist("J:\\output");
 

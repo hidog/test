@@ -13,8 +13,8 @@
 
 int main()
 {
-    //print_all_extension();
-    unzip_all_files();
+    remove_by_extension();
+    //unzip_all_files();
 
     //unzip_main();
 
