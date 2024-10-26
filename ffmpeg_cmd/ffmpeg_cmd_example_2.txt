@@ -69,3 +69,10 @@ ffmpeg -i test.mp3 -acodec pcm_alaw -f alaw -ac 2 -ar 8000 output.g711a  <= è½‰æ
 
 
 
+12. re-scale   re-size
+
+ffmpeg -i input.mp4 -vcodec hevc_nvenc -cq 25 -vf "scale='w=1920:h=1080'" output.mp4
+
+
+
+
