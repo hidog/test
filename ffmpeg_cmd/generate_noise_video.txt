@@ -1,0 +1,25 @@
+ref:  
+https://stackoverflow.com/questions/15792105/simulating-tv-noise
+AMD gpu https://askubuntu.com/questions/1107782/how-to-use-gpu-acceleration-in-ffmpeg-with-amd-radeon
+
+
+ffmpeg -f lavfi -i nullsrc=s=1280x720 -filter_complex \
+"geq=random(1)*255:128:128;aevalsrc=-2+random(0)" \
+-t 5 output.mkv
+
+
+ffmpeg -f rawvideo -video_size 1280x720 -pixel_format yuv420p -framerate 25 \
+-i /dev/urandom -ar 48000 -ac 2 -f s16le -i /dev/urandom -codec:a copy \
+-t 5 output.mkv
+
+
+
+ffmpeg -f rawvideo -video_size 1280x720 -pixel_format yuv420p -framerate 25 \
+-i /dev/urandom -ar 48000 -ac 2 -f s16le -i /dev/urandom -codec:a copy \
+-t 5 -vf hue=s=0 output.mkv
+
+
+
+
+
+1.  ffmpeg -f lavfi -i nullsrc=s=1920x1080 -filter_complex "geq=random(1)*255:128:128;aevalsrc=-2+random(0)" -t 10 -vcodec h264_amf -pixel_format yuv420p -framerate 60  -qvbr_quality_level 25 output.mkv
