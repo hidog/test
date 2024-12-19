@@ -22,4 +22,4 @@ ffmpeg -f rawvideo -video_size 1280x720 -pixel_format yuv420p -framerate 25 \
 
 
 
-1.  ffmpeg -f lavfi -i nullsrc=s=1920x1080 -filter_complex "geq=random(1)*255:128:128;aevalsrc=-2+random(0)" -t 10 -vcodec h264_amf -pixel_format yuv420p -framerate 60  -qvbr_quality_level 25 output.mkv
+1.  ffmpeg -f lavfi -i nullsrc=s=1920x1080 -filter_complex "geq=random(1)*255:128:128;aevalsrc=-2+random(0)" -t 1:0:0 -vcodec h264_amf -pixel_format yuv420p -framerate 60  -qvbr_quality_level 10 E:\output.mkv
