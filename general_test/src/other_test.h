@@ -2,6 +2,7 @@
 #define OTHER_TEST_H
 
 
+void write_disk_to_full_test( const char *path );
 void ref_test();
 void raw_string_test();
 

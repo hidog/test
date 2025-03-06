@@ -22,6 +22,10 @@ using namespace std;
 
 int main()
 {
+    write_disk_to_full_test( "J:\\test.dat" );
+    return 0;
+
+
     cast_test_func();
 
     bit_field_test();

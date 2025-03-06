@@ -7,6 +7,27 @@ using namespace std;
 
 
 
+void write_disk_to_full_test( const char *path )
+{
+    FILE* fp = fopen( path, "wb+");
+    int count = 0;
+    while (true)
+    {
+        if (count % 100000 == 0)
+            printf("count = %d\n", count);
+        count++;
+        char buf[] = "1234";
+        int res = fwrite(buf, 4, 1, fp);
+        if (res <= 0)
+            break;
+    }
+
+    fclose(fp);
+}
+
+
+
+
 
 void ref_test()
 {
