@@ -13,10 +13,10 @@
 
 int main()
 {
-    remove_by_extension();
+    //remove_by_extension();
     //unzip_all_files();
 
-    //unzip_main();
+    unzip_main();
 
     /*timer_test();
 
