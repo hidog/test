@@ -6,6 +6,7 @@
 #include <vector>
 #include <sstream>
 #include <boost/thread.hpp>
+#include <fstream>
 
 
 
@@ -14,7 +15,9 @@ using namespace boost::filesystem;
 
 
 //const std::string dictionary = "`1234567890-=qwertyuiop[]\\asdfghjkl;'zxcvbnm,./ ~!@#$%^&*()_+QWERTYUIOP{}|ASDFGHJKL:\"ZXCVBNM<>?";
-const std::string dictionary = "1234567890-qwertyuiopasdfghjklzxcvbnm.@QWERTYUIOPASDFGHJKL:ZXCVBNM";
+//const std::string dictionary = "1234567890-qwertyuiopasdfghjklzxcvbnm.@QWERTYUIOPASDFGHJKL:ZXCVBNM";
+const std::string dictionary = "-qQwWeErRtTyYuUiIoOpPaAsSdDfFgGhHjJkKlLzZxXcCvVbBnNmM.@:1234567890";
+
 const int dict_size = dictionary.size();
 
 std::string filename;
@@ -124,14 +127,16 @@ bool    crack_zip( const int pass_len )
         if( false == create_directory( tmp_path ) )
             std::cout << "\n\n\n !!! error !!!\n\n\n";
 
-        if( count % 10000 == 0 )
-            std::cout << "pass_len = " << pass_len << " run " << count << " times\n";
-        count++;
-
         for( int i = 0; i < vec.size(); i++ )
             password[vec.size() - i - 1] = dictionary[vec[i]];
+        //std::cout << password << std::endl;
 
-        std::cout << password << std::endl;
+        if( password == "0" )
+            std::cout << "Test";
+
+        if( count % 10000 == 0 )
+            std::cout << "password = " << password << " pass_len = " << pass_len << " run " << count << " times\n";
+        count++;
 
         //unzip( password, tmp_path );
         result = unzip_7z( password, tmp_path );
@@ -175,9 +180,9 @@ bool    crack_zip( const int pass_len )
             break;
     }    
 
-    std::cout << "password = " << password << "\n";
+    //std::cout << "password = " << password << "\n";
 
-    return true;
+    return result;
 }
 
 
@@ -206,12 +211,12 @@ void    unzip_main()
 
     std::cout << "input filepath : ";
     //std::cin >> filepath;
-    filepath = "D:\\tmp\\";
+    filepath = "F:\\tmp\\";
     std::cout << "filepath = " << filepath << std::endl;
 
     std::cout << "input thread count : ";
     //std::cin >> thread_count;
-    thread_count = 8;
+    thread_count = 15;
 
     boost::thread **thr = nullptr;
     thr = new boost::thread*[thread_count];
@@ -225,4 +230,9 @@ void    unzip_main()
     delete [] thr;
 
     std::cout << "\n\n\ntrue_password = " << true_password << "\n\n\n";
+
+    std::ofstream out("true_password.txt");
+    out << "pw len = " << true_password.size() << std::endl;
+    out << true_password << std::endl;
+    out.close();
 }
