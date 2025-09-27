@@ -13,5 +13,6 @@ bool    is_unzip_success( const boost::filesystem::path& dir );
 void    unzip_main();
 void    control_unzip( const int thr_id );
 
+void    process_example();
 
 #endif

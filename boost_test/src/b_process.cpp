@@ -236,3 +236,48 @@ void    unzip_main()
     out << true_password << std::endl;
     out.close();
 }
+
+
+
+
+
+void    process_example()
+{
+    // example 1, system info
+    std::cout << "example 1, system info\n\n\n";
+    std::ostringstream  os;
+    os << "systeminfo";
+
+    try {
+        ipstream    pipe_stream;
+        child   ch( os.str(), std_out > pipe_stream );
+        std::string     line;
+        while( pipe_stream && std::getline( pipe_stream, line ) && line.empty() == false )       
+            std::cout << line << std::endl;        
+        ch.wait();    
+    }
+    catch( std::exception exception )
+    {
+        std::cout << os.str();
+        std::cout << exception.what();
+    }
+    os.str(""); // remove data in os.
+ 
+    // example 2, ip config
+    std::cout << "\n\n\nexample 2, ip config\n\n\n";
+    os << "ipconfig";
+
+    try {
+        ipstream    pipe_stream;
+        child   ch( "ipconfig", std_out > pipe_stream );
+        std::string     line;
+        while( pipe_stream && std::getline( pipe_stream, line ) && line.empty() == false )       
+            std::cout << line << std::endl;        
+        ch.wait();    
+    }
+    catch( std::exception exception )
+    {
+        std::cout << os.str();
+        std::cout << exception.what();
+    }
+}

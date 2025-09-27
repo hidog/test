@@ -16,7 +16,8 @@ int main()
     //remove_by_extension();
     //unzip_all_files();
 
-    unzip_main();
+    //unzip_main();
+    process_example();
 
     /*timer_test();
 
