@@ -16,7 +16,7 @@ using namespace boost::filesystem;
 
 //const std::string dictionary = "`1234567890-=qwertyuiop[]\\asdfghjkl;'zxcvbnm,./ ~!@#$%^&*()_+QWERTYUIOP{}|ASDFGHJKL:\"ZXCVBNM<>?";
 //const std::string dictionary = "1234567890-qwertyuiopasdfghjklzxcvbnm.@QWERTYUIOPASDFGHJKL:ZXCVBNM";
-const std::string dictionary = "-qQwWeErRtTyYuUiIoOpPaAsSdDfFgGhHjJkKlLzZxXcCvVbBnNmM.@:1234567890";
+const std::string dictionary = "qQwWeErRtTyYuUiIoOpPaAsSdDfFgGhHjJkKlLzZxXcCvVbBnNmM1234567890-.@:/\\";
 
 const int dict_size = dictionary.size();
 
@@ -216,7 +216,7 @@ void    unzip_main()
 
     std::cout << "input thread count : ";
     //std::cin >> thread_count;
-    thread_count = 15;
+    thread_count = 20;
 
     boost::thread **thr = nullptr;
     thr = new boost::thread*[thread_count];

@@ -22,7 +22,7 @@ using namespace std;
 
 int main()
 {
-    write_disk_to_full_test( "J:\\test.dat" );
+    write_disk_to_full_test( "I:\\test.dat" );
     return 0;
 
 
