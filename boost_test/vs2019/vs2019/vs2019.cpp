@@ -17,7 +17,8 @@ int main()
     //unzip_all_files();
 
     //unzip_main();
-    process_example();
+    //process_example();
+    unrar_main();
 
     /*timer_test();
 

@@ -15,4 +15,10 @@ void    control_unzip( const int thr_id );
 
 void    process_example();
 
+
+void    unrar_main();
+bool    unrar( std::string& password, const std::string& tmp_path );
+void    crack_rar( const int thr_id, const int pass_len );
+
+
 #endif
