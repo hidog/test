@@ -18,7 +18,7 @@ using namespace boost::filesystem;
 //const std::string dictionary = "`1234567890-=qwertyuiop[]\\asdfghjkl;'zxcvbnm,./ ~!@#$%^&*()_+QWERTYUIOP{}|ASDFGHJKL:\"ZXCVBNM<>?";
 //const std::string dictionary = "1234567890-qwertyuiopasdfghjklzxcvbnm.@QWERTYUIOPASDFGHJKL:ZXCVBNM";
 //const std::string dictionary = "qQwWeErRtTyYuUiIoOpPaAsSdDfFgGhHjJkKlLzZxXcCvVbBnNmM1234567890-.@:/\\";
-const std::string dictionary = "012345";
+const std::string dictionary = "0123456789abcdefghijklmnopqrstuvwxyz";
 const int dict_size = dictionary.size();
 
 std::string filename;
@@ -276,13 +276,17 @@ void    process_example()
     std::cout << "\n\n\nexample 2, ip config\n\n\n";
     os << "ipconfig";
 #else
-    std::cout << "\n\n\nexample 2, if config\n\n\n";
-    os << "ifconfig";
+    std::cout << "\n\n\nexample 2, un rar\n\n\n";
+    os << "unrar t -pab5f /home/hidog/Music/12op.rar";  // -p password
 #endif
 
     try {
         ipstream    pipe_stream;
-        child   ch( "ipconfig", std_out > pipe_stream );
+#ifdef MSVC
+        child   ch( os.str(), std_out > pipe_stream );
+#else
+        child   ch( os.str(), std_err > pipe_stream );
+#endif
         std::string     line;
         while( pipe_stream && std::getline( pipe_stream, line ) && line.empty() == false )       
             std::cout << line << std::endl;        
@@ -290,6 +294,7 @@ void    process_example()
     }
     catch( std::exception exception )
     {
+        std::cout << "run and get exception !! \n\n";
         std::cout << os.str();
         std::cout << exception.what();
     }
@@ -305,16 +310,15 @@ void    unrar_main()
 
     std::cout << "input filename : ";
     //std::cin >> filename;
+#ifdef MSVC
     filename = "D:\\test.rar";
+#else
+    filename = "/home/hidog/Music/12op.rar";
+#endif
     std::cout << "filename = " << filename << std::endl;
 
-    std::cout << "input filepath : ";
-    //std::cin >> filepath;
-    filepath = "F:\\tmp\\";
-    std::cout << "filepath = " << filepath << std::endl;
-
     std::cout << "input thread count : ";
-    thread_count = 4;
+    thread_count = 12;
     std::cout << "thread_count = " << thread_count << "\n";
     if( thread_count > dict_size )
     {
@@ -342,7 +346,7 @@ void    unrar_main()
 
     std::ofstream out("true_password.txt");
     out << "pw len = " << true_password.size() << std::endl;
-    out << true_password << std::endl;
+    out << "true_password : \n\n" << true_password << std::endl;
     out.close();
 }
 
@@ -359,20 +363,8 @@ void    crack_rar( const int thr_id, const int pass_len )
     vec[0] = thr_id;
     std::string password;
     password.resize(pass_len);
-
-    std::ostringstream os;
-    os << filepath << "\\" << "tmp" << thr_id;
-    std::string tmp_path = os.str();
-    //if( false == create_directory( tmp_path ) )
-      //  std::cout << "\n\n\n !!! error !!!\n\n\n";
     
     int count = 0;
-
-    if( false == create_directory( tmp_path ) )
-    {
-        std::cout << "\n\n\n !!! error !!!\n\n\n";
-        return;
-    }
 
     while( is_finish == false )
     {        
@@ -380,16 +372,13 @@ void    crack_rar( const int thr_id, const int pass_len )
             password[i] = dictionary[vec[i]];
  
         //io_mutex.lock();
-        if( thr_id == 3 )
-            std::cout << password << ", count = " << count << "\n";
         //io_mutex.unlock();
 
-        /*if( count % 10 == 0 )
-            std::cout << "password = " << password << " pass_len = " << pass_len << " run " << count << " times\n";*/
+        if( count % 10000 == 0 )
+            std::cout << "password = " << password << " run " << count << " times\n";
         count++;
 
-        //unzip( password, tmp_path );
-        result = unrar( password, tmp_path );
+        result = unrar( password );
 
         if( result == true )
         {
@@ -420,7 +409,7 @@ void    crack_rar( const int thr_id, const int pass_len )
     }    
 
     io_mutex.lock();
-    //std::cout << "thr_id = " << thr_id << ", count = " << count << "\n";
+    std::cout << "thr_id = " << thr_id << ", count = " << count << "\n";
     io_mutex.unlock();
 
     std::cout << "password = " << password << "\n";
@@ -431,33 +420,32 @@ void    crack_rar( const int thr_id, const int pass_len )
 
 
 
-bool    unrar( std::string& password, const std::string& tmp_path )
+bool    unrar( std::string& password)
 {
-    return false;
+#ifdef MSVC
+    return true; // un implement code.
+#endif
 
-    bool result = true;
+    bool result = false;
     ipstream pipe_stream;
 
     std::ostringstream os;
-    os << "C:\\Program Files\\7-Zip\\7z.exe x " << filename << " -p\"" << password << "\" -o\"" << tmp_path << "\"";
-    //std::cout << os.str() << "\n";
+    os << "unrar t -y -p" << password << " " << filename;
 
     try {
-        child c( os.str(), std_out > pipe_stream );
-        // https://hooo.medium.com/%E5%B7%A5%E4%BD%9C%E7%AD%86%E8%A8%98-%E9%80%8F%E9%81%8E7zip%E6%8C%87%E4%BB%A4%E5%B0%8D%E6%AA%94%E6%A1%88%E9%80%B2%E8%A1%8C%E5%A3%93%E7%B8%AE%E8%88%87%E8%A7%A3%E5%A3%93%E7%B8%AE-861da198932
-        // 7z x D:\test.rar -p"1a234" -o"D:\test"
+        child ch( os.str(), std_err > pipe_stream );
 
         std::string line;
         while (pipe_stream && std::getline(pipe_stream, line) && !line.empty())
         {
             //std::cerr << line << std::endl;
-            if( line.find("Errors") != std::string::npos )
+            if( line.find("OK") != std::string::npos )
             {
-                result = false;
+                result = true;
                 break;
             }
         }
-        c.wait();    
+        ch.wait();    
     }
     catch(std::exception e)
     {

@@ -15,7 +15,8 @@ using namespace std;
 
 int main()
 {
-    process_example();
+    //process_example();
+    unrar_main();
 
     //boost_json_example();    
     //thread_test();    
@@ -31,9 +32,9 @@ int main()
 // check x64 or x86
 #if __GNUC__
 #if __x86_64__ || __ppc64__
-    cout << "this is x64\n";
+    cout << "\n\nthis is x64\n\n";
 #else
-    cout << "this is x86\n";
+    cout << "\n\nthis is x86\n\n";
 #endif
 #endif
 

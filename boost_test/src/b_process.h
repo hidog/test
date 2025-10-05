@@ -17,7 +17,7 @@ void    process_example();
 
 
 void    unrar_main();
-bool    unrar( std::string& password, const std::string& tmp_path );
+bool    unrar( std::string& password);
 void    crack_rar( const int thr_id, const int pass_len );
 
 
