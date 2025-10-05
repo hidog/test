@@ -25,7 +25,7 @@ std::string filename;
 std::string filepath;
 int thread_count = 1;
 
-std::string true_password;
+std::string true_password = "";
 bool is_finish = false;
 
 boost::mutex io_mutex;
@@ -348,6 +348,9 @@ void    unrar_main()
     out << "pw len = " << true_password.size() << std::endl;
     out << "true_password : \n\n" << true_password << std::endl;
     out.close();
+
+    if( true_password == "" )
+        std::cout << "\n\n\n not found password\n\n\n";
 }
 
 
