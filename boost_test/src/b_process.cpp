@@ -261,7 +261,7 @@ void    process_example()
         child   ch( os.str(), std_out > pipe_stream );
         std::string     line;
         while( pipe_stream && std::getline( pipe_stream, line ) && line.empty() == false )       
-            std::cout << line << std::endl;        
+            std::cout << "line : " << line << std::endl;        
         ch.wait();    
     }
     catch( std::exception exception )
@@ -277,7 +277,7 @@ void    process_example()
     os << "ipconfig";
 #else
     std::cout << "\n\n\nexample 2, un rar\n\n\n";
-    os << "unrar t -pab5f /home/hidog/Music/12op.rar";  // -p password
+    os << "unrar t -y -pab5f /home/hidog/Music/12op.rar";  // -p password
 #endif
 
     try {
@@ -289,7 +289,7 @@ void    process_example()
 #endif
         std::string     line;
         while( pipe_stream && std::getline( pipe_stream, line ) && line.empty() == false )       
-            std::cout << line << std::endl;        
+            std::cout << "line print: " << line << std::endl;        
         ch.wait();    
     }
     catch( std::exception exception )
@@ -318,7 +318,7 @@ void    unrar_main()
     std::cout << "filename = " << filename << std::endl;
 
     std::cout << "input thread count : ";
-    thread_count = 12;
+    thread_count = 11;
     std::cout << "thread_count = " << thread_count << "\n";
     if( thread_count > dict_size )
     {
@@ -375,7 +375,7 @@ void    crack_rar( const int thr_id, const int pass_len )
         //io_mutex.unlock();
 
         if( count % 10000 == 0 )
-            std::cout << "password = " << password << " run " << count << " times\n";
+            std::cout << "password = " << password << " thread id = " << thr_id << " run " << count << " times\n";
         count++;
 
         result = unrar( password );
@@ -430,22 +430,24 @@ bool    unrar( std::string& password)
     ipstream pipe_stream;
 
     std::ostringstream os;
-    os << "unrar t -y -p" << password << " " << filename;
+    os << "unrar t -y -p" << password << " " << filename << " 2>&1";
 
     try {
-        child ch( os.str(), std_err > pipe_stream );
-
-        std::string line;
-        while (pipe_stream && std::getline(pipe_stream, line) && !line.empty())
+        FILE *pipe;
+        char ret[200];
+        pipe = popen( os.str().c_str(), "r");
+        while ( !feof(pipe) )
         {
-            //std::cerr << line << std::endl;
-            if( line.find("OK") != std::string::npos )
+            fgets( (char*)&ret, 200, pipe );
+            //std::cout << "ret = " << ret << "\n\n";
+
+            if( strcasestr(ret, "OK") != NULL ) 
             {
-                result = true;
+                result = true;  
                 break;
             }
         }
-        ch.wait();    
+        pclose(pipe);
     }
     catch(std::exception e)
     {
@@ -456,4 +458,3 @@ bool    unrar( std::string& password)
 
     return result;
 }
-
