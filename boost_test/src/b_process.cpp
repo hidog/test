@@ -18,7 +18,7 @@ using namespace boost::filesystem;
 //const std::string dictionary = "`1234567890-=qwertyuiop[]\\asdfghjkl;'zxcvbnm,./ ~!@#$%^&*()_+QWERTYUIOP{}|ASDFGHJKL:\"ZXCVBNM<>?";
 //const std::string dictionary = "1234567890-qwertyuiopasdfghjklzxcvbnm.@QWERTYUIOPASDFGHJKL:ZXCVBNM";
 //const std::string dictionary = "qQwWeErRtTyYuUiIoOpPaAsSdDfFgGhHjJkKlLzZxXcCvVbBnNmM1234567890-.@:/\\";
-const std::string dictionary = "0123456789abcdefghijklmnopqrstuvwxyz";
+const std::string dictionary = "0123456789abcdefghijklmnopqrstuvwxyz:/\\@.";
 const int dict_size = dictionary.size();
 
 std::string filename;
@@ -313,7 +313,7 @@ void    unrar_main()
 #ifdef MSVC
     filename = "D:\\test.rar";
 #else
-    filename = "/home/hidog/Music/12op.rar";
+    filename = "/home/hidog/Music/aaa.rar";
 #endif
     std::cout << "filename = " << filename << std::endl;
 
@@ -441,7 +441,7 @@ bool    unrar( std::string& password)
             fgets( (char*)&ret, 200, pipe );
             //std::cout << "ret = " << ret << "\n\n";
 
-            if( strcasestr(ret, "OK") != NULL ) 
+            if( strcasestr(ret, "All OK") != NULL ) 
             {
                 result = true;  
                 break;
