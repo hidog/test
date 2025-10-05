@@ -1,4 +1,3 @@
-#include "process.h"
 #include "b_process.h"
 
 #include <boost/process.hpp>
@@ -247,9 +246,15 @@ void    unzip_main()
 void    process_example()
 {
     // example 1, system info
+#ifdef MSVC
     std::cout << "example 1, system info\n\n\n";
     std::ostringstream  os;
     os << "systeminfo";
+#else
+    std::cout << "example 1, screenfetch\n\n\n";
+    std::ostringstream  os;
+    os << "screenfetch";
+#endif
 
     try {
         ipstream    pipe_stream;
@@ -267,8 +272,13 @@ void    process_example()
     os.str(""); // remove data in os.
  
     // example 2, ip config
+#ifdef MSVC
     std::cout << "\n\n\nexample 2, ip config\n\n\n";
     os << "ipconfig";
+#else
+    std::cout << "\n\n\nexample 2, if config\n\n\n";
+    os << "ifconfig";
+#endif
 
     try {
         ipstream    pipe_stream;

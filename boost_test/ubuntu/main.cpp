@@ -6,6 +6,7 @@
 #include "algorithm.h"
 #include "uuid.h"
 #include "container.h"
+#include "b_process.h"
 
 
 using namespace std;
@@ -14,16 +15,18 @@ using namespace std;
 
 int main()
 {
-    boost_json_example();    
-    thread_test();    
-    all_of_example();
+    process_example();
 
-    find_not_example();
-    generate_uuid_example();
+    //boost_json_example();    
+    //thread_test();    
+    //all_of_example();
+
+    //find_not_example();
+    //generate_uuid_example();
     
-    get_cpu_core_func();
+    //get_cpu_core_func();
 
-    test_vector_emplace();
+    //test_vector_emplace();
     
 // check x64 or x86
 #if __GNUC__

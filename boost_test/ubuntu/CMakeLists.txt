@@ -45,7 +45,8 @@ set( SOURCE main.cpp
             ${CMAKE_SOURCE_DIR}/../src/hardware.cpp
             ${CMAKE_SOURCE_DIR}/../src/json.cpp 
             ${CMAKE_SOURCE_DIR}/../src/thread.cpp 
-            ${CMAKE_SOURCE_DIR}/../src/uuid.cpp )
+            ${CMAKE_SOURCE_DIR}/../src/uuid.cpp 
+            ${CMAKE_SOURCE_DIR}/../src/b_process.cpp )
 
 # head
 set( HEAD   ${CMAKE_SOURCE_DIR}/../src/algorithm.h
@@ -53,16 +54,17 @@ set( HEAD   ${CMAKE_SOURCE_DIR}/../src/algorithm.h
             ${CMAKE_SOURCE_DIR}/../src/hardware.h
             ${CMAKE_SOURCE_DIR}/../src/json.h
             ${CMAKE_SOURCE_DIR}/../src/thread.h
-            ${CMAKE_SOURCE_DIR}/../src/uuid.h )
+            ${CMAKE_SOURCE_DIR}/../src/uuid.h 
+            ${CMAKE_SOURCE_DIR}/../src/b_process.h )
 
 
 # exec file
 add_executable( ${PROJECT_NAME} ${SOURCE} ${HEAD} )
 
 find_package( Boost REQUIRED COMPONENTS
-                    system thread )
+                    system thread filesystem )
                     
-target_link_libraries( ${PROJECT_NAME} Boost::system Boost::thread pthread )
+target_link_libraries( ${PROJECT_NAME} Boost::system Boost::thread Boost::filesystem )
 
 #target_link_libraries( ${PROJECT_NAME} boost_system boost_thread pthread)
 
