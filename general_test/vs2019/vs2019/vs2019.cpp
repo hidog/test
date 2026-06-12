@@ -22,7 +22,8 @@ using namespace std;
 
 int main()
 {
-    write_disk_to_full_test( "I:\\test.dat" );
+    seperate_large_file("");
+    //write_disk_to_full_test( "I:\\test.dat" );
     return 0;
 
 

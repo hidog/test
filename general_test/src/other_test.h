@@ -6,6 +6,8 @@ void write_disk_to_full_test( const char *path );
 void ref_test();
 void raw_string_test();
 
+void seperate_large_file(const char* path );
+
 /*
 https://zh.wikipedia.org/wiki/%E4%BD%8D%E6%AE%B5    
 https://loserembedded.blogspot.com/2016/06/cbit-field.html  

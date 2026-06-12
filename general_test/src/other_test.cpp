@@ -51,6 +51,127 @@ void raw_string_test()
 
 
 
+/*
+N = 3
+block=4
+shift=2
+
+
+0   3   6   9   12
+0   1   2   3   4
+
+1   4   7   10   13
+5   6   7   8    9
+
+2   5   8   11   14
+10  11  12  13   14
+
+
+
+
+block=5
+shift=0
+
+0   3   6   9   12
+0   1   2   3   4
+
+1   4   7   10   13
+5   6   7   8    9
+
+2   5   8   11   14
+10  11  12  13   14
+
+15
+15
+
+
+
+
+count = 0
+i = 0; i < N; i++
+    j = i; j < SIZE; j += N;
+        j mapping to count
+        count++
+
+index = 0; index < SIZE; index++
+    block = SIZE / N
+    shift = SIZE % N
+    if index in 0 <= <= block
+        map = index*N
+    if index in block+1 <= <= block*2+1
+        map = (index-block-1)*N + 1
+    if index in block*2+2 <= <= SIZE
+        map = (index-block*2-2)*N + 2
+*/
+
+
+
+
+void seperate_large_file( const char* path )
+{
+    int INPUT_SIZE = 15;
+    int N = 3;
+    int SIZE = ((INPUT_SIZE+1)/N)*N;
+    int count = 0;
+    int i, j;
+    int index;
+    int offset;
+    int map;
+
+    count = 0;
+    for( i = 0; i < N; i++ )
+    {
+        for( j = i; j <= SIZE; j += N )
+        {
+            printf( " %d => %d \n", j, count );
+            count++;
+        }
+    }
+    for( i = SIZE+1; i <= INPUT_SIZE; i++ )
+        printf("%d => %d\n", i, i);
+    printf("\n\n\n");
+
+    // 有錯, offset計算公式錯
+    for( index = 0; index <= SIZE; index++ )
+    {
+        offset = SIZE / N;
+        if( 0 <= index && index <= offset )
+            map = index*N;
+        else if( offset+1 <= index && index <= offset*2+1 )
+            map = (index-offset-1)*N + 1;
+        else
+            map = (index-offset*2-2)*N +2;
+        printf( "%d => %d \n", index, map );
+    }
+    for( i = SIZE+1; i <= INPUT_SIZE; i++ )
+        printf("%d => %d\n", i, i);
+
+    return;
+
+
+    FILE* src_fp = fopen(path, "rb");
+    if (src_fp == NULL)
+    {
+        printf("open fail.\n");
+        return;
+    }
+
+    // 取得檔案大小
+    fseek( src_fp, 0, SEEK_END );
+    __int64 file_size = _ftelli64( src_fp );
+    printf( "file size : %lld\n", file_size);
+
+
+    fclose(src_fp);
+}
+
+
+
+
+
+
+
+
 
 
 
