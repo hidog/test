@@ -76,3 +76,13 @@ ffmpeg -i input.mp4 -vcodec hevc_nvenc -cq 25 -vf "scale='w=1920:h=1080'" output
 
 
 
+分離出影片的字型檔案
+ffmpeg -dump_attachment:t "" -i file.mkv
+https://www.reddit.com/r/ffmpeg/comments/yv85w4/how_can_i_keep_font_attachmentsstyle_when/?tl=zh-hant
+
+
+
+
+
+
+
