@@ -69,6 +69,9 @@
     <ClCompile Include="..\..\src\cast\cast_test.cpp">
       <Filter>src\cast</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\seperate_large_file.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\linklist.h">
@@ -112,6 +115,9 @@
     </ClInclude>
     <ClInclude Include="..\..\src\cast\cast_test.h">
       <Filter>src\cast</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\seperate_large_file.h">
+      <Filter>src</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

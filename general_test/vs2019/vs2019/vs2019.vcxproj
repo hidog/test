@@ -154,6 +154,7 @@
     <ClCompile Include="..\..\src\other_test.cpp" />
     <ClCompile Include="..\..\src\pointer.cpp" />
     <ClCompile Include="..\..\src\scanf_regular.cpp" />
+    <ClCompile Include="..\..\src\seperate_large_file.cpp" />
     <ClCompile Include="..\..\src\template.cpp" />
     <ClCompile Include="..\..\src\typeid.cpp" />
     <ClCompile Include="..\..\src\variable_arg.cpp" />
@@ -171,6 +172,7 @@
     <ClInclude Include="..\..\src\other_test.h" />
     <ClInclude Include="..\..\src\pointer.h" />
     <ClInclude Include="..\..\src\scanf_regular.h" />
+    <ClInclude Include="..\..\src\seperate_large_file.h" />
     <ClInclude Include="..\..\src\template.h" />
     <ClInclude Include="..\..\src\typeid.h" />
     <ClInclude Include="..\..\src\variable_arg.h" />

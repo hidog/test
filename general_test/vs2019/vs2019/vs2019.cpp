@@ -7,6 +7,7 @@
 #include "typeid.h"
 #include "template.h"
 #include "other_test.h"
+#include "seperate_large_file.h"
 
 #include "class/rule_three.h"
 #include "class/inherit.h"
@@ -22,7 +23,8 @@ using namespace std;
 
 int main()
 {
-    seperate_large_file("");
+    //slf_test();
+    seperate_large_file("I://temp//test.rar");
     //write_disk_to_full_test( "I:\\test.dat" );
     return 0;
 
