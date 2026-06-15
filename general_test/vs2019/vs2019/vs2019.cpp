@@ -26,8 +26,24 @@ int main()
     //test_seperate2();
 
     //slf_test();
-    //seperate_large_file("I://temp//test.rar");
-    merge_large_file("J:\\test\\");
+
+    SlfSetting setting;
+
+#if 0
+    sprintf( setting.filename, "test2.rar" );
+    setting.prime = 101;
+    setting.block_size = 10000;
+    seperate_large_file( "I://temp//", "J://test//", setting );
+#else
+    int res = slf_load_info( "J:\\test\\", setting );
+    if( res < 0 )
+    {
+        printf("error\n");
+        return 0;
+    }
+    setting.prime = 101;
+    merge_large_file( "J:\\test\\", "I:\\temp\\", setting );
+#endif
 
     //write_disk_to_full_test( "I:\\test.dat" );
     return 0;
