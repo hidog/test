@@ -1,4 +1,5 @@
 #include <iostream>
+#include <Windows.h>
 
 using namespace std;
 
@@ -142,6 +143,8 @@ void slf_test()
         }
     };
 
+    func( 59, 2069 );
+
     func( 15, 3 );
     func( 16, 3 );
     func( 17, 3 );
@@ -163,15 +166,15 @@ void slf_test()
 
 
 
-
+constexpr int64_t block_size = 1000000;
+constexpr int prime = 2069;
 
 
 
 
 void seperate_large_file( const char* path )
 {
-    char dst_root_path[1000] = "I:\\temp\\test\\";
-    constexpr int64_t block_size = 10000;
+    char dst_root_path[1000] = "J:\\test\\";
 
     FILE* src_fp = fopen(path, "rb");
     if (src_fp == NULL)
@@ -185,40 +188,229 @@ void seperate_large_file( const char* path )
     __int64 file_size = _ftelli64( src_fp );
 
     printf( "file size : %lld\n", file_size);
-    printf( "%lld\n", file_size/block_size);
+    printf( "total size %lld\n", file_size/block_size);
 
     int64_t repeat_size = file_size/block_size;
     int64_t index;
-    size_t read_size;
+    size_t read_size, write_size;
 
     fseek( src_fp, 0, SEEK_SET );
-    uint8_t buffer[block_size] = {0};
+    uint8_t *buffer = nullptr;  //[block_size] = {0};
+    buffer = new uint8_t[block_size];
+    if( buffer == NULL )
+    {
+        printf("error\n");
+        return;
+    }
 
-    for( index = 0; index <= repeat_size; index++ )
+    for( index = 0; index < repeat_size; index++ )
     {
         printf("solve: %lld\n", index);
 
         read_size = fread( buffer, sizeof(uint8_t), block_size, src_fp );
         if( read_size != block_size )
+        {
             printf("error\n");
+            return;
+        }
 
         char dst_path[1000];
-        int64_t mapping = slf_f(index, repeat_size, 2069);
+        int64_t mapping = index; //slf_f(index, repeat_size, prime);
         sprintf( dst_path, "%s\\db_%lld.dat", dst_root_path, mapping );
         FILE* dst_fp = fopen(dst_path, "wb+");
-        fwrite( buffer, sizeof(uint8_t), block_size, dst_fp );
+        write_size = fwrite( buffer, sizeof(uint8_t), read_size, dst_fp );
+        if( write_size != read_size )
+        {
+            printf("error\n");
+            return;
+        }
         fclose(dst_fp);
+
+        if( index % 10000 == 0 )
+            Sleep(1000);
     }
 
+    read_size = fread( buffer, sizeof(uint8_t), block_size, src_fp);
+    printf("tail size = %lld\n", read_size);
     char dst_path[1000];
     sprintf( dst_path, "%s\\db_tail.dat", dst_root_path );
     FILE* dst_fp = fopen(dst_path, "wb+");
-    int64_t remain_size = file_size % block_size;
-    int tmp = remain_size;
-    fwrite( buffer, sizeof(uint8_t), tmp, dst_fp );
+    if( dst_fp == NULL )
+    {
+        printf("error\n");
+        return;
+    }
+    write_size = fwrite( buffer, sizeof(uint8_t), read_size, dst_fp );
+    int tail_write_size = write_size;
+    if( write_size != read_size )
+    {
+        printf("error\n");
+        return;
+    }
     fclose(dst_fp);
 
+    char file_info_path[1000];
+    sprintf( file_info_path, "%s\\db_info.inf", dst_root_path );
+    FILE* fi_fp = fopen( file_info_path, "w+" );
+    if( fi_fp == NULL )
+    {
+        printf("error\n");
+        return;
+    }
+    fprintf( fi_fp, "%lld\n", repeat_size );
+    fprintf( fi_fp, "%d\n", tail_write_size );
+    fclose(fi_fp);
+
     fclose(src_fp);
+    delete [] buffer;
+    buffer = nullptr;
+}
+
+
+
+
+
+void merge_large_file(const char* path)
+{
+    int res = 0;
+    char src_file_info[1000];
+    sprintf( src_file_info, "%s\\db_info.inf", path );
+    FILE* fi_fp = fopen( src_file_info, "r" );
+    if( fi_fp == NULL )
+    {
+        printf("error\n");
+        return;
+    }
+    int64_t repeat_size = 0;
+    int remain_size = 0;
+    int write_size;
+    res = fscanf( fi_fp, "%lld", &repeat_size );
+    res = fscanf( fi_fp, "%d", &remain_size );
+    fclose(fi_fp);
+
+    char dst_file_name[1000] = "I:\\temp\\merge.rar";
+    FILE* dst_fp = fopen( dst_file_name, "wb+" );
+    if( dst_fp == NULL )
+    {
+        printf("error\n");
+        return;
+    }
+
+    uint8_t *buffer = nullptr;
+    buffer = new uint8_t[block_size];
+    if( buffer == NULL )
+    {
+        printf("error\n");
+        return;
+    }
+
+    int64_t index;
+    int64_t mapping;
+    int read_size;
+    for( index = 0; index < repeat_size; index++ )
+    {
+        printf("solve: %lld\n", index);
+        mapping = index; //slf_g( index, repeat_size, prime );
+
+        char src_path[1000];
+        sprintf( src_path, "%s\\db_%lld.dat", path, mapping );
+        FILE* src_fp = fopen(src_path, "rb");
+        if( src_fp == NULL )
+        {
+            printf("error\n");
+            return;
+        }
+
+        read_size = fread( buffer, sizeof(uint8_t), block_size, src_fp );
+        if( read_size != block_size )
+        {
+            printf("error\n");
+            return;
+        }
+        fclose(src_fp);
+
+        write_size = fwrite( buffer, sizeof(uint8_t), read_size, dst_fp );
+        if( write_size != read_size )
+        {
+            printf("error\n");
+            return;
+        }
+
+        if( index % 10000 == 0 )
+            Sleep(1000);
+    }
+
+    char src_path[1000];
+    sprintf( src_path, "%s\\db_tail.dat", path );
+    FILE* src_fp = fopen(src_path, "rb");
+    if( src_fp == NULL )
+    {
+        printf("error\n");
+        return;
+    }    
+    res = fread( buffer, sizeof(uint8_t), block_size, src_fp );
+    printf("tail size = %d", res);
+    fclose(src_fp);
+    write_size = fwrite( buffer, sizeof(uint8_t), res, dst_fp );
+    if( write_size != res )
+    {
+        printf("error\n");
+        return;
+    }
+
+    delete [] buffer;
+    buffer = nullptr;
+    fclose(dst_fp);
+}
+
+
+
+
+
+void test_seperate()
+{
+    int res = 0, res2 = 0;
+    FILE *fp, *fq;
+    fp = fopen("I:\\temp\\test2.rar", "rb");
+    uint8_t *buff = new uint8_t[30000000];
+    res = fread( buff, sizeof(uint8_t), 30000000, fp );
+
+    fq = fopen("I:\\temp\\data1.dat", "wb+");
+    res2 = fwrite( buff, sizeof(uint8_t), res, fq );
+    fclose(fq);
+
+    res = fread( buff, sizeof(uint8_t), 30000000, fp );
+
+    fq = fopen("I:\\temp\\data2.dat", "wb+");
+    res2 = fwrite( buff, sizeof(uint8_t), res, fq );
+    fclose(fq);
+
+    delete [] buff;
+    fclose(fp);
+}
+
+
+
+void test_seperate2()
+{
+    int res = 0, res2 = 0;
+    FILE *fp, *fq;
+    fp = fopen("I:\\temp\\data1.dat", "rb");
+    uint8_t *buff = new uint8_t[30000000];
+    res = fread( buff, sizeof(uint8_t), 30000000, fp );
+    fclose(fp);
+
+    fq = fopen("I:\\temp\\output.rar", "wb+");
+    res2 = fwrite( buff, sizeof(uint8_t), res, fq );   
+
+    fp = fopen("I:\\temp\\data2.dat", "rb");
+    res = fread( buff, sizeof(uint8_t), 30000000, fp );
+    fclose(fp);
+
+    res2 = fwrite( buff, sizeof(uint8_t), res, fq );
+
+    fclose(fq);
+    delete [] buff;
 }
 
 

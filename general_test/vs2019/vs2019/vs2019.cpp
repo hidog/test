@@ -23,8 +23,12 @@ using namespace std;
 
 int main()
 {
+    //test_seperate2();
+
     //slf_test();
-    seperate_large_file("I://temp//test.rar");
+    //seperate_large_file("I://temp//test.rar");
+    merge_large_file("J:\\test\\");
+
     //write_disk_to_full_test( "I:\\test.dat" );
     return 0;
 

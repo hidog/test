@@ -13,5 +13,9 @@ int64_t slf_g( int64_t input, int64_t full_size, int prime );
 void slf_test();
 
 void seperate_large_file(const char* path );
+void merge_large_file(const char* path);
+
+void test_seperate();
+void test_seperate2();
 
 #endif
