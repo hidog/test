@@ -30,9 +30,9 @@ int main()
     SlfSetting setting;
 
 #if 0
-    sprintf( setting.filename, "test2.rar" );
-    setting.prime = 101;
-    setting.block_size = 10000;
+    sprintf( setting.filename, "test.rar" );
+    setting.prime = 2069;
+    setting.block_size = 1000000;
     seperate_large_file( "I://temp//", "J://test//", setting );
 #else
     int res = slf_load_info( "J:\\test\\", setting );
