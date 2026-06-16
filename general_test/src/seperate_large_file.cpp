@@ -487,6 +487,12 @@ int merge_tail( const char* src_root, FILE *dst_fp, SlfSetting& setting )
 
 void merge_large_file( const char* src_root, const char* dst_root, SlfSetting& setting )
 {
+    if( setting.prime < setting.repeat_size )
+    {
+        printf("merge_large_file error, setting fail\n");
+        return;
+    }
+
     int res = 0;
 
     char dst_path[1000];
